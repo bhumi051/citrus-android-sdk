@@ -11,8 +11,7 @@ To perform this, a two step approach is followed as explained below,
        @Override
             public void success(LinkUserExtendedResponse linkUserExtendedResponse) {
             }
-
-            @Override
+       @Override
             public void error(CitrusError error) {
         });
  ``` 
@@ -30,7 +29,31 @@ To perform this, a two step approach is followed as explained below,
                 2. SignInTypeMOtp (Sign-in using mobile OTP)
                 3. SignInTypeEOtpOrPassword (Sign-in using email OTP or Password)
                 4. SignInTypeEOtp (Sign-in using email OTP)
-                5. None (Error in sign in type calculation)
+                5. None (Error case)
    ```
 
-- Using the above sign in type you can manage your UI to display either both OTP,Password field or
+- Using the above sign in type you can manage your UI to display either OTP/Password editfields or both. Also for above cases, you can display a particular message to user, call the below method to get the message,
+
+ ```java
+ String linkUserMessage = linkUserExtendedResponse.getLinkUserMessage();
+ ``` 
+- Next, once user enters the OTP/Password, you need to set one enum value as below,
+```java
+      LinkUserPasswordType linkUserPasswordType = LinkUserPasswordType.None;
+      if("OTP entered by user"){
+           linkUserPasswordType = LinkUserPasswordType.Otp;
+      }else if("Password entered by user"){
+           linkUserPasswordType = LinkUserPasswordType.Password;
+      }
+```
+ - Finally call the below method to Signin user,
+ ```java
+ citrusClient.linkUserExtendedSignIn(emailId,linkUserPassword,linkUserExtended,linkUserPasswordType, new Callback<CitrusResponse>() {
+            @Override
+            public void success(CitrusResponse citrusResponse) {
+            }
+            @Override
+            public void error(CitrusError error) {
+                
+            }
+        });
