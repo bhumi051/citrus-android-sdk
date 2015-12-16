@@ -19,17 +19,17 @@ To perform this, a two step approach is followed as explained below,
             }
  });
  ``` 
- - The above API call, will perform all the required calculations on these credentialls and give you 'success/error' callback based on its result. Success callback will give a <b>'linkUserExtendedResponse'</b> object which you should maintain for future reference.
+ - The above API call, will perform all the required calculations on these credentials and give you 'success/error' callback based on its result. Success callback will give a <b>'linkUserExtendedResponse'</b> object which you should maintain for future reference.
  
  
 
 ####Step 2. (Signing the user based on response of Step 1)
- - Step 1 will also give you the type of Sign In, that should be performed for the current user. This type falls under 5 categories, which you can get by calling the below method,
+ - Step 1 will also give you the type of Sign In, that should be performed for the current user. This type falls under 5 categories, and you can get it by calling the below method,
  
  ```java
  LinkUserSignInType linkUserSignInType = linkUserExtendedResponse.getLinkUserSignInType();
  ```
-  - The above method will give you a enum and the 5 categories are,
+  - The above method will give you a enum and its 5 categories are,
   ```java
                 1. SignInTypeMOtpOrPassword (Sign-in using mobile OTP or Password)
                 2. SignInTypeMOtp (Sign-in using mobile OTP)
@@ -71,4 +71,7 @@ To perform this, a two step approach is followed as explained below,
                 String errorMessasge = error.getMessage();
             }
 });
+```
 
+#### Notes:
+ - In case, if after performing Step 1, the OTP is not received, you can have a resend functionality for users. This basically should just perform Step 1 again with the already entered user credentials.
