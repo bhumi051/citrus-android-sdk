@@ -3,9 +3,27 @@
 Welcome to the open-source Android SDK Documentation of Citrus Payments Solution!
 
 ### Download
-#### Gradle
-
+#### Update your project’s build.gradle
+    
     compile 'com.citrus.sdk:payment-sdk:3.0.36'
+    
+#### Update Top-level build.gradle.
+    buildscript {
+        repositories {
+            mavenCentral()
+            jcenter()
+    }
+    dependencies {
+            classpath 'com.android.tools.build:gradle:1.3.1'
+            }
+    }
+    allprojects {
+        repositories {
+            maven { url "http://dl.bintray.com/populov/maven" } 
+            mavenCentral()
+            jcenter() 
+        }
+    }
       
 #### Eclipse
     
