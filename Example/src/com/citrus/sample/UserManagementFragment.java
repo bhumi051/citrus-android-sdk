@@ -19,6 +19,7 @@ package com.citrus.sample;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,11 +27,20 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.citrus.mobile.OAuth2GrantType;
 import com.citrus.sdk.Callback;
 import com.citrus.sdk.CitrusClient;
+import com.citrus.sdk.classes.AccessToken;
+import com.citrus.sdk.classes.LinkUserExtendedResponse;
+import com.citrus.sdk.classes.LinkUserPasswordType;
+import com.citrus.sdk.classes.LinkUserSignInType;
 import com.citrus.sdk.response.CitrusError;
 import com.citrus.sdk.response.CitrusResponse;
+import com.google.gson.JsonElement;
+
+import static com.citrus.sdk.classes.Utils.*;
 
 
 /**
@@ -45,8 +55,9 @@ public class UserManagementFragment extends Fragment implements View.OnClickList
     private Button btnLinkUser = null;
     private Button btnSignUp = null;
     private Button btnSignIn = null;
-    private Button btnResetPassword = null;
+    private Button btnResend = null;
 
+    private EditText editOtp = null;
     private EditText editEmailId = null;
     private EditText editMobileNo = null;
     private EditText editPassword = null;
@@ -54,6 +65,9 @@ public class UserManagementFragment extends Fragment implements View.OnClickList
 
     private CitrusClient citrusClient = null;
     private Context context = null;
+
+    private LinkUserExtendedResponse linkUserExtended;
+    private static final long RESEND_TIMER = 15000;
 
     /**
      * Use this factory method to create a new instance of
@@ -83,6 +97,7 @@ public class UserManagementFragment extends Fragment implements View.OnClickList
 
         context = getActivity();
 
+        editOtp = (EditText) rootView.findViewById(R.id.edit_otp_id);
         editEmailId = (EditText) rootView.findViewById(R.id.edit_email_id);
         editMobileNo = (EditText) rootView.findViewById(R.id.edit_mobile_no);
         editPassword = (EditText) rootView.findViewById(R.id.edit_password);
@@ -91,13 +106,15 @@ public class UserManagementFragment extends Fragment implements View.OnClickList
         btnLinkUser = (Button) rootView.findViewById(R.id.btn_link_user);
         btnSignIn = (Button) rootView.findViewById(R.id.btn_signin);
         btnSignUp = (Button) rootView.findViewById(R.id.btn_signup);
+        btnResend = (Button) rootView.findViewById(R.id.btn_resend);
 
-        btnResetPassword = (Button) rootView.findViewById(R.id.btn_reset_password);
+        Button btnResetPassword = (Button) rootView.findViewById(R.id.btn_reset_password);
 
         btnLinkUser.setOnClickListener(this);
         btnSignUp.setOnClickListener(this);
         btnSignIn.setOnClickListener(this);
         btnResetPassword.setOnClickListener(this);
+        btnResend.setOnClickListener(this);
 
 
         citrusClient = CitrusClient.getInstance(context.getApplicationContext());
@@ -131,6 +148,32 @@ public class UserManagementFragment extends Fragment implements View.OnClickList
                 textMessage.setText(error.getMessage());
             }
         });
+    }
+
+    /**
+     * Call Link User Extended API
+     */
+    private void linkUserExtended() {
+        String emailId = editEmailId.getText().toString();
+        String mobileNo = editMobileNo.getText().toString();
+
+
+        citrusClient.linkUserExtended(emailId, mobileNo, new Callback<LinkUserExtendedResponse>() {
+            @Override
+            public void success(LinkUserExtendedResponse linkUserExtendedResponse) {
+                if (linkUserExtendedResponse != null) {
+                    linkUserExtended = linkUserExtendedResponse;
+                    modifyUi(linkUserExtendedResponse);
+                }
+            }
+
+            @Override
+            public void error(CitrusError error) {
+                Utils.showToast(context, error.getMessage());
+                textMessage.setText(error.getMessage());
+            }
+        });
+
     }
 
     private void signIn() {
@@ -186,13 +229,13 @@ public class UserManagementFragment extends Fragment implements View.OnClickList
             @Override
             public void success(CitrusResponse citrusResponse) {
                 Utils.showToast(context, citrusResponse.getMessage());
-                textMessage.setText(citrusResponse.getMessage());
+//                textMessage.setText(citrusResponse.getMessage());
             }
 
             @Override
             public void error(CitrusError error) {
                 Utils.showToast(context, error.getMessage());
-                textMessage.setText(error.getMessage());
+//                textMessage.setText(error.getMessage());
             }
         });
     }
@@ -219,15 +262,12 @@ public class UserManagementFragment extends Fragment implements View.OnClickList
 
     @Override
     public void onClick(View v) {
-
-        textMessage.setText("");
-
         switch (v.getId()) {
             case R.id.btn_link_user:
-                linkUser();
+                linkUserExtended();
                 break;
             case R.id.btn_signin:
-                signIn();
+                linkUserExtendedSignIn();
                 break;
             case R.id.btn_signup:
                 signUp();
@@ -235,7 +275,106 @@ public class UserManagementFragment extends Fragment implements View.OnClickList
             case R.id.btn_reset_password:
                 resetPassword();
                 break;
+            case R.id.btn_resend:
+                linkUserExtended();
+                btnResend.setClickable(false);
+                btnResend.setEnabled(false);
+                break;
         }
+    }
+
+    /**
+     * Perform Link User Extended Sign In.
+     */
+    private void linkUserExtendedSignIn() {
+
+        String linkUserPassword = null;
+        String otpPassword = editOtp.getText().toString();
+        String passwordString = editPassword.getText().toString();
+
+        LinkUserPasswordType linkUserPasswordType = LinkUserPasswordType.None;
+        if (otpPassword.length() > 0) {
+            linkUserPasswordType = LinkUserPasswordType.Otp;
+            linkUserPassword = otpPassword;
+        } else if (passwordString.length() > 0) {
+            linkUserPasswordType = LinkUserPasswordType.Password;
+            linkUserPassword = passwordString;
+        }
+
+        citrusClient.linkUserExtendedSignIn(linkUserExtended, linkUserPasswordType, linkUserPassword, new Callback<CitrusResponse>() {
+            @Override
+            public void success(CitrusResponse citrusResponse) {
+                Utils.showToast(context, citrusResponse.getMessage());
+                textMessage.setText(citrusResponse.getMessage());
+                clearPasswordFields();
+
+                mListener.onShowWalletScreen();
+            }
+
+            @Override
+            public void error(CitrusError error) {
+                Utils.showToast(context, error.getMessage());
+                textMessage.setText(error.getMessage());
+                clearPasswordFields();
+            }
+        });
+    }
+
+    private void clearPasswordFields() {
+        editOtp.getText().clear();
+        editPassword.getText().clear();
+    }
+
+    private void modifyUi(LinkUserExtendedResponse linkUserExtendedResponse) {
+
+        LinkUserSignInType linkUserSignInType = linkUserExtendedResponse.getLinkUserSignInType();
+        if (linkUserSignInType != LinkUserSignInType.None) {
+            String linkUserMessage = linkUserExtendedResponse.getLinkUserMessage();
+
+            textMessage.setText(linkUserMessage);
+            btnSignIn.setVisibility(View.VISIBLE);
+            btnLinkUser.setVisibility(View.GONE);
+            editOtp.setVisibility(View.VISIBLE);
+            editPassword.setVisibility(View.VISIBLE);
+            btnResend.setVisibility(View.VISIBLE);
+            editEmailId.setEnabled(false);
+            editMobileNo.setEnabled(false);
+
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    btnResend.setClickable(true);
+                    btnResend.setEnabled(true);
+                }
+            }, RESEND_TIMER);
+
+
+            switch (linkUserSignInType) {
+
+                case SignInTypeMOtpOrPassword:
+                    // Show Mobile otp and password sign in screen
+                    editOtp.setHint("Mobile OTP");
+                    break;
+                case SignInTypeMOtp:
+                    // Show Mobile otp sign in screen
+                    editOtp.setHint("Mobile OTP");
+                    editPassword.setVisibility(View.GONE);
+                    break;
+                case SignInTypeEOtpOrPassword:
+                    // Show Email otp and password sign in screen
+                    editOtp.setHint("Email OTP");
+                    break;
+                case SignInTypeEOtp:
+                    // Show Email otp sign in screen
+                    editOtp.setHint("Email OTP");
+                    editPassword.setVisibility(View.GONE);
+                    break;
+                default:
+                    break;
+            }
+        }
+
     }
 
     public interface UserManagementInteractionListener {

@@ -19,31 +19,36 @@
         android:clickable="true"
         android:visibility="gone" />
 
-    <FrameLayout
-        android:id="@+id/otp_popup_layout"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:visibility="gone">
+        android:layout_height="wrap_content">
 
-        <com.citrus.sdk.otp.OTPPopupView
-            android:id="@+id/otpPopupViewId"
+        <FrameLayout
+            android:id="@+id/otp_popup_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-        <ImageView
-            android:id="@+id/otpPopupCancelImgViewId"
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:background="@drawable/arrow_down_icon" />
+            android:visibility="gone">
 
-        <LinearLayout
-            android:id="@+id/otpPopupSeparatorId"
-            android:layout_width="match_parent"
-            android:layout_height="4dp"
-            android:background="@drawable/separator"
-            android:orientation="horizontal" />
+            <com.citrus.sdk.otp.OTPPopupView
+                android:id="@+id/otpPopupViewId"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
 
-    </FrameLayout>
+            <ImageView
+                android:id="@+id/otpPopupCancelImgViewId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:background="@drawable/arrow_down_icon" />
+
+            <LinearLayout
+                android:id="@+id/otpPopupSeparatorId"
+                android:layout_width="match_parent"
+                android:layout_height="4dp"
+                android:background="@drawable/separator"
+                android:orientation="horizontal" />
+
+        </FrameLayout>
+    </ScrollView>
 </RelativeLayout>
