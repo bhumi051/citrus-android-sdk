@@ -1,5 +1,7 @@
-| Version History<br>Last updated : : 24/08/2015 |  Feature's Update|
+| Version History<br>Last updated : : 21/12/2015 |  Feature's Update|
 | :-------------: | :------------- |
+|  v3.0.34| * Added resized Card Type icons for all resolutions  
+| | * Bug Fixes and improvements|
 | v3.0.33| * Auto OTP Reading on 3D Secure Pages |
 |	| * Improved Speed |
 |	| * Bug Fixes and improvements |
