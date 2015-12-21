@@ -1,5 +1,6 @@
 | Version History<br>Last updated : 21/12/2015 |  Feature Updates|
 | :-------------: | :------------- |
+| v3.1.1| * Removed ic_launcher images from the SDK.  |
 | v3.1.0| * New Link User Extended API  
 | | * New Pay using Citrus Cash|
 | | * Auto OTP feature enhancements|
