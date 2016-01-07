@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="@dimen/citrus_activity_horizontal_margin">
+        android:padding="@dimen/activity_horizontal_margin">
 
         <TextView
             android:layout_width="match_parent"
@@ -32,7 +32,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="@dimen/citrus_activity_horizontal_margin">
+        android:padding="@dimen/activity_horizontal_margin">
 
 
         <TextView
@@ -52,7 +52,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="@dimen/citrus_activity_horizontal_margin"
+        android:padding="@dimen/activity_horizontal_margin"
         android:visibility="gone">
 
         <TextView
@@ -73,7 +73,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="@dimen/citrus_activity_horizontal_margin"
+        android:padding="@dimen/activity_horizontal_margin"
         android:visibility="gone">
 
         <TextView

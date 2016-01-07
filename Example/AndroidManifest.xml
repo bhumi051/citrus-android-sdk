@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.citrus.sample"
     android:versionCode="1"
     android:versionName="1.0">
@@ -35,12 +36,9 @@
         <activity
             android:name="com.citrus.sdk.CitrusActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:label="@string/title_activity_citrus"
             android:theme="@style/Theme.AppCompat.Dialog"
-            android:windowSoftInputMode="adjustResize"/>
-        <activity
-            android:name=".Widgets"
-            android:label="@string/title_activity_widgets" />
+            android:windowSoftInputMode="adjustResize"
+            tools:replace="android:windowSoftInputMode" />
         <activity
             android:name=".UIActivity"
             android:configChanges="orientation|keyboard|screenSize"
