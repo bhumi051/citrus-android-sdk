@@ -5,10 +5,10 @@ Welcome to the open-source Android SDK Documentation of Citrus Payments Solution
 ### Download
 #### Update your project’s build.gradle
     
-    compile 'com.citrus.sdk:payment-sdk:3.1.1'
+    compile 'com.citrus.sdk:payment-sdk:3.1.3'
     
 ### If you are using Google Play Services library in your project and if you are facing multidex problem , update build.gradle as below
-    compile ('com.citrus.sdk:payment-sdk:3.1.1') {
+    compile ('com.citrus.sdk:payment-sdk:3.1.3') {
         transitive = false
     }
     
