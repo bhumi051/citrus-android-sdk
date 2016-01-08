@@ -1,5 +1,8 @@
-| Version History<br>Last updated : 21/12/2015 |  Feature Updates|
+| Version History<br>Last updated : 08/01/2016 |  Feature Updates|
 | :-------------: | :------------- |
+| v3.1.3| * Fixed NoClassDefError for Citrus SDK  |
+| | * The issue occurs when using play-services version > 7.8.0. Please refer  <a href="https://code.google.com/p/android/issues/detail?id=187483" target="_blank"> here </a> for more details.|
+| | * We are using play-services version 7.8.0 in Citrus SDK. |
 | v3.1.1| * Removed ic_launcher images from the SDK.  |
 | v3.1.0| * New Link User Extended API  
 | | * New Pay using Citrus Cash|
