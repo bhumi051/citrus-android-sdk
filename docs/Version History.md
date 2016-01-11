@@ -1,5 +1,7 @@
 | Version History<br>Last updated : 08/01/2016 |  Feature Updates|
 | :-------------: | :------------- |
+| v3.1.7| * Added some card validations.  |
+| | * Support for RUPAY card |
 | v3.1.3| * Fixed NoClassDefError for Citrus SDK  |
 | | * The issue occurs when using play-services version > 7.8.0. Please refer  <a href="https://code.google.com/p/android/issues/detail?id=187483" target="_blank"> here </a> for more details.|
 | | * We are using play-services version 7.8.0 in Citrus SDK. |
