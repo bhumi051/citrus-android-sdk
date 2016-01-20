@@ -25,6 +25,7 @@ import android.widget.TextView;
 
 import com.citrus.sdk.Callback;
 import com.citrus.sdk.CitrusClient;
+import com.citrus.sdk.CitrusUser;
 import com.citrus.sdk.response.CitrusError;
 import com.citrus.sdk.response.CitrusResponse;
 
@@ -62,10 +63,23 @@ public class UIActivityFragment extends Fragment implements View.OnClickListener
             @Override
             public void success(Boolean isUserLoggedIn) {
                 if (isUserLoggedIn) {
-                    textMessage.setText("Welcome " + citrusClient.getUserEmailId());
-                    btnWalletPayment.setVisibility(View.VISIBLE);
-                    btnUserManagement.setVisibility(View.GONE);
-                    btnSignout.setVisibility(View.VISIBLE);
+                    citrusClient.getProfileInfo(new Callback<CitrusUser>() {
+                        @Override
+                        public void success(CitrusUser citrusUser) {
+                            textMessage.setText("Welcome " + citrusUser.getEmailId());
+                            btnWalletPayment.setVisibility(View.VISIBLE);
+                            btnUserManagement.setVisibility(View.GONE);
+                            btnSignout.setVisibility(View.VISIBLE);
+                        }
+
+                        @Override
+                        public void error(CitrusError error) {
+                            textMessage.setText("Welcome Back");
+                            btnWalletPayment.setVisibility(View.VISIBLE);
+                            btnUserManagement.setVisibility(View.GONE);
+                            btnSignout.setVisibility(View.VISIBLE);
+                        }
+                    });
                 } else {
                     textMessage.setText("Please Sign In or Sign Up the user.");
                     btnWalletPayment.setVisibility(View.GONE);
@@ -94,7 +108,9 @@ public class UIActivityFragment extends Fragment implements View.OnClickListener
         citrusClient.signOut(new Callback<CitrusResponse>() {
             @Override
             public void success(CitrusResponse citrusResponse) {
-                Utils.showToast(getActivity(), citrusResponse.getMessage());
+//                Utils.showToast(getActivity(), citrusResponse.getMessage());
+
+                ((UIActivity) getActivity()).showSnackBar(citrusResponse.getMessage());
 
                 textMessage.setText("Please Sign In or Sign Up the user.");
                 btnSignout.setVisibility(View.GONE);
@@ -104,7 +120,9 @@ public class UIActivityFragment extends Fragment implements View.OnClickListener
 
             @Override
             public void error(CitrusError error) {
-                Utils.showToast(getActivity(), error.getMessage());
+//                Utils.showToast(getActivity(), error.getMessage());
+
+                ((UIActivity) getActivity()).showSnackBar(error.getMessage());
             }
         });
     }

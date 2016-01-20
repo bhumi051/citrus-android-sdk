@@ -15,7 +15,6 @@ import android.widget.TextView;
 
 import com.citrus.sdk.Callback;
 import com.citrus.sdk.CitrusClient;
-import com.citrus.sdk.CitrusUser;
 import com.citrus.sdk.TransactionResponse;
 import com.citrus.sdk.classes.Amount;
 import com.citrus.sdk.classes.CitrusException;
@@ -92,7 +91,7 @@ public final class NetbankingFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_net_banking, container, false);
 
-        final NetbankingAdapter netbankingAdapter = new NetbankingAdapter(getActivity(),mNetbankingOptionsList);
+        final NetbankingAdapter netbankingAdapter = new NetbankingAdapter(getActivity(), mNetbankingOptionsList);
 
         RecyclerView recylerViewNetbanking = (RecyclerView) view.findViewById(R.id.recycler_view_netbanking);
         recylerViewNetbanking.setAdapter(netbankingAdapter);
@@ -122,7 +121,8 @@ public final class NetbankingFragment extends Fragment {
 
                 @Override
                 public void error(CitrusError error) {
-                    Utils.showToast(getActivity(), error.getMessage());
+//                    Utils.showToast(getActivity(), error.getMessage());
+                    ((UIActivity) getActivity()).showSnackBar(error.getMessage());
                 }
             });
         } else {
@@ -139,7 +139,7 @@ public final class NetbankingFragment extends Fragment {
 
                 @Override
                 public void error(CitrusError error) {
-                    Utils.showToast(getActivity(), error.getMessage());
+                    ((UIActivity) getActivity()).showSnackBar(error.getMessage());
                 }
             });
         }
@@ -190,17 +190,17 @@ public final class NetbankingFragment extends Fragment {
                 } else if (dpRequestType == Utils.DPRequestType.VALIDATE_RULE) {
                     dynamicPricingRequestType = new DynamicPricingRequestType.ValidateRule(amount, netbankingOption, couponCode, alteredAmount, null);
                 }
-//                client.performDynamicPricing(dynamicPricingRequestType, Constants.BILL_URL, new Callback<DynamicPricingResponse>() {
-//                    @Override
-//                    public void success(DynamicPricingResponse dynamicPricingResponse) {
-//                        showPrompt(dynamicPricingResponse);
-//                    }
-//
-//                    @Override
-//                    public void error(CitrusError error) {
-//                        Utils.showToast(getActivity(), error.getMessage());
-//                    }
-//                });
+                client.performDynamicPricing(dynamicPricingRequestType, Constants.BILL_URL, new Callback<DynamicPricingResponse>() {
+                    @Override
+                    public void success(DynamicPricingResponse dynamicPricingResponse) {
+                        showPrompt(dynamicPricingResponse);
+                    }
+
+                    @Override
+                    public void error(CitrusError error) {
+                        ((UIActivity) getActivity()).showSnackBar(error.getMessage());
+                    }
+                });
             } else {
 
                 PaymentType paymentType1;
@@ -212,7 +212,7 @@ public final class NetbankingFragment extends Fragment {
 
                     @Override
                     public void error(CitrusError error) {
-                        Utils.showToast(getActivity(), error.getMessage());
+                        ((UIActivity) getActivity()).showSnackBar(error.getMessage());
                     }
                 };
 
@@ -221,13 +221,16 @@ public final class NetbankingFragment extends Fragment {
                         paymentType1 = new PaymentType.LoadMoney(amount, Constants.RETURN_URL_LOAD_MONEY, netbankingOption);
                         client.loadMoney((PaymentType.LoadMoney) paymentType1, callback);
                     } else if (paymentType == Utils.PaymentType.PG_PAYMENT) {
-                        paymentType1 = new PaymentType.PGPayment(amount, Constants.BILL_URL, netbankingOption, new CitrusUser(client.getUserEmailId(), client.getUserMobileNumber()));
+                        paymentType1 = new PaymentType.PGPayment(amount, Constants.BILL_URL, netbankingOption, null);
                         client.pgPayment((PaymentType.PGPayment) paymentType1, callback);
+                    } else if (paymentType == Utils.PaymentType.NEW_PG_PAYMENT) {
+                        paymentType1 = new PaymentType.PGPayment(amount, Constants.BILL_URL, netbankingOption, null);
+                        client.makePayment((PaymentType.PGPayment) paymentType1, callback);
                     }
                 } catch (CitrusException e) {
                     e.printStackTrace();
 
-                    Utils.showToast(getActivity(), e.getMessage());
+                    ((UIActivity) getActivity()).showSnackBar(e.getMessage());
                 }
             }
         }
@@ -265,12 +268,12 @@ public final class NetbankingFragment extends Fragment {
                     CitrusClient.getInstance(getActivity()).pgPayment(dynamicPricingResponse, new Callback<TransactionResponse>() {
                         @Override
                         public void success(TransactionResponse transactionResponse) {
-                            Utils.showToast(getActivity(), transactionResponse.getMessage());
+                            ((UIActivity) getActivity()).showSnackBar(transactionResponse.getMessage());
                         }
 
                         @Override
                         public void error(CitrusError error) {
-                            Utils.showToast(getActivity(), error.getMessage());
+                            ((UIActivity) getActivity()).showSnackBar(error.getMessage());
                         }
                     });
 

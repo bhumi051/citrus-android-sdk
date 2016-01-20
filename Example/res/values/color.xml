@@ -24,4 +24,8 @@
     -->
     <color name="holo_blue">#FF33B5E5</color>
     <color name="lendimagebg">#dddddd</color>
+
+    <color name="colorPrimary">#FE7D2E</color>
+    <color name="colorPrimaryDark">#CC6626</color>
+    <color name="colorAccent">#fb832a</color>
 </resources>

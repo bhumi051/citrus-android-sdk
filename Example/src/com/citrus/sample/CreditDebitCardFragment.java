@@ -15,7 +15,6 @@ import android.widget.TextView;
 import com.citrus.mobile.CType;
 import com.citrus.sdk.Callback;
 import com.citrus.sdk.CitrusClient;
-import com.citrus.sdk.CitrusUser;
 import com.citrus.sdk.TransactionResponse;
 import com.citrus.sdk.classes.Amount;
 import com.citrus.sdk.classes.CitrusException;
@@ -152,17 +151,17 @@ public class CreditDebitCardFragment extends Fragment implements View.OnClickLis
                 dynamicPricingRequestType = new DynamicPricingRequestType.ValidateRule(amount, cardOption, couponCode, alteredAmount, null);
             }
 
-//            citrusClient.performDynamicPricing(dynamicPricingRequestType, Constants.BILL_URL, new Callback<DynamicPricingResponse>() {
-//                @Override
-//                public void success(DynamicPricingResponse dynamicPricingResponse) {
-//                    showPrompt(dynamicPricingResponse);
-//                }
-//
-//                @Override
-//                public void error(CitrusError error) {
-//                    Utils.showToast(getActivity(), error.getMessage());
-//                }
-//            });
+            citrusClient.performDynamicPricing(dynamicPricingRequestType, Constants.BILL_URL, new Callback<DynamicPricingResponse>() {
+                @Override
+                public void success(DynamicPricingResponse dynamicPricingResponse) {
+                    showPrompt(dynamicPricingResponse);
+                }
+
+                @Override
+                public void error(CitrusError error) {
+                    ((UIActivity) getActivity()).showSnackBar(error.getMessage());
+                }
+            });
         } else {
             PaymentType paymentType;
 
@@ -174,7 +173,7 @@ public class CreditDebitCardFragment extends Fragment implements View.OnClickLis
 
                 @Override
                 public void error(CitrusError error) {
-                    Utils.showToast(getActivity(), error.getMessage());
+                    ((UIActivity) getActivity()).showSnackBar(error.getMessage());
                 }
             };
 
@@ -183,27 +182,30 @@ public class CreditDebitCardFragment extends Fragment implements View.OnClickLis
                     paymentType = new PaymentType.LoadMoney(amount, Constants.RETURN_URL_LOAD_MONEY, cardOption);
                     citrusClient.loadMoney((PaymentType.LoadMoney) paymentType, callback);
                 } else if (this.paymentType == Utils.PaymentType.PG_PAYMENT) {
-                    paymentType = new PaymentType.PGPayment(amount, Constants.BILL_URL, cardOption, new CitrusUser(citrusClient.getUserEmailId(), citrusClient.getUserMobileNumber()));
+                    paymentType = new PaymentType.PGPayment(amount, Constants.BILL_URL, cardOption, null);
                     citrusClient.pgPayment((PaymentType.PGPayment) paymentType, callback);
+                } else if (this.paymentType == Utils.PaymentType.NEW_PG_PAYMENT) {
+                    paymentType = new PaymentType.PGPayment(amount, Constants.BILL_URL, cardOption, null);
+                    citrusClient.makePayment((PaymentType.PGPayment) paymentType, callback);
                 } else if (this.paymentType == Utils.PaymentType.DYNAMIC_PRICING) {
                     DynamicPricingRequestType dynamicPricingRequestType = new DynamicPricingRequestType.SearchAndApplyRule(amount, cardOption, null);
 
-//                    citrusClient.performDynamicPricing(dynamicPricingRequestType, Constants.BILL_URL, new Callback<DynamicPricingResponse>() {
-//                        @Override
-//                        public void success(DynamicPricingResponse dynamicPricingResponse) {
-//                            showPrompt(dynamicPricingResponse);
-//                        }
-//
-//                        @Override
-//                        public void error(CitrusError error) {
-//                            Utils.showToast(getActivity(), error.getMessage());
-//                        }
-//                    });
+                    citrusClient.performDynamicPricing(dynamicPricingRequestType, Constants.BILL_URL, new Callback<DynamicPricingResponse>() {
+                        @Override
+                        public void success(DynamicPricingResponse dynamicPricingResponse) {
+                            showPrompt(dynamicPricingResponse);
+                        }
+
+                        @Override
+                        public void error(CitrusError error) {
+                            ((UIActivity) getActivity()).showSnackBar(error.getMessage());
+                        }
+                    });
                 }
             } catch (CitrusException e) {
                 e.printStackTrace();
 
-                Utils.showToast(getActivity(), e.getMessage());
+                ((UIActivity) getActivity()).showSnackBar(e.getMessage());
             }
         }
     }
@@ -212,12 +214,12 @@ public class CreditDebitCardFragment extends Fragment implements View.OnClickLis
         citrusClient.savePaymentOption(paymentOption, new Callback<CitrusResponse>() {
             @Override
             public void success(CitrusResponse citrusResponse) {
-                Utils.showToast(getActivity(), citrusResponse.getMessage());
+                ((UIActivity) getActivity()).showSnackBar(citrusResponse.getMessage());
             }
 
             @Override
             public void error(CitrusError error) {
-                Utils.showToast(getActivity(), error.getMessage());
+                ((UIActivity) getActivity()).showSnackBar(error.getMessage());
             }
         });
     }
@@ -254,12 +256,12 @@ public class CreditDebitCardFragment extends Fragment implements View.OnClickLis
                     CitrusClient.getInstance(getActivity()).pgPayment(dynamicPricingResponse, new Callback<TransactionResponse>() {
                         @Override
                         public void success(TransactionResponse transactionResponse) {
-                            Utils.showToast(getActivity(), transactionResponse.getMessage());
+                            ((UIActivity) getActivity()).showSnackBar(transactionResponse.getMessage());
                         }
 
                         @Override
                         public void error(CitrusError error) {
-                            Utils.showToast(getActivity(), error.getMessage());
+                            ((UIActivity) getActivity()).showSnackBar(error.getMessage());
                         }
                     });
 

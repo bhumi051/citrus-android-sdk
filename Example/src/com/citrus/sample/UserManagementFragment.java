@@ -27,20 +27,14 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.citrus.mobile.OAuth2GrantType;
 import com.citrus.sdk.Callback;
 import com.citrus.sdk.CitrusClient;
-import com.citrus.sdk.classes.AccessToken;
 import com.citrus.sdk.classes.LinkUserExtendedResponse;
 import com.citrus.sdk.classes.LinkUserPasswordType;
 import com.citrus.sdk.classes.LinkUserSignInType;
 import com.citrus.sdk.response.CitrusError;
 import com.citrus.sdk.response.CitrusResponse;
-import com.google.gson.JsonElement;
-
-import static com.citrus.sdk.classes.Utils.*;
 
 
 /**
@@ -65,6 +59,7 @@ public class UserManagementFragment extends Fragment implements View.OnClickList
 
     private CitrusClient citrusClient = null;
     private Context context = null;
+    private View rootView = null;
 
     private LinkUserExtendedResponse linkUserExtended;
     private static final long RESEND_TIMER = 15000;
@@ -93,9 +88,7 @@ public class UserManagementFragment extends Fragment implements View.OnClickList
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View rootView = inflater.inflate(R.layout.fragment_user_management, container, false);
-
-        context = getActivity();
+        rootView = inflater.inflate(R.layout.fragment_user_management, container, false);
 
         editOtp = (EditText) rootView.findViewById(R.id.edit_otp_id);
         editEmailId = (EditText) rootView.findViewById(R.id.edit_email_id);
@@ -116,6 +109,7 @@ public class UserManagementFragment extends Fragment implements View.OnClickList
         btnResetPassword.setOnClickListener(this);
         btnResend.setOnClickListener(this);
 
+        context = getActivity();
 
         citrusClient = CitrusClient.getInstance(context.getApplicationContext());
 
@@ -169,7 +163,7 @@ public class UserManagementFragment extends Fragment implements View.OnClickList
 
             @Override
             public void error(CitrusError error) {
-                Utils.showToast(context, error.getMessage());
+                ((UIActivity) getActivity()).showSnackBar(error.getMessage());
                 textMessage.setText(error.getMessage());
             }
         });
@@ -183,7 +177,9 @@ public class UserManagementFragment extends Fragment implements View.OnClickList
         citrusClient.signIn(emailId, password, new Callback<CitrusResponse>() {
             @Override
             public void success(CitrusResponse citrusResponse) {
-                Utils.showToast(context, citrusResponse.getMessage());
+//                Utils.showToast(context, citrusResponse.getMessage());
+//                ((UIActivity) getActivity()).showSnackBar(citrusResponse.getMessage());
+                ((UIActivity) getActivity()).showSnackBar(citrusResponse.getMessage());
                 textMessage.setText(citrusResponse.getMessage());
 
                 mListener.onShowWalletScreen();
@@ -191,7 +187,8 @@ public class UserManagementFragment extends Fragment implements View.OnClickList
 
             @Override
             public void error(CitrusError error) {
-                Utils.showToast(context, error.getMessage());
+//                Utils.showToast(context, error.getMessage());
+                ((UIActivity) getActivity()).showSnackBar(error.getMessage());
                 textMessage.setText(error.getMessage());
             }
         });
@@ -205,7 +202,8 @@ public class UserManagementFragment extends Fragment implements View.OnClickList
         citrusClient.signUp(emailId, mobileNo, password, new Callback<CitrusResponse>() {
             @Override
             public void success(CitrusResponse citrusResponse) {
-                Utils.showToast(context, citrusResponse.getMessage());
+//                Utils.showToast(context, citrusResponse.getMessage());
+                ((UIActivity) getActivity()).showSnackBar(citrusResponse.getMessage());
                 textMessage.setText(citrusResponse.getMessage());
 
                 btnSignUp.setVisibility(View.GONE);
@@ -216,7 +214,8 @@ public class UserManagementFragment extends Fragment implements View.OnClickList
 
             @Override
             public void error(CitrusError error) {
-                Utils.showToast(context, error.getMessage());
+//                Utils.showToast(context, error.getMessage());
+                ((UIActivity) getActivity()).showSnackBar(error.getMessage());
                 textMessage.setText(error.getMessage());
             }
         });
@@ -228,14 +227,14 @@ public class UserManagementFragment extends Fragment implements View.OnClickList
         citrusClient.resetPassword(emailId, new Callback<CitrusResponse>() {
             @Override
             public void success(CitrusResponse citrusResponse) {
-                Utils.showToast(context, citrusResponse.getMessage());
-//                textMessage.setText(citrusResponse.getMessage());
+                ((UIActivity) getActivity()).showSnackBar(citrusResponse.getMessage());
+                textMessage.setText(citrusResponse.getMessage());
             }
 
             @Override
             public void error(CitrusError error) {
-                Utils.showToast(context, error.getMessage());
-//                textMessage.setText(error.getMessage());
+                ((UIActivity) getActivity()).showSnackBar(error.getMessage());
+                textMessage.setText(error.getMessage());
             }
         });
     }
@@ -304,7 +303,8 @@ public class UserManagementFragment extends Fragment implements View.OnClickList
         citrusClient.linkUserExtendedSignIn(linkUserExtended, linkUserPasswordType, linkUserPassword, new Callback<CitrusResponse>() {
             @Override
             public void success(CitrusResponse citrusResponse) {
-                Utils.showToast(context, citrusResponse.getMessage());
+//                Utils.showToast(context, citrusResponse.getMessage());
+                ((UIActivity) getActivity()).showSnackBar(citrusResponse.getMessage());
                 textMessage.setText(citrusResponse.getMessage());
                 clearPasswordFields();
 
@@ -313,7 +313,8 @@ public class UserManagementFragment extends Fragment implements View.OnClickList
 
             @Override
             public void error(CitrusError error) {
-                Utils.showToast(context, error.getMessage());
+//                Utils.showToast(context, error.getMessage());
+                ((UIActivity) getActivity()).showSnackBar(error.getMessage());
                 textMessage.setText(error.getMessage());
                 clearPasswordFields();
             }
@@ -338,6 +339,7 @@ public class UserManagementFragment extends Fragment implements View.OnClickList
             editPassword.setVisibility(View.VISIBLE);
             btnResend.setVisibility(View.VISIBLE);
             editEmailId.setEnabled(false);
+            editEmailId.setHint("");
             editMobileNo.setEnabled(false);
 
             Handler handler = new Handler();
@@ -355,6 +357,7 @@ public class UserManagementFragment extends Fragment implements View.OnClickList
                 case SignInTypeMOtpOrPassword:
                     // Show Mobile otp and password sign in screen
                     editOtp.setHint("Mobile OTP");
+                    rootView.findViewById(R.id.oRTextViewId).setVisibility(View.VISIBLE);
                     break;
                 case SignInTypeMOtp:
                     // Show Mobile otp sign in screen
@@ -364,6 +367,7 @@ public class UserManagementFragment extends Fragment implements View.OnClickList
                 case SignInTypeEOtpOrPassword:
                     // Show Email otp and password sign in screen
                     editOtp.setHint("Email OTP");
+                    rootView.findViewById(R.id.oRTextViewId).setVisibility(View.VISIBLE);
                     break;
                 case SignInTypeEOtp:
                     // Show Email otp sign in screen

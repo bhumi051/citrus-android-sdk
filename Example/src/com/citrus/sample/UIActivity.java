@@ -17,10 +17,13 @@ package com.citrus.sample;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
+import android.view.Gravity;
 import android.view.View;
+import android.widget.FrameLayout;
 
 import com.citrus.sdk.Callback;
 import com.citrus.sdk.CitrusClient;
@@ -35,17 +38,21 @@ import com.citrus.sdk.response.CitrusResponse;
 import com.citrus.sdk.response.PaymentResponse;
 
 
-public class UIActivity extends ActionBarActivity implements UserManagementFragment.UserManagementInteractionListener, WalletFragmentListener {
+public class UIActivity extends AppCompatActivity implements UserManagementFragment.UserManagementInteractionListener, WalletFragmentListener {
 
     private FragmentManager fragmentManager = null;
     private Context mContext = this;
     private CitrusClient citrusClient = null;
     private CitrusConfig citrusConfig = null;
+    private FrameLayout frameLayout = null;
+    private View snackBarParent = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ui);
+
+        frameLayout = (FrameLayout) findViewById(R.id.container);
 
         fragmentManager = getSupportFragmentManager();
 
@@ -54,19 +61,28 @@ public class UIActivity extends ActionBarActivity implements UserManagementFragm
 
         citrusClient.init(Constants.SIGNUP_ID, Constants.SIGNUP_SECRET, Constants.SIGNIN_ID, Constants.SIGNIN_SECRET, Constants.VANITY, Constants.environment);
 
+        citrusClient.enableAutoOtpReading(true);
         citrusConfig = CitrusConfig.getInstance();
         citrusConfig.setColorPrimary(Constants.colorPrimary);
         citrusConfig.setColorPrimaryDark(Constants.colorPrimaryDark);
         citrusConfig.setTextColorPrimary(Constants.textColor);
+        citrusConfig.setAutoCVVEnabled(true);
 
         showUI();
+
+
+        snackBarParent = new View(this);
+        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, 200);
+        layoutParams.gravity = Gravity.BOTTOM;
+        snackBarParent.setLayoutParams(layoutParams);
+        frameLayout.addView(snackBarParent);
     }
 
     private void showUI() {
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction()
                 .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
                 .replace(R.id.container, UIActivityFragment.newInstance());
-
+        fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
     }
 
@@ -99,7 +115,8 @@ public class UIActivity extends ActionBarActivity implements UserManagementFragm
     @Override
     public void onPaymentComplete(TransactionResponse transactionResponse) {
         if (transactionResponse != null) {
-            Utils.showToast(mContext, transactionResponse.getMessage());
+//            Utils.showToast(mContext, transactionResponse.getMessage());
+            showSnackBar(transactionResponse.getMessage());
         }
     }
 
@@ -122,6 +139,27 @@ public class UIActivity extends ActionBarActivity implements UserManagementFragm
             } catch (CitrusException e) {
                 e.printStackTrace();
 
+//                Utils.showToast(UIActivity.this, e.getMessage());
+                showSnackBar(e.getMessage());
+            }
+        } else if (paymentType == Utils.PaymentType.NEW_CITRUS_CASH) {
+
+            try {
+                citrusClient.prepaidPay(new PaymentType.CitrusCash(amount, Constants.BILL_URL), new Callback<PaymentResponse>() {
+                    @Override
+                    public void success(PaymentResponse paymentResponse) {
+                        Utils.showToast(getApplicationContext(), paymentResponse.getMessage());
+                    }
+
+                    @Override
+                    public void error(CitrusError error) {
+                        Utils.showToast(getApplicationContext(), error.getMessage());
+                    }
+
+                });
+            } catch (CitrusException e) {
+                e.printStackTrace();
+
                 Utils.showToast(UIActivity.this, e.getMessage());
             }
         } else {
@@ -135,7 +173,8 @@ public class UIActivity extends ActionBarActivity implements UserManagementFragm
     }
 
     @Override
-    public void onPaymentTypeSelected(Utils.DPRequestType dpRequestType, Amount originalAmount, String couponCode, Amount alteredAmount) {
+    public void onPaymentTypeSelected(Utils.DPRequestType dpRequestType, Amount
+            originalAmount, String couponCode, Amount alteredAmount) {
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction()
                 .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right)
                 .replace(R.id.container, CardPaymentFragment.newInstance(dpRequestType, originalAmount, couponCode, alteredAmount));
@@ -149,29 +188,52 @@ public class UIActivity extends ActionBarActivity implements UserManagementFragm
         citrusClient.saveCashoutInfo(cashoutInfo, new Callback<CitrusResponse>() {
             @Override
             public void success(CitrusResponse citrusResponse) {
-                Utils.showToast(getApplicationContext(), citrusResponse.getMessage());
+//                Utils.showToast(getApplicationContext(), citrusResponse.getMessage());
+                showSnackBar(citrusResponse.getMessage());
             }
 
             @Override
             public void error(CitrusError error) {
-                Utils.showToast(getApplicationContext(), error.getMessage());
+//                Utils.showToast(getApplicationContext(), error.getMessage());
+                showSnackBar(error.getMessage());
             }
         });
 
         citrusClient.cashout(cashoutInfo, new Callback<PaymentResponse>() {
             @Override
             public void success(PaymentResponse paymentResponse) {
-                Utils.showToast(getApplicationContext(), paymentResponse.toString());
+//                Utils.showToast(getApplicationContext(), paymentResponse.toString());
+                String message = "";
+                if (paymentResponse.getStatus() == CitrusResponse.Status.SUCCESSFUL) {
+                    message = "Cashout Was Successful";
+                }
+                showSnackBar(message);
             }
 
             @Override
             public void error(CitrusError error) {
-                Utils.showToast(getApplicationContext(), error.getMessage());
+//                Utils.showToast(getApplicationContext(), error.getMessage());
+                showSnackBar(error.getMessage());
             }
         });
     }
 
+    @Override
+    public void onUpdateProfileSelected() {
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction()
+                .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right)
+                .replace(R.id.container, UpdateProfileFragment.newInstance());
+
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+    }
+
     public void onWalletPaymentClicked(View view) {
         onShowWalletScreen();
+    }
+
+    @Override
+    public void showSnackBar(String message) {
+        Snackbar.make(snackBarParent, message, Snackbar.LENGTH_LONG).show();
     }
 }

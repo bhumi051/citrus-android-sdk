@@ -45,11 +45,25 @@
             android:text="Pay Using Citrus Cash" />
 
         <Button
+            android:id="@+id/btn_new_pay_using_cash"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/button_margin"
+            android:text="New Pay Using Citrus Cash" />
+
+        <Button
             android:id="@+id/btn_pg_payment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/button_margin"
             android:text="PG Payment" />
+
+        <Button
+            android:id="@+id/btn_new_pg_payment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/button_margin"
+            android:text="New PG Payment" />
 
         <Button
             android:id="@+id/btn_get_cashout_info"
@@ -78,6 +92,22 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/button_margin"
             android:text="Perform Dynamic Pricing" />
+
+        <Button
+            android:id="@+id/btn_update_profile"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="@dimen/button_margin"
+            android:text="Update Profile" />
+
+        <Button
+            android:id="@+id/btn_get_profile"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="@dimen/button_margin"
+            android:text="GetProfile" />
 
     </LinearLayout>
 </ScrollView>

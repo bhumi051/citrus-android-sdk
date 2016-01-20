@@ -33,9 +33,11 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.citrus.sdk.Callback;
 import com.citrus.sdk.CitrusClient;
+import com.citrus.sdk.CitrusUser;
 import com.citrus.sdk.classes.Amount;
 import com.citrus.sdk.classes.CashoutInfo;
 import com.citrus.sdk.response.CitrusError;
@@ -44,6 +46,8 @@ import com.citrus.sdk.response.PaymentResponse;
 
 import static com.citrus.sample.Utils.PaymentType.CITRUS_CASH;
 import static com.citrus.sample.Utils.PaymentType.LOAD_MONEY;
+import static com.citrus.sample.Utils.PaymentType.NEW_CITRUS_CASH;
+import static com.citrus.sample.Utils.PaymentType.NEW_PG_PAYMENT;
 import static com.citrus.sample.Utils.PaymentType.PG_PAYMENT;
 
 
@@ -69,6 +73,10 @@ public class WalletPaymentFragment extends Fragment implements View.OnClickListe
     private Button btnWithdraw = null;
     private Button btnSendMoney = null;
     private Button btnPerformDP = null;
+    private Button btnUpdateProfile = null;
+    private Button btnGetProfile = null;
+    private Button btnNewPayUsingCash = null;
+    private Button btnNewPGPayment = null;
 
     /**
      * Use this factory method to create a new instance of
@@ -105,22 +113,32 @@ public class WalletPaymentFragment extends Fragment implements View.OnClickListe
 
         btnGetBalance = (Button) rootView.findViewById(R.id.btn_get_balance);
         btnLoadMoney = (Button) rootView.findViewById(R.id.btn_load_money);
+        btnNewPayUsingCash = (Button) rootView.findViewById(R.id.btn_new_pay_using_cash);
         btnPayUsingCash = (Button) rootView.findViewById(R.id.btn_pay_using_cash);
+        btnNewPGPayment = (Button) rootView.findViewById(R.id.btn_new_pg_payment);
         btnPGPayment = (Button) rootView.findViewById(R.id.btn_pg_payment);
         btnWithdraw = (Button) rootView.findViewById(R.id.btn_cashout);
         btnGetWithdrawInfo = (Button) rootView.findViewById(R.id.btn_get_cashout_info);
         btnSendMoney = (Button) rootView.findViewById(R.id.btn_send_money);
         btnPerformDP = (Button) rootView.findViewById(R.id.btn_perform_dp);
 
+        btnUpdateProfile = (Button) rootView.findViewById(R.id.btn_update_profile);
+        btnGetProfile = (Button) rootView.findViewById(R.id.btn_get_profile);
+
         btnGetBalance.setOnClickListener(this);
         btnLoadMoney.setOnClickListener(this);
+        btnNewPayUsingCash.setOnClickListener(this);
         btnPayUsingCash.setOnClickListener(this);
+        btnNewPGPayment.setOnClickListener(this);
         btnPGPayment.setOnClickListener(this);
         btnGetWithdrawInfo.setOnClickListener(this);
         btnWithdraw.setOnClickListener(this);
         btnSendMoney.setOnClickListener(this);
         btnPerformDP.setOnClickListener(this);
-        btnPerformDP.setVisibility(View.GONE);
+        btnUpdateProfile.setOnClickListener(this);
+        btnGetProfile.setOnClickListener(this);
+
+        btnPerformDP.setVisibility(View.VISIBLE);
 
         return rootView;
     }
@@ -152,8 +170,14 @@ public class WalletPaymentFragment extends Fragment implements View.OnClickListe
             case R.id.btn_load_money:
                 loadMoney();
                 break;
+            case R.id.btn_new_pay_using_cash:
+                payUsingNewCash();
+                break;
             case R.id.btn_pay_using_cash:
                 payUsingCash();
+                break;
+            case R.id.btn_new_pg_payment:
+                newPgPayment();
                 break;
             case R.id.btn_pg_payment:
                 pgPayment();
@@ -170,7 +194,17 @@ public class WalletPaymentFragment extends Fragment implements View.OnClickListe
             case R.id.btn_perform_dp:
                 performDP();
                 break;
+            case R.id.btn_update_profile:
+                updateProfile();
+                break;
+            case R.id.btn_get_profile:
+                getProfile();
+                break;
         }
+    }
+
+    private void updateProfile() {
+        mListener.onUpdateProfileSelected();
     }
 
     private void getBalance() {
@@ -178,12 +212,14 @@ public class WalletPaymentFragment extends Fragment implements View.OnClickListe
         mCitrusClient.getBalance(new Callback<Amount>() {
             @Override
             public void success(Amount amount) {
-                Utils.showToast(mContext, "Balance : " + amount.getValue());
+//                Utils.showToast(mContext, "Balance : " + amount.getValue());
+                ((UIActivity) getActivity()).showSnackBar("Balance : " + amount.getValueAsDouble());
             }
 
             @Override
             public void error(CitrusError error) {
-                Utils.showToast(mContext, error.getMessage());
+//                Utils.showToast(mContext, error.getMessage());
+                ((UIActivity) getActivity()).showSnackBar(error.getMessage());
             }
         });
     }
@@ -192,8 +228,16 @@ public class WalletPaymentFragment extends Fragment implements View.OnClickListe
         showPrompt(LOAD_MONEY);
     }
 
+    private void payUsingNewCash() {
+        showPrompt(NEW_CITRUS_CASH);
+    }
+
     private void payUsingCash() {
         showPrompt(CITRUS_CASH);
+    }
+
+    private void newPgPayment() {
+        showPrompt(NEW_PG_PAYMENT);
     }
 
     private void pgPayment() {
@@ -208,12 +252,14 @@ public class WalletPaymentFragment extends Fragment implements View.OnClickListe
         mCitrusClient.getCashoutInfo(new Callback<CashoutInfo>() {
             @Override
             public void success(CashoutInfo cashoutInfo) {
-                Utils.showToast(getActivity(), cashoutInfo.toString());
+//                Utils.showToast(getActivity(), cashoutInfo.toString());
+                ((UIActivity) getActivity()).showSnackBar(cashoutInfo.toString());
             }
 
             @Override
             public void error(CitrusError error) {
-                Utils.showToast(getActivity(), error.getMessage());
+//                Utils.showToast(getActivity(), error.getMessage());
+                ((UIActivity) getActivity()).showSnackBar(error.getMessage());
             }
         });
     }
@@ -237,10 +283,12 @@ public class WalletPaymentFragment extends Fragment implements View.OnClickListe
                 positiveButtonText = "Load Money";
                 break;
             case CITRUS_CASH:
+            case NEW_CITRUS_CASH:
                 message = "Please enter the transaction amount.";
                 positiveButtonText = "Pay";
                 break;
             case PG_PAYMENT:
+            case NEW_PG_PAYMENT:
                 message = "Please enter the transaction amount.";
                 positiveButtonText = "Make Payment";
                 break;
@@ -253,7 +301,7 @@ public class WalletPaymentFragment extends Fragment implements View.OnClickListe
         alert.setMessage(message);
         // Set an EditText view to get user input
         final EditText input = new EditText(getActivity());
-        input.setInputType(InputType.TYPE_CLASS_NUMBER);
+        input.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
         alert.setView(input);
         alert.setPositiveButton(positiveButtonText, new DialogInterface.OnClickListener() {
 
@@ -291,10 +339,13 @@ public class WalletPaymentFragment extends Fragment implements View.OnClickListe
         final EditText editAmount = new EditText(getActivity());
         final TextView labelAccountNo = new TextView(getActivity());
         final EditText editAccountNo = new EditText(getActivity());
+        editAccountNo.setSingleLine(true);
         final TextView labelAccountHolderName = new TextView(getActivity());
         final EditText editAccountHolderName = new EditText(getActivity());
+        editAccountHolderName.setSingleLine(true);
         final TextView labelIfscCode = new TextView(getActivity());
         final EditText editIfscCode = new EditText(getActivity());
+        editIfscCode.setSingleLine(true);
 
         labelAmount.setText("Withdrawal Amount");
         labelAccountNo.setText("Account Number");
@@ -322,7 +373,10 @@ public class WalletPaymentFragment extends Fragment implements View.OnClickListe
         linearLayout.addView(labelIfscCode);
         linearLayout.addView(editIfscCode);
 
-        editAmount.setInputType(InputType.TYPE_CLASS_NUMBER);
+        int paddingPx = Utils.getSizeInPx(getActivity(), 32);
+        linearLayout.setPadding(paddingPx, paddingPx, paddingPx, paddingPx);
+
+        editAmount.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
 
         alert.setTitle("Withdraw Money To Your Account");
         alert.setMessage(message);
@@ -369,6 +423,9 @@ public class WalletPaymentFragment extends Fragment implements View.OnClickListe
         final EditText editMobileNo = new EditText(getActivity());
         final TextView labelMessage = new TextView(getActivity());
         final EditText editMessage = new EditText(getActivity());
+        editAmount.setSingleLine(true);
+        editMobileNo.setSingleLine(true);
+        editMessage.setSingleLine(true);
 
         labelAmount.setText("Amount");
         labelMobileNo.setText("Enter Mobile No of Friend");
@@ -391,7 +448,10 @@ public class WalletPaymentFragment extends Fragment implements View.OnClickListe
         linearLayout.addView(labelMessage);
         linearLayout.addView(editMessage);
 
-        editAmount.setInputType(InputType.TYPE_CLASS_NUMBER);
+        int paddingPx = Utils.getSizeInPx(getActivity(), 32);
+        linearLayout.setPadding(paddingPx, paddingPx, paddingPx, paddingPx);
+
+        editAmount.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
         editMobileNo.setInputType(InputType.TYPE_CLASS_NUMBER);
         alert.setTitle("Send Money In A Flash");
         alert.setMessage(message);
@@ -407,12 +467,14 @@ public class WalletPaymentFragment extends Fragment implements View.OnClickListe
                 mCitrusClient.sendMoneyToMoblieNo(new Amount(amount), mobileNo, message, new Callback<PaymentResponse>() {
                     @Override
                     public void success(PaymentResponse paymentResponse) {
-                        Utils.showToast(getActivity(), paymentResponse.getStatus() == CitrusResponse.Status.SUCCESSFUL ? "Sent Money Successfully." : "Failed To Send the Money");
+//                        Utils.showToast(getActivity(), paymentResponse.getStatus() == CitrusResponse.Status.SUCCESSFUL ? "Sent Money Successfully." : "Failed To Send the Money");
+                        ((UIActivity) getActivity()).showSnackBar(paymentResponse.getStatus() == CitrusResponse.Status.SUCCESSFUL ? "Sent Money Successfully." : "Failed To Send the Money");
                     }
 
                     @Override
                     public void error(CitrusError error) {
-                        Utils.showToast(getActivity(), error.getMessage());
+//                        Utils.showToast(getActivity(), error.getMessage());
+                        ((UIActivity) getActivity()).showSnackBar(error.getMessage());
                     }
                 });
                 // Hide the keyboard.
@@ -503,6 +565,20 @@ public class WalletPaymentFragment extends Fragment implements View.OnClickListe
 
         editTransactionAmount.requestFocus();
         alert.show();
+    }
+
+    private void getProfile() {
+        mCitrusClient.getProfileInfo(new Callback<CitrusUser>() {
+            @Override
+            public void success(CitrusUser citrusUser) {
+                Toast.makeText(mContext, citrusUser.toString(), Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void error(CitrusError error) {
+
+            }
+        });
     }
 }
 

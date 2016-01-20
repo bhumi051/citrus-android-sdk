@@ -7,7 +7,9 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.InputFilter;
 import android.text.InputType;
+import android.text.method.PasswordTransformationMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +20,6 @@ import android.widget.TextView;
 
 import com.citrus.sdk.Callback;
 import com.citrus.sdk.CitrusClient;
-import com.citrus.sdk.CitrusUser;
 import com.citrus.sdk.TransactionResponse;
 import com.citrus.sdk.classes.Amount;
 import com.citrus.sdk.classes.CitrusException;
@@ -82,7 +83,7 @@ public class SavedOptionsFragment extends Fragment {
             alteredAmount = bundle.getParcelable("alteredAmount");
             couponCode = bundle.getString("couponCode");
 
-            walletList = new ArrayList<PaymentOption>();
+            walletList = new ArrayList<>();
         }
     }
 
@@ -146,7 +147,8 @@ public class SavedOptionsFragment extends Fragment {
 
             @Override
             public void error(CitrusError error) {
-                Utils.showToast(getActivity(), error.getMessage());
+//                Utils.showToast(getActivity(), error.getMessage());
+                ((UIActivity) getActivity()).showSnackBar(error.getMessage());
             }
         });
     }
@@ -168,7 +170,17 @@ public class SavedOptionsFragment extends Fragment {
             PaymentOption paymentOption = getItem(position);
 
             if (paymentOption instanceof CardOption) {
-                showPrompt(paymentType, paymentOption);
+                if (citrusClient.isCVVPresent(paymentOption.getToken())) {
+                    if(paymentType == Utils.PaymentType.NEW_PG_PAYMENT) {
+                        proceedToFastMakePayment(paymentType, paymentOption);
+
+                    }else {
+                        proceedToFastPayment(paymentType, paymentOption);
+                    }
+                } else {
+                    showPrompt(paymentType, paymentOption);
+                }
+
             } else {
                 proceedToPayment(paymentType, paymentOption);
             }
@@ -181,7 +193,8 @@ public class SavedOptionsFragment extends Fragment {
             citrusClient.deletePaymentOption(paymentOption, new Callback<CitrusResponse>() {
                 @Override
                 public void success(CitrusResponse citrusResponse) {
-                    Utils.showToast(getActivity(), citrusResponse.getMessage());
+//                    Utils.showToast(getActivity(), citrusResponse.getMessage());
+                    ((UIActivity) getActivity()).showSnackBar(citrusResponse.getMessage());
 
                     walletList.clear();
                     savedOptionsAdapter.notifyDataSetChanged();
@@ -190,7 +203,8 @@ public class SavedOptionsFragment extends Fragment {
 
                 @Override
                 public void error(CitrusError error) {
-                    Utils.showToast(getActivity(), error.getMessage());
+//                    Utils.showToast(getActivity(), error.getMessage());
+                    ((UIActivity) getActivity()).showSnackBar(error.getMessage());
                 }
             });
         }
@@ -209,17 +223,65 @@ public class SavedOptionsFragment extends Fragment {
                 dynamicPricingRequestType = new DynamicPricingRequestType.ValidateRule(amount, paymentOption, couponCode, alteredAmount, null);
             }
 
-//            citrusClient.performDynamicPricing(dynamicPricingRequestType, Constants.BILL_URL, new Callback<DynamicPricingResponse>() {
-//                @Override
-//                public void success(DynamicPricingResponse dynamicPricingResponse) {
-//                    showPrompt(dynamicPricingResponse);
-//                }
-//
-//                @Override
-//                public void error(CitrusError error) {
-//                    Utils.showToast(getActivity(), error.getMessage());
-//                }
-//            });
+            citrusClient.performDynamicPricing(dynamicPricingRequestType, Constants.BILL_URL, new Callback<DynamicPricingResponse>() {
+                @Override
+                public void success(DynamicPricingResponse dynamicPricingResponse) {
+                    showPrompt(dynamicPricingResponse);
+                }
+
+                @Override
+                public void error(CitrusError error) {
+                    ((UIActivity) getActivity()).showSnackBar(error.getMessage());
+                }
+            });
+        } else {
+
+            PaymentType paymentType1;
+
+            Callback<TransactionResponse> callback = new Callback<TransactionResponse>() {
+                @Override
+                public void success(TransactionResponse transactionResponse) {
+                    ((UIActivity) getActivity()).onPaymentComplete(transactionResponse);
+                }
+
+                @Override
+                public void error(CitrusError error) {
+                    ((UIActivity) getActivity()).showSnackBar(error.getMessage());
+                }
+            };
+
+            try {
+                if (paymentType == Utils.PaymentType.LOAD_MONEY) {
+                    paymentType1 = new PaymentType.LoadMoney(amount, Constants.RETURN_URL_LOAD_MONEY, paymentOption);
+                    citrusClient.loadMoney((PaymentType.LoadMoney) paymentType1, callback);
+                } else if (paymentType == Utils.PaymentType.PG_PAYMENT) {
+                    paymentType1 = new PaymentType.PGPayment(amount, Constants.BILL_URL, paymentOption, null);
+                    citrusClient.pgPayment((PaymentType.PGPayment) paymentType1, callback);
+                } else if (this.paymentType == Utils.PaymentType.NEW_PG_PAYMENT) {
+                    paymentType1 = new PaymentType.PGPayment(amount, Constants.BILL_URL, paymentOption, null);
+                    citrusClient.makePayment((PaymentType.PGPayment) paymentType1, callback);
+                }
+            } catch (CitrusException e) {
+                e.printStackTrace();
+                ((UIActivity) getActivity()).showSnackBar(e.getMessage());
+            }
+        }
+    }
+
+
+    private void proceedToFastPayment(Utils.PaymentType paymentType, PaymentOption paymentOption) {
+
+        if (paymentType == Utils.PaymentType.DYNAMIC_PRICING) {
+            DynamicPricingRequestType dynamicPricingRequestType = null;
+
+            if (dpRequestType == Utils.DPRequestType.SEARCH_AND_APPLY) {
+                dynamicPricingRequestType = new DynamicPricingRequestType.SearchAndApplyRule(amount, paymentOption, null);
+            } else if (dpRequestType == Utils.DPRequestType.CALCULATE_PRICING) {
+                dynamicPricingRequestType = new DynamicPricingRequestType.CalculatePrice(amount, paymentOption, couponCode, null);
+            } else if (dpRequestType == Utils.DPRequestType.VALIDATE_RULE) {
+                dynamicPricingRequestType = new DynamicPricingRequestType.ValidateRule(amount, paymentOption, couponCode, alteredAmount, null);
+            }
+
         } else {
 
             PaymentType paymentType1;
@@ -239,10 +301,57 @@ public class SavedOptionsFragment extends Fragment {
             try {
                 if (paymentType == Utils.PaymentType.LOAD_MONEY) {
                     paymentType1 = new PaymentType.LoadMoney(amount, Constants.RETURN_URL_LOAD_MONEY, paymentOption);
-                    citrusClient.loadMoney((PaymentType.LoadMoney) paymentType1, callback);
+                    citrusClient.loadMoneyWithoutCVV((PaymentType.LoadMoney) paymentType1, callback);
                 } else if (paymentType == Utils.PaymentType.PG_PAYMENT) {
-                    paymentType1 = new PaymentType.PGPayment(amount, Constants.BILL_URL, paymentOption, new CitrusUser(citrusClient.getUserEmailId(), citrusClient.getUserMobileNumber()));
-                    citrusClient.pgPayment((PaymentType.PGPayment) paymentType1, callback);
+                    paymentType1 = new PaymentType.PGPayment(amount, Constants.BILL_URL, paymentOption, null);
+                    citrusClient.pgPaymentWithoutCVV((PaymentType.PGPayment) paymentType1, callback);
+                }
+            } catch (CitrusException e) {
+                e.printStackTrace();
+
+                Utils.showToast(getActivity(), e.getMessage());
+            }
+        }
+    }
+
+
+
+    private void proceedToFastMakePayment(Utils.PaymentType paymentType, PaymentOption paymentOption) {
+
+        if (paymentType == Utils.PaymentType.DYNAMIC_PRICING) {
+            DynamicPricingRequestType dynamicPricingRequestType = null;
+
+            if (dpRequestType == Utils.DPRequestType.SEARCH_AND_APPLY) {
+                dynamicPricingRequestType = new DynamicPricingRequestType.SearchAndApplyRule(amount, paymentOption, null);
+            } else if (dpRequestType == Utils.DPRequestType.CALCULATE_PRICING) {
+                dynamicPricingRequestType = new DynamicPricingRequestType.CalculatePrice(amount, paymentOption, couponCode, null);
+            } else if (dpRequestType == Utils.DPRequestType.VALIDATE_RULE) {
+                dynamicPricingRequestType = new DynamicPricingRequestType.ValidateRule(amount, paymentOption, couponCode, alteredAmount, null);
+            }
+
+        } else {
+
+            PaymentType paymentType1;
+
+            Callback<TransactionResponse> callback = new Callback<TransactionResponse>() {
+                @Override
+                public void success(TransactionResponse transactionResponse) {
+                    ((UIActivity) getActivity()).onPaymentComplete(transactionResponse);
+                }
+
+                @Override
+                public void error(CitrusError error) {
+                    Utils.showToast(getActivity(), error.getMessage());
+                }
+            };
+
+            try {
+                if (paymentType == Utils.PaymentType.LOAD_MONEY) {
+                    paymentType1 = new PaymentType.LoadMoney(amount, Constants.RETURN_URL_LOAD_MONEY, paymentOption);
+                    citrusClient.loadMoneyWithoutCVV((PaymentType.LoadMoney) paymentType1, callback);
+                } else if (paymentType == Utils.PaymentType.NEW_PG_PAYMENT) {
+                    paymentType1 = new PaymentType.PGPayment(amount, Constants.BILL_URL, paymentOption, null);
+                    citrusClient.makePaymentWithoutCVV((PaymentType.PGPayment) paymentType1, callback);
                 }
             } catch (CitrusException e) {
                 e.printStackTrace();
@@ -261,6 +370,10 @@ public class SavedOptionsFragment extends Fragment {
         // Set an EditText view to get user input
         final EditText input = new EditText(getActivity());
         input.setInputType(InputType.TYPE_CLASS_NUMBER);
+        input.setTransformationMethod(PasswordTransformationMethod.getInstance());
+        InputFilter[] FilterArray = new InputFilter[1];
+        FilterArray[0] = new InputFilter.LengthFilter(4);
+        input.setFilters(FilterArray);
         alert.setView(input);
         alert.setPositiveButton(positiveButtonText, new DialogInterface.OnClickListener() {
 
@@ -320,12 +433,12 @@ public class SavedOptionsFragment extends Fragment {
                     CitrusClient.getInstance(getActivity()).pgPayment(dynamicPricingResponse, new Callback<TransactionResponse>() {
                         @Override
                         public void success(TransactionResponse transactionResponse) {
-                            Utils.showToast(getActivity(), transactionResponse.getMessage());
+                            ((UIActivity) getActivity()).showSnackBar(transactionResponse.getMessage());
                         }
 
                         @Override
                         public void error(CitrusError error) {
-                            Utils.showToast(getActivity(), error.getMessage());
+                            ((UIActivity) getActivity()).showSnackBar(error.getMessage());
                         }
                     });
 

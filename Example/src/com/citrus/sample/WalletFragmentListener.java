@@ -16,4 +16,7 @@ public interface WalletFragmentListener {
 
     void onCashoutSelected(CashoutInfo cashoutInfo);
 
+    void onUpdateProfileSelected();
+
+    void showSnackBar(String message);
 }

@@ -27,11 +27,18 @@ public class Utils {
         Toast.makeText(context.getApplicationContext(), message, Toast.LENGTH_SHORT).show();
     }
 
-    public static enum PaymentType {
-        LOAD_MONEY, CITRUS_CASH, PG_PAYMENT, DYNAMIC_PRICING;
+    public enum PaymentType {
+        LOAD_MONEY, NEW_CITRUS_CASH, CITRUS_CASH, NEW_PG_PAYMENT, PG_PAYMENT, DYNAMIC_PRICING;
     }
 
     public enum DPRequestType {
         SEARCH_AND_APPLY, CALCULATE_PRICING, VALIDATE_RULE;
+    }
+
+    public static int getSizeInPx(Context context, int sizeInDP) {
+        float density = context.getResources().getDisplayMetrics().density;
+        float px = sizeInDP * density;
+
+        return (int) px;
     }
 }

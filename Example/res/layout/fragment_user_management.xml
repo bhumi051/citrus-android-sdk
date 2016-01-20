@@ -5,17 +5,17 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context="com.citrus.sample.UserManagementFragment">
+        android:layout_height="wrap_content"
+        tools:mContext="com.citrus.sample.UserManagementFragment">
 
         <EditText
             android:id="@+id/edit_email_id"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/button_margin"
-            android:hint="Enter Email Id"
+            android:hint="@string/enter_email_text"
             android:inputType="textEmailAddress"
-            android:text="developercitrus@mailinator.com" />
+            android:text="@string/dummy_email_hint" />
 
         <EditText
             android:id="@+id/edit_mobile_no"
@@ -23,9 +23,9 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/edit_email_id"
             android:layout_margin="@dimen/button_margin"
-            android:hint="Enter Mobile No"
+            android:hint="@string/enter_mobile_text"
             android:inputType="number"
-            android:text="9769507476" />
+            android:text="@string/dummy_mobile_hint" />
 
         <Button
             android:id="@+id/btn_link_user"
@@ -33,7 +33,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/edit_mobile_no"
             android:layout_margin="@dimen/button_margin"
-            android:text="Is Citrus Member?" />
+            android:text="@string/is_citrus_member_text" />
 
         <EditText
             android:id="@+id/edit_password"
@@ -42,10 +42,23 @@
             android:layout_below="@id/btn_link_user"
             android:layout_margin="@dimen/button_margin"
             android:layout_marginTop="@dimen/button_margin"
-            android:hint="Password"
+            android:hint="@string/password_hint"
             android:inputType="textPassword"
             android:visibility="gone" />
         <!--android:text="Citrus@123"-->
+
+        <TextView
+            android:id="@+id/oRTextViewId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/edit_password"
+            android:layout_centerHorizontal="true"
+            android:text="OR"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:visibility="gone" />
+
         <EditText
             android:id="@+id/edit_otp_id"
             android:layout_width="match_parent"
@@ -84,7 +97,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/btn_signin"
             android:layout_margin="@dimen/button_margin"
-            android:text="Sign Up"
+            android:text="@string/signup_text"
             android:visibility="gone" />
 
         <TextView
@@ -102,7 +115,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/txt_user_mgmt_message"
             android:layout_margin="@dimen/button_margin"
-            android:text="Reset Password"
+            android:text="@string/reset_pass_text"
             android:visibility="visible" />
 
     </RelativeLayout>
