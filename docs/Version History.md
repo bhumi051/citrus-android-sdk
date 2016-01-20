@@ -1,6 +1,6 @@
 | Version History<br>Last updated : 08/01/2016 |  Feature Updates|
 | :-------------: | :------------- |
-| v3.2.2| * Added support for retrofit 2.0 along with retrofit 1.9. Follow instructions for usage.  |
+| v3.2.3| * Added support for retrofit 2.0 along with retrofit 1.9. Follow instructions for usage.  |
 | | * Reduced the size of the SDK by 65%|
 | | * Removed some deprecated classes and APIs. |
 | | * New Link User API fully supported for user creation and login |
