@@ -66,7 +66,6 @@ public class UIActivity extends AppCompatActivity implements UserManagementFragm
         citrusConfig.setColorPrimary(Constants.colorPrimary);
         citrusConfig.setColorPrimaryDark(Constants.colorPrimaryDark);
         citrusConfig.setTextColorPrimary(Constants.textColor);
-        citrusConfig.setAutoCVVEnabled(true);
 
         showUI();
 
