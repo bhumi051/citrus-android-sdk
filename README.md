@@ -17,7 +17,7 @@ Welcome to the open-source Android SDK Documentation of Citrus Payments Solution
 	  <td>	
 			<br />
 	  		// Using Citrus SDK <br /> 
-			compile 'com.citrus.sdk:payment-sdk:3.2.3:retrofitoldRelease@aar' <br /> 
+			compile 'com.citrus.sdk:payment-sdk:3.3.1:retrofitoldRelease@aar' <br /> 
 		 <br /> 
 			// citrus sdk dependencies for retrofit <br /> 
 			// For retrofit 1.9 <br /> 
@@ -28,7 +28,7 @@ Welcome to the open-source Android SDK Documentation of Citrus Payments Solution
 			compile 'com.squareup.okhttp:okhttp-urlconnection:2.3.0' <br /> 
 			compile 'com.squareup.okio:okio:1.3.0' <br /> 
 			compile 'com.orhanobut:logger:1.8' <br /> 
-			compile 'de.greenrobot:eventbus:2.4.0' <br /> 
+			
 			compile "com.facebook.conceal:conceal:1.0.1@aar" <br /> 
 		 <br /> 
 			// Other additional dependencies (You may skip these if you are already using these in your app). <br /> 
@@ -44,7 +44,7 @@ Welcome to the open-source Android SDK Documentation of Citrus Payments Solution
 	  <td>	
 			<br />
 			// Using Citrus SDK <br /> 
-			compile 'com.citrus.sdk:payment-sdk:3.2.3:retrofitnewRelease@aar' <br /> 
+			compile 'com.citrus.sdk:payment-sdk:3.3.1:retrofitnewRelease@aar' <br /> 
 			// citrus sdk dependencies for retrofit <br /> 
 			// For retrofit version 2.0 <br /> 
 			compile('com.squareup.retrofit:retrofit:2.0.0-beta2') { <br /> 
@@ -58,7 +58,7 @@ Welcome to the open-source Android SDK Documentation of Citrus Payments Solution
 			compile 'com.squareup.okhttp:okhttp-urlconnection:2.3.0' <br /> 
 			compile 'com.squareup.okio:okio:1.3.0' <br /> 
 			compile 'com.orhanobut:logger:1.8' <br /> 
-			compile 'de.greenrobot:eventbus:2.4.0' <br /> 
+			
 			compile "com.facebook.conceal:conceal:1.0.1@aar" <br /> 
 			<br /> 
 			// Other additional dependencies (You may skip these if you are already using these in your app). <br /> 
@@ -71,13 +71,13 @@ Welcome to the open-source Android SDK Documentation of Citrus Payments Solution
     
     
 ### If you are using Google Play Services library in your project and if you are facing multidex problem , update build.gradle as below
-	compile ('com.citrus.sdk:payment-sdk:3.2.3:retrofitoldRelease@aar')  {
+	compile ('com.citrus.sdk:payment-sdk:3.3.1:retrofitoldRelease@aar')  {
         transitive = false
     }
     
             OR 
             
-    compile ('com.citrus.sdk:payment-sdk:3.2.3:retrofitnewRelease@aar')  {
+    compile ('com.citrus.sdk:payment-sdk:3.3.1:etrofitnewRelease@aar')  {
         transitive = false
     }
     
