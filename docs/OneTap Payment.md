@@ -1,5 +1,6 @@
 One Tap Payment will enable the payment without entering CVV for Card Payments. 
 If enabled we will save a the CVV of the card if the transaction is successful and the user does not need to enter CVV while making payment next time.
+Encryption is based on Concel library provided by Facebook.
 
 ####Step 1. Enable the One Tap Payment
  ```java
