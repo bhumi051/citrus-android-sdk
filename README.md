@@ -151,9 +151,7 @@ ___
 <b> Implementation for User creation and management </b>
 
 * <a href="docs/isUserSignedIn.md" target="_blank">See if the User is logged/Signed in   </a>
-* <a href="docs/isCitrusMember.md" target="_blank">To check if the User is a Citrus member or not? </a>
-* <a href="docs/Sign%20Up%20User.md" target="_blank">SignUp User </a>
-* <a href="docs/Sign%20In%20User.md" target="_blank">SignIn User </a>
+* <a href="docs/Link User Extended API.md" target="_blank">Link User Extended</a>
 * <a href="docs/Reset%20Password.md" target="_blank">Reset Password </a>
 * <a href="docs/Logout.md" target="_blank">Logout the User </a>
 
