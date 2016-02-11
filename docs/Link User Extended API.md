@@ -75,3 +75,5 @@ To perform this, a two step approach is followed as explained below,
 
 #### Notes:
  - In case, if after performing Step 1, the OTP is not received, you can have a resend functionality for users. This basically should just perform Step 1 again with the already entered user credentials.
+ - Email ID is not mandatory in Step 1.
+ - If user enters both email and mobile number in Step 1, make sure that he/she is unable to edit those values during Step 2 after Step 1 is completed.
