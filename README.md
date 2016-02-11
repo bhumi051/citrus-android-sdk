@@ -175,6 +175,9 @@ ___
 * <a href="docs/Pay%20Using%20Saved%20Cards%20and%20Bank.md" target="_blank">Pay using Saved Cards and Net banking</a>
 * <a href="docs/Pay%20using%20Citrus%20Cash.md" target="_blank">Pay using Citrus Cash</a> (<b>Note:</b> User should be <b>Signed In</b> for this Implementation)
 
+<b>One Tap Card Payment</b>
+* <a href="docs/OneTap Payment.md" target="_blank">One Tap Card Payment</a>
+
 <b>How to save Cards option and Banks</b>
 * <a href="docs/Save%20payment%20option.md" target="_blank">Save Debit/Credit Card and Net banking</a>
 
