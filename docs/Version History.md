@@ -1,5 +1,8 @@
-| Version History<br>Last updated : 08/01/2016 |  Feature Updates|
+| Version History<br>Last updated : 12/02/2016 |  Feature Updates|
 | :-------------: | :------------- |
+| v3.4.0| * Added support for Rupay Card  |
+| | * Bug fixes|
+| | * Mobile Only Sign Up|
 | v3.2.3| * Added support for retrofit 2.0 along with retrofit 1.9. Follow instructions for usage.  |
 | | * Reduced the size of the SDK by 65%|
 | | * Removed some deprecated classes and APIs. |
