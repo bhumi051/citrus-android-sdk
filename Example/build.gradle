@@ -10,7 +10,7 @@ dependencies {
     compile 'com.android.support:design:23.1.1'
 
     // Using Citrus SDK
-    compile 'com.citrus.sdk:payment-sdk:3.2.3:retrofitoldRelease@aar'
+    compile 'com.citrus.sdk:payment-sdk:3.4.0:retrofitoldRelease@aar'
 
     // citrus sdk dependencies for retrofit
     // For retrofit 1.9
@@ -21,7 +21,6 @@ dependencies {
     compile 'com.squareup.okhttp:okhttp-urlconnection:2.3.0'
     compile 'com.squareup.okio:okio:1.3.0'
     compile 'com.orhanobut:logger:1.8'
-    compile 'de.greenrobot:eventbus:2.4.0'
     compile "com.facebook.conceal:conceal:1.0.1@aar"
 
     // Other additional dependencies (You may skip these if you are already using these in your app).

@@ -170,11 +170,11 @@ public class SavedOptionsFragment extends Fragment {
             PaymentOption paymentOption = getItem(position);
 
             if (paymentOption instanceof CardOption) {
-                if (citrusClient.isCVVPresent(paymentOption.getToken())) {
-                    if(paymentType == Utils.PaymentType.NEW_PG_PAYMENT) {
+                if (citrusClient.isOneTapPaymentEnabledForCard((CardOption) paymentOption)) {
+                    if (paymentType == Utils.PaymentType.NEW_PG_PAYMENT) {
                         proceedToFastMakePayment(paymentType, paymentOption);
 
-                    }else {
+                    } else {
                         proceedToFastPayment(paymentType, paymentOption);
                     }
                 } else {
@@ -241,12 +241,16 @@ public class SavedOptionsFragment extends Fragment {
             Callback<TransactionResponse> callback = new Callback<TransactionResponse>() {
                 @Override
                 public void success(TransactionResponse transactionResponse) {
-                    ((UIActivity) getActivity()).onPaymentComplete(transactionResponse);
+                    if (getActivity() != null) {
+                        ((UIActivity) getActivity()).onPaymentComplete(transactionResponse);
+                    }
                 }
 
                 @Override
                 public void error(CitrusError error) {
-                    ((UIActivity) getActivity()).showSnackBar(error.getMessage());
+                    if (getActivity() != null) {
+                        ((UIActivity) getActivity()).showSnackBar(error.getMessage());
+                    }
                 }
             };
 
@@ -263,7 +267,9 @@ public class SavedOptionsFragment extends Fragment {
                 }
             } catch (CitrusException e) {
                 e.printStackTrace();
-                ((UIActivity) getActivity()).showSnackBar(e.getMessage());
+                if (getActivity() != null) {
+                    ((UIActivity) getActivity()).showSnackBar(e.getMessage());
+                }
             }
         }
     }
@@ -294,26 +300,29 @@ public class SavedOptionsFragment extends Fragment {
 
                 @Override
                 public void error(CitrusError error) {
-                    Utils.showToast(getActivity(), error.getMessage());
+                    if (getActivity() != null) {
+                        ((UIActivity) getActivity()).showSnackBar(error.getMessage());
+                    }
                 }
             };
 
             try {
                 if (paymentType == Utils.PaymentType.LOAD_MONEY) {
                     paymentType1 = new PaymentType.LoadMoney(amount, Constants.RETURN_URL_LOAD_MONEY, paymentOption);
-                    citrusClient.loadMoneyWithoutCVV((PaymentType.LoadMoney) paymentType1, callback);
+                    citrusClient.loadMoneyWithOneTap((PaymentType.LoadMoney) paymentType1, callback);
                 } else if (paymentType == Utils.PaymentType.PG_PAYMENT) {
                     paymentType1 = new PaymentType.PGPayment(amount, Constants.BILL_URL, paymentOption, null);
-                    citrusClient.pgPaymentWithoutCVV((PaymentType.PGPayment) paymentType1, callback);
+                    citrusClient.pgPaymentWithOneTap((PaymentType.PGPayment) paymentType1, callback);
                 }
             } catch (CitrusException e) {
                 e.printStackTrace();
 
-                Utils.showToast(getActivity(), e.getMessage());
+                if (getActivity() != null) {
+                    ((UIActivity) getActivity()).showSnackBar(e.getMessage());
+                }
             }
         }
     }
-
 
 
     private void proceedToFastMakePayment(Utils.PaymentType paymentType, PaymentOption paymentOption) {
@@ -341,22 +350,26 @@ public class SavedOptionsFragment extends Fragment {
 
                 @Override
                 public void error(CitrusError error) {
-                    Utils.showToast(getActivity(), error.getMessage());
+                    if (getActivity() != null) {
+                        ((UIActivity) getActivity()).showSnackBar(error.getMessage());
+                    }
                 }
             };
 
             try {
                 if (paymentType == Utils.PaymentType.LOAD_MONEY) {
                     paymentType1 = new PaymentType.LoadMoney(amount, Constants.RETURN_URL_LOAD_MONEY, paymentOption);
-                    citrusClient.loadMoneyWithoutCVV((PaymentType.LoadMoney) paymentType1, callback);
+                    citrusClient.loadMoneyWithOneTap((PaymentType.LoadMoney) paymentType1, callback);
                 } else if (paymentType == Utils.PaymentType.NEW_PG_PAYMENT) {
                     paymentType1 = new PaymentType.PGPayment(amount, Constants.BILL_URL, paymentOption, null);
-                    citrusClient.makePaymentWithoutCVV((PaymentType.PGPayment) paymentType1, callback);
+                    citrusClient.makePaymentWithOneTap((PaymentType.PGPayment) paymentType1, callback);
                 }
             } catch (CitrusException e) {
                 e.printStackTrace();
 
-                Utils.showToast(getActivity(), e.getMessage());
+                if (getActivity() != null) {
+                    ((UIActivity) getActivity()).showSnackBar(e.getMessage());
+                }
             }
         }
     }
