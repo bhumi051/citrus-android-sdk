@@ -1,7 +1,9 @@
 # Citrus Payments Android SDK
 
 Welcome to the open-source Android SDK Documentation of Citrus Payments Solution!
-
+##Note: Prior to Version 3.4.3 we were using google analytics. We have removed google analytics from SDK. Please make sure you have removed google analytics dependecy from your build.gradle.
+### Please remove below line from your build.gradle if it exists
+    compile 'com.google.android.gms:play-services-analytics:7.8.0'
 ### Download
 #### Update your project’s build.gradle
 
