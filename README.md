@@ -32,7 +32,7 @@ Welcome to the open-source Android SDK Documentation of Citrus Payments Solution
 			compile "com.facebook.conceal:conceal:1.0.1@aar" <br /> 
 		 <br /> 
 			// Other additional dependencies (You may skip these if you are already using these in your app). <br /> 
-			compile 'com.google.android.gms:play-services-analytics:7.8.0' <br /> 
+			
 			compile 'com.android.support:appcompat-v7:23.1.1'
 			<br />
 	  </td>
@@ -62,7 +62,7 @@ Welcome to the open-source Android SDK Documentation of Citrus Payments Solution
 			compile "com.facebook.conceal:conceal:1.0.1@aar" <br /> 
 			<br /> 
 			// Other additional dependencies (You may skip these if you are already using these in your app). <br /> 
-			compile 'com.google.android.gms:play-services-analytics:7.8.0' <br /> 
+			
 			compile 'com.android.support:appcompat-v7:23.1.1'
 			<br />
 	  </td>
