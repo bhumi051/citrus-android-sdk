@@ -1,5 +1,7 @@
-| Version History<br>Last updated : 12/02/2016 |  Feature Updates|
+| Version History<br>Last updated : 19/02/2016 |  Feature Updates|
 | :-------------: | :------------- |
+| v3.4.3| * Removed Analytics, SDK size optimization (This version will reduce your app size by around 1mb) |
+| | * Bug fixes|
 | v3.4.0| * Added support for Rupay Card  |
 | | * Bug fixes|
 | | * Mobile Only Sign Up|
