@@ -17,7 +17,7 @@ Welcome to the open-source Android SDK Documentation of Citrus Payments Solution
 	  <td>	
 			<br />
 	  		// Using Citrus SDK <br /> 
-			compile 'com.citrus.sdk:payment-sdk:3.4.0:retrofitoldRelease@aar' <br /> 
+			compile 'com.citrus.sdk:payment-sdk:3.4.3:retrofitoldRelease@aar' <br /> 
 		 <br /> 
 			// citrus sdk dependencies for retrofit <br /> 
 			// For retrofit 1.9 <br /> 
@@ -44,7 +44,7 @@ Welcome to the open-source Android SDK Documentation of Citrus Payments Solution
 	  <td>	
 			<br />
 			// Using Citrus SDK <br /> 
-			compile 'com.citrus.sdk:payment-sdk:3.4.0:retrofitnewRelease@aar' <br /> 
+			compile 'com.citrus.sdk:payment-sdk:3.4.3:retrofitnewRelease@aar' <br /> 
 			// citrus sdk dependencies for retrofit <br /> 
 			// For retrofit version 2.0 <br /> 
 			compile('com.squareup.retrofit:retrofit:2.0.0-beta2') { <br /> 
@@ -71,13 +71,13 @@ Welcome to the open-source Android SDK Documentation of Citrus Payments Solution
     
     
 ### If you are using Google Play Services library in your project and if you are facing multidex problem , update build.gradle as below
-	compile ('com.citrus.sdk:payment-sdk:3.4.0:retrofitoldRelease@aar')  {
+	compile ('com.citrus.sdk:payment-sdk:3.4.3:retrofitoldRelease@aar')  {
         transitive = false
     }
     
             OR 
             
-    compile ('com.citrus.sdk:payment-sdk:3.4.0:etrofitnewRelease@aar')  {
+    compile ('com.citrus.sdk:payment-sdk:3.4.3:etrofitnewRelease@aar')  {
         transitive = false
     }
     
