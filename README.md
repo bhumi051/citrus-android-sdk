@@ -79,7 +79,7 @@ Welcome to the open-source Android SDK Documentation of Citrus Payments Solution
     
             OR 
             
-    compile ('com.citrus.sdk:payment-sdk:3.4.3:etrofitnewRelease@aar')  {
+    compile ('com.citrus.sdk:payment-sdk:3.4.3:retrofitnewRelease@aar')  {
         transitive = false
     }
     
