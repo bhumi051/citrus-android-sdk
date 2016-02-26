@@ -1,9 +1,5 @@
 One Tap Payment feature makes your user save the trouble of enterring the CVV of his/her card.
 
-If enabled SDK will save the CVV of the card if the <b>transaction is successful</b> and the user does not need to enter CVV while making payment next time.
-
-Encryption is based on Concel library provided by Facebook.
-
 ####Step 1. Enable the One Tap Payment
  ```java
 CitrusConfig.getInstance().enableOneTapPayment(true);
