@@ -177,6 +177,9 @@ ___
 * <a href="docs/Pay%20Using%20Saved%20Cards%20and%20Bank.md" target="_blank">Pay using Saved Cards and Net banking</a>
 * <a href="docs/Pay%20using%20Citrus%20Cash.md" target="_blank">Pay using Citrus Cash</a> (<b>Note:</b> User should be <b>Signed In</b> for this Implementation)
 
+#####Dynamic Pricing Offer Coupons and Surcharge
+* [How to use dynamic pricing ?](https://github.com/citruspay/citrus-android-sdk/blob/master/docs/dynamic_pricing_coupons.md)
+
 <b>One Tap Card Payment</b>
 * <a href="docs/OneTap Payment.md" target="_blank">One Tap Card Payment</a>
 
