@@ -25,3 +25,4 @@ You need to present user with the UI to decide to the user using which payment i
   
   PaymentType.WalletPGPayment paymentType = new PaymentType.WalletPGPayment(amount, Constants.BILL_URL, paymentOptionList);
   citrusClient.walletPGCharge((PaymentType.WalletPGPayment) paymentType, callback);
+ 
