@@ -1,5 +1,7 @@
 <h2><b>Initiate Citrus SDK</b></h2>
 
+<h4><b>Make sure you initialize Citrus SDK just before processing Payment. It is not recommended to init() SDK on app launch.
+
 <b>Create a object of CitrusClient</b>
 ```java
     CitrusClient citrusClient = CitrusClient.getInstance(Context);
