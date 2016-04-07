@@ -220,7 +220,7 @@ public final class NetbankingFragment extends Fragment {
                     if (paymentType == Utils.PaymentType.LOAD_MONEY) {
                         paymentType1 = new PaymentType.LoadMoney(amount, Constants.RETURN_URL_LOAD_MONEY, netbankingOption);
                         client.loadMoney((PaymentType.LoadMoney) paymentType1, callback);
-                    } else if (paymentType == Utils.PaymentType.PG_PAYMENT) {
+                    } else if (paymentType == Utils.PaymentType.PG_PAYMENT  || paymentType == Utils.PaymentType.PG_PAYMENT_CUSTOM_WEBVIEW) {
                         paymentType1 = new PaymentType.PGPayment(amount, Constants.BILL_URL, netbankingOption, null);
                         client.pgPayment((PaymentType.PGPayment) paymentType1, callback);
                     } else if (paymentType == Utils.PaymentType.NEW_PG_PAYMENT) {

@@ -258,7 +258,7 @@ public class SavedOptionsFragment extends Fragment {
                 if (paymentType == Utils.PaymentType.LOAD_MONEY) {
                     paymentType1 = new PaymentType.LoadMoney(amount, Constants.RETURN_URL_LOAD_MONEY, paymentOption);
                     citrusClient.loadMoney((PaymentType.LoadMoney) paymentType1, callback);
-                } else if (paymentType == Utils.PaymentType.PG_PAYMENT) {
+                } else if (paymentType == Utils.PaymentType.PG_PAYMENT || paymentType == Utils.PaymentType.PG_PAYMENT_CUSTOM_WEBVIEW ) {
                     paymentType1 = new PaymentType.PGPayment(amount, Constants.BILL_URL, paymentOption, null);
                     citrusClient.pgPayment((PaymentType.PGPayment) paymentType1, callback);
                 } else if (this.paymentType == Utils.PaymentType.NEW_PG_PAYMENT) {
@@ -310,7 +310,7 @@ public class SavedOptionsFragment extends Fragment {
                 if (paymentType == Utils.PaymentType.LOAD_MONEY) {
                     paymentType1 = new PaymentType.LoadMoney(amount, Constants.RETURN_URL_LOAD_MONEY, paymentOption);
                     citrusClient.loadMoneyWithOneTap((PaymentType.LoadMoney) paymentType1, callback);
-                } else if (paymentType == Utils.PaymentType.PG_PAYMENT) {
+                } else if (paymentType == Utils.PaymentType.PG_PAYMENT || paymentType == Utils.PaymentType.PG_PAYMENT_CUSTOM_WEBVIEW ) {
                     paymentType1 = new PaymentType.PGPayment(amount, Constants.BILL_URL, paymentOption, null);
                     citrusClient.pgPaymentWithOneTap((PaymentType.PGPayment) paymentType1, callback);
                 }

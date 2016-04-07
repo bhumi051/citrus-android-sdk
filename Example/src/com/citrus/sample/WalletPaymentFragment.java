@@ -49,6 +49,7 @@ import static com.citrus.sample.Utils.PaymentType.LOAD_MONEY;
 import static com.citrus.sample.Utils.PaymentType.NEW_CITRUS_CASH;
 import static com.citrus.sample.Utils.PaymentType.NEW_PG_PAYMENT;
 import static com.citrus.sample.Utils.PaymentType.PG_PAYMENT;
+import static com.citrus.sample.Utils.PaymentType.PG_PAYMENT_CUSTOM_WEBVIEW;
 
 
 /**
@@ -69,6 +70,7 @@ public class WalletPaymentFragment extends Fragment implements View.OnClickListe
     private Button btnLoadMoney = null;
     private Button btnPayUsingCash = null;
     private Button btnPGPayment = null;
+    private Button btnPGPaymentCustomWebView = null;
     private Button btnGetWithdrawInfo = null;
     private Button btnWithdraw = null;
     private Button btnSendMoney = null;
@@ -117,6 +119,7 @@ public class WalletPaymentFragment extends Fragment implements View.OnClickListe
         btnPayUsingCash = (Button) rootView.findViewById(R.id.btn_pay_using_cash);
         btnNewPGPayment = (Button) rootView.findViewById(R.id.btn_new_pg_payment);
         btnPGPayment = (Button) rootView.findViewById(R.id.btn_pg_payment);
+        btnPGPaymentCustomWebView = (Button) rootView.findViewById(R.id.btn_pg_payment_webview );
         btnWithdraw = (Button) rootView.findViewById(R.id.btn_cashout);
         btnGetWithdrawInfo = (Button) rootView.findViewById(R.id.btn_get_cashout_info);
         btnSendMoney = (Button) rootView.findViewById(R.id.btn_send_money);
@@ -131,6 +134,7 @@ public class WalletPaymentFragment extends Fragment implements View.OnClickListe
         btnPayUsingCash.setOnClickListener(this);
         btnNewPGPayment.setOnClickListener(this);
         btnPGPayment.setOnClickListener(this);
+        btnPGPaymentCustomWebView.setOnClickListener(this);
         btnGetWithdrawInfo.setOnClickListener(this);
         btnWithdraw.setOnClickListener(this);
         btnSendMoney.setOnClickListener(this);
@@ -181,6 +185,9 @@ public class WalletPaymentFragment extends Fragment implements View.OnClickListe
                 break;
             case R.id.btn_pg_payment:
                 pgPayment();
+                break;
+            case R.id.btn_pg_payment_webview:
+                pgPaymentCustomWebView();
                 break;
             case R.id.btn_cashout:
                 cashout();
@@ -244,6 +251,10 @@ public class WalletPaymentFragment extends Fragment implements View.OnClickListe
         showPrompt(PG_PAYMENT);
     }
 
+    private void pgPaymentCustomWebView(){
+        showPrompt( PG_PAYMENT_CUSTOM_WEBVIEW );
+    }
+
     private void cashout() {
         showCashoutPrompt();
     }
@@ -287,6 +298,7 @@ public class WalletPaymentFragment extends Fragment implements View.OnClickListe
                 message = "Please enter the transaction amount.";
                 positiveButtonText = "Pay";
                 break;
+            case PG_PAYMENT_CUSTOM_WEBVIEW:
             case PG_PAYMENT:
             case NEW_PG_PAYMENT:
                 message = "Please enter the transaction amount.";

@@ -111,6 +111,7 @@ public class CreditDebitCardFragment extends Fragment implements View.OnClickLis
                 break;
             case CITRUS_CASH:
             case PG_PAYMENT:
+            case PG_PAYMENT_CUSTOM_WEBVIEW:
             case DYNAMIC_PRICING:
                 submitButton.setText("Pay");
                 break;
@@ -181,7 +182,7 @@ public class CreditDebitCardFragment extends Fragment implements View.OnClickLis
                 if (this.paymentType == Utils.PaymentType.LOAD_MONEY) {
                     paymentType = new PaymentType.LoadMoney(amount, Constants.RETURN_URL_LOAD_MONEY, cardOption);
                     citrusClient.loadMoney((PaymentType.LoadMoney) paymentType, callback);
-                } else if (this.paymentType == Utils.PaymentType.PG_PAYMENT) {
+                } else if (this.paymentType == Utils.PaymentType.PG_PAYMENT  || this.paymentType == Utils.PaymentType.PG_PAYMENT_CUSTOM_WEBVIEW ) {
                     paymentType = new PaymentType.PGPayment(amount, Constants.BILL_URL, cardOption, null);
                     citrusClient.pgPayment((PaymentType.PGPayment) paymentType, callback);
                 } else if (this.paymentType == Utils.PaymentType.NEW_PG_PAYMENT) {

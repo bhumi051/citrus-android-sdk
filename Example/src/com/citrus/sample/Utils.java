@@ -28,7 +28,7 @@ public class Utils {
     }
 
     public enum PaymentType {
-        LOAD_MONEY, NEW_CITRUS_CASH, CITRUS_CASH, NEW_PG_PAYMENT, PG_PAYMENT, DYNAMIC_PRICING;
+        LOAD_MONEY, NEW_CITRUS_CASH, CITRUS_CASH, NEW_PG_PAYMENT, PG_PAYMENT, DYNAMIC_PRICING, PG_PAYMENT_CUSTOM_WEBVIEW ;
     }
 
     public enum DPRequestType {

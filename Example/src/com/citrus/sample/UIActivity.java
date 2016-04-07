@@ -16,13 +16,19 @@
 package com.citrus.sample;
 
 import android.content.Context;
+import android.net.http.SslError;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.webkit.SslErrorHandler;
+import android.webkit.WebResourceError;
+import android.webkit.WebResourceRequest;
+import android.webkit.WebResourceResponse;
 import android.widget.FrameLayout;
 
 import com.citrus.sdk.Callback;
@@ -36,6 +42,9 @@ import com.citrus.sdk.payment.PaymentType;
 import com.citrus.sdk.response.CitrusError;
 import com.citrus.sdk.response.CitrusResponse;
 import com.citrus.sdk.response.PaymentResponse;
+import com.citrus.widgets.webview.CitrusWebView;
+import com.citrus.widgets.webview.CitrusWebViewClient;
+import com.citrus.widgets.webview.CitrusWebViewConfig;
 
 
 public class UIActivity extends AppCompatActivity implements UserManagementFragment.UserManagementInteractionListener, WalletFragmentListener {
@@ -76,6 +85,56 @@ public class UIActivity extends AppCompatActivity implements UserManagementFragm
         snackBarParent.setLayoutParams(layoutParams);
         frameLayout.addView(snackBarParent);
     }
+
+    private CitrusWebViewClient myCitrusWebviewClient = new CitrusWebViewClient(){
+        private final String TAG = CitrusWebViewClient.class.getSimpleName() ;
+
+        @Override
+        public void onPageStarted(CitrusWebView view, String url) {
+            Log.i(TAG, TAG + ".onPageStarted(): url = " + url);
+        }
+
+        @Override
+        public void onPageFinished(CitrusWebView view, String url) {
+            Log.d( TAG, TAG + ".onPageFinished(): url = "+url );
+        }
+
+        @Override
+        public void onReceivedSslError(CitrusWebView view, SslErrorHandler handler, SslError error) {
+            Log.e( TAG, TAG + ".onReceivedSslError(): error = "+error );
+        }
+
+        @Override
+        public void onReceivedError(CitrusWebView view, WebResourceRequest request, WebResourceError error) {
+            Log.e( TAG, TAG + ".onReceivedError(): error = "+error );
+        }
+
+        @Override
+        public void onReceivedHttpError(CitrusWebView view, WebResourceRequest request, WebResourceResponse errorResponse) {
+            Log.e( TAG, TAG + ".onReceivedHttpError(): errorResponse = "+errorResponse );
+        }
+
+        @Override
+        public boolean onTransactionComplete(final CitrusWebView view, boolean transactionSuccessful) {
+            Log.d( TAG, TAG + ".onTransactionComplete(): transactionSuccessful = "+transactionSuccessful );
+
+            boolean handlingResponse = false ;
+
+            // for testing
+            handlingResponse = true ;
+            view.stopLoading();
+
+            if( transactionSuccessful )
+            {
+                view.loadUrl("http://www.google.com");
+            }
+            else {
+                view.loadUrl("http://www.yahoo.com");
+            }
+
+            return handlingResponse;
+        }
+    };
 
     private void showUI() {
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction()
@@ -162,6 +221,14 @@ public class UIActivity extends AppCompatActivity implements UserManagementFragm
                 Utils.showToast(UIActivity.this, e.getMessage());
             }
         } else {
+
+            if (paymentType == Utils.PaymentType.PG_PAYMENT_CUSTOM_WEBVIEW ){
+                initCitrusWebVieConfig();
+            }
+            else{
+                disableCitrusWebViewConfig();
+            }
+
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction()
                     .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right)
                     .replace(R.id.container, CardPaymentFragment.newInstance(paymentType, amount));
@@ -170,6 +237,19 @@ public class UIActivity extends AppCompatActivity implements UserManagementFragm
             fragmentTransaction.commit();
         }
     }
+
+    private void initCitrusWebVieConfig( ){
+        final CitrusWebViewConfig config = CitrusWebViewConfig.getInstance() ;
+        // config.setJsInterface( someJsInterface, someJsInterfaceName );
+        config.setWebViewClient( myCitrusWebviewClient );
+    }
+
+    private void disableCitrusWebViewConfig( ){
+        final CitrusWebViewConfig config = CitrusWebViewConfig.getInstance() ;
+        config.setJsInterface( null, null );
+        config.setWebViewClient( null );
+    }
+
 
     @Override
     public void onPaymentTypeSelected(Utils.DPRequestType dpRequestType, Amount
