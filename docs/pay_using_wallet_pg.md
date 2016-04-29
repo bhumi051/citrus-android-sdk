@@ -143,19 +143,8 @@ MVC Balance: &#8377; 30
 ```java
 Amount totalAmount = new Amount("100");
 
-// Get the MVC payment mode from the payment options list returned by the getwallet api
-MVCOption mvcOption = null;
-for (PaymentOption paymentOption : paymentOptionsList) {
-      if (paymentOption instanceOf MVCOption) {
-            mvcOption = (MVCOption) paymentOption;
-            break;
-      }
-}
-// Set the transaction amount for the particular payment option.
-mvcOption.setTransactionAmount(mvcOption.getMaxBalance());
-
-// Remaing amount to be paid using other payment option is 80.
-Amount remainingAmount = new Amount("80");
+boolean useMVC = true;
+boolean useCitrusCash = false;
 PaymentOption paymentOption = null;
 
 ```
@@ -163,31 +152,21 @@ PaymentOption paymentOption = null;
 
 ``` java
 paymentOption = new NetbankingOption("ICICI Bank", "CID001");
-// Set the transaction amount for the particular payment option.
-paymentOption.setTransactionAmount(remainingAmount);
 ```
 
 ##### Or CreditCard
 ``` java
 paymentOption = new CreditCardOption("Salil", "411111111111111", "123", Month.getMonth("12"), Year.getYear("2020"));
-// Set the transaction amount for the particular payment option.
-paymentOption.setTransactionAmount(remainingAmount);
 ```
 
 ##### Or DebitCard
 ``` java
 paymentOption = new DebitCardOption("Salil", "411111111111111", "123", Month.getMonth("12"), Year.getYear("2020"));
-// Set the transaction amount for the particular payment option.
-paymentOption.setTransactionAmount(remainingAmount);
 ```
 
 ```java
-List<PaymentOption> walletPaymentOptionsList = new ArrayList<>();
-// Add the payment option in the list.
-walletPaymentOptionsList.add(paymentOption);
-
-PaymentType.WalletPGPayment paymentType = new PaymentType.WalletPGPayment(totalAmount, Constants.BILL_URL, walletPaymentOptionsList);
-citrusClient.walletPGCharge( paymentType, callback);
+PaymentType.SplitPayment paymentType = new PaymentType.SplitPayment(amount, Constants.BILL_URL, paymentOption,useCitrusCash, useMVC);
+citrusClient.smartPay( paymentType , callback);
 ```
 ----
 
@@ -195,52 +174,29 @@ citrusClient.walletPGCharge( paymentType, callback);
 
 ```java
 Amount totalAmount = new Amount("100");
-
-// Get the MVC payment mode from the payment options list returned by the getwallet api
-CitrusCash citrusCash = null;
-for (PaymentOption paymentOption : paymentOptionsList) {
-      if (paymentOption instanceOf CitrusCash) {
-            citrusCash = (CitrusCash) paymentOption;
-            break;
-      }
-}
-// Set the transaction amount for the particular payment option.
-citrusCash.setTransactionAmount(citrusCash.getMaxBalance());
-
-// Remaing amount to be paid using other payment option is 50.
-Amount remainingAmount = new Amount("50");
+boolean useMVC = false;
+boolean useCitrusCash = true;
 PaymentOption paymentOption = null;
-
 ```
 ##### Netbanking
 
 ``` java
 paymentOption = new NetbankingOption("ICICI Bank", "CID001");
-// Set the transaction amount for the particular payment option.
-paymentOption.setTransactionAmount(remainingAmount);
 ```
 
 ##### Or CreditCard
 ``` java
 paymentOption = new CreditCardOption("Salil", "411111111111111", "123", Month.getMonth("12"), Year.getYear("2020"));
-// Set the transaction amount for the particular payment option.
-paymentOption.setTransactionAmount(remainingAmount);
 ```
 
 ##### Or DebitCard
 ``` java
 paymentOption = new DebitCardOption("Salil", "411111111111111", "123", Month.getMonth("12"), Year.getYear("2020"));
-// Set the transaction amount for the particular payment option.
-paymentOption.setTransactionAmount(remainingAmount);
 ```
 
 ```java
-List<PaymentOption> walletPaymentOptionsList = new ArrayList<>();
-// Add the payment option in the list.
-walletPaymentOptionsList.add(paymentOption);
-
-PaymentType.WalletPGPayment paymentType = new PaymentType.WalletPGPayment(totalAmount, Constants.BILL_URL, walletPaymentOptionsList);
-citrusClient.walletPGCharge( paymentType, callback);
+PaymentType.SplitPayment paymentType = new PaymentType.SplitPayment(amount, Constants.BILL_URL, paymentOption,useCitrusCash, useMVC);
+citrusClient.smartPay( paymentType , callback);
 ```
 ----
 
@@ -249,31 +205,8 @@ citrusClient.walletPGCharge( paymentType, callback);
 ```java
 Amount totalAmount = new Amount("100");
 
-// Get the MVC payment mode from the payment options list returned by the getwallet api
-CitrusCash citrusCash = null;
-MVCOption mvcOption = null;
-for (PaymentOption paymentOption : paymentOptionsList) {
-      if (paymentOption instanceOf MVCOption) {
-            mvcOption = (MVCOption) paymentOption;
-            break;
-      }
-}
-
-for (PaymentOption paymentOption : paymentOptionsList) {
-      if (paymentOption instanceOf CitrusCash) {
-            citrusCash = (CitrusCash) paymentOption;
-            break;
-      }
-}
-
-// Set the transaction amount for the particular payment option.
-citrusCash.setTransactionAmount(citrusCash.getMaxBalance()); // Rs. 50
-
-// Set the transaction amount for the particular payment option.
-mvcOption.setTransactionAmount(mvcOption.getMaxBalance()); // Rs. 30
-
-// Remaing amount to be paid using other payment option is 20.
-Amount remainingAmount = new Amount("20");
+boolean useMVC = true;
+boolean useCitrusCash = true;
 PaymentOption paymentOption = null;
 
 ```
@@ -281,29 +214,19 @@ PaymentOption paymentOption = null;
 
 ``` java
 paymentOption = new NetbankingOption("ICICI Bank", "CID001");
-// Set the transaction amount for the particular payment option.
-paymentOption.setTransactionAmount(remainingAmount);
 ```
 
 ##### Or CreditCard
 ``` java
 paymentOption = new CreditCardOption("Salil", "411111111111111", "123", Month.getMonth("12"), Year.getYear("2020"));
-// Set the transaction amount for the particular payment option.
-paymentOption.setTransactionAmount(remainingAmount);
 ```
 
 ##### Or DebitCard
 ``` java
 paymentOption = new DebitCardOption("Salil", "411111111111111", "123", Month.getMonth("12"), Year.getYear("2020"));
-// Set the transaction amount for the particular payment option.
-paymentOption.setTransactionAmount(remainingAmount);
 ```
 
 ```java
-List<PaymentOption> walletPaymentOptionsList = new ArrayList<>();
-// Add the payment option in the list.
-walletPaymentOptionsList.add(paymentOption);
-
-PaymentType.WalletPGPayment paymentType = new PaymentType.WalletPGPayment(totalAmount, Constants.BILL_URL, walletPaymentOptionsList);
-citrusClient.walletPGCharge( paymentType, callback);
+PaymentType.SplitPayment paymentType = new PaymentType.SplitPayment(amount, Constants.BILL_URL, paymentOption,useCitrusCash, useMVC);
+citrusClient.smartPay( paymentType , callback);
 ```
