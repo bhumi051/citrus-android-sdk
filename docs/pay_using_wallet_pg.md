@@ -30,25 +30,8 @@ You need to present user with the UI to decide to the user using which payment i
 
 ### Payment Using CitrusCash (If the citrusCash balance is sufficient)
 ```java
-Amount amount = new Amount("100");
-
-// Get the citrusCash payment mode from the payment options list returned by the getwallet api
-CitrusCash citrusCash = null;
-for (PaymentOption paymentOption : paymentOptionsList) {
-      if (paymentOption instanceOf CitrusCash) {
-            citrusCash = (CitrusCash) paymentOption;
-            break;
-      }
-}
-// Set the transaction amount for the particular payment option.
-citrusCash.setTransactionAmount(amount);
-
-List<PaymentOption> walletPaymentOptionsList = new ArrayList<>();
-// Add the payment option in the list.
-walletPaymentOptionsList.add(citrusCash);
-
-PaymentType.WalletPGPayment paymentType = new PaymentType.WalletPGPayment(amount, Constants.BILL_URL, walletPaymentOptionsList);
-citrusClient.walletPGCharge(paymentType, callback);
+PaymentType.CitrusCash paymentType = new PaymentType.CitrusCash(new Amount("5"),"BILL_URL");
+citrusClient.smartPay(paymentType,callback);
 ```
 
 ### Payment Using MVC(Merchant Virtual Currency) (If the MVC balance is sufficient)
