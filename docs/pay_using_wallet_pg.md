@@ -147,24 +147,12 @@ boolean useMVC = true;
 boolean useCitrusCash = false;
 PaymentOption paymentOption = null;
 
-```
-##### Netbanking
-
-``` java
+//Netbanking
 paymentOption = new NetbankingOption("ICICI Bank", "CID001");
-```
-
-##### Or CreditCard
-``` java
+// Or CreditCard
 paymentOption = new CreditCardOption("Salil", "411111111111111", "123", Month.getMonth("12"), Year.getYear("2020"));
-```
-
-##### Or DebitCard
-``` java
+// Or DebitCard
 paymentOption = new DebitCardOption("Salil", "411111111111111", "123", Month.getMonth("12"), Year.getYear("2020"));
-```
-
-```java
 PaymentType.SplitPayment paymentType = new PaymentType.SplitPayment(amount, Constants.BILL_URL, paymentOption,useCitrusCash, useMVC);
 citrusClient.smartPay( paymentType , callback);
 ```
