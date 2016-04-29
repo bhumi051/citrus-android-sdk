@@ -36,15 +36,16 @@ citrusClient.smartPay(paymentType,callback);
 
 ### Payment Using MVC(Merchant Virtual Currency) (If the MVC balance is sufficient)
 ```java
+Amount amount = new Amount("100");
 boolean useCitrusCash = false;
 boolean useMVC = true;
-citrusClient.smartPay(new PaymentType.SplitPayment(amount, Constants.BILL_URL, null, useCitrusCash, useMVC), callback);
+PaymentType.SplitPayment paymentType = new PaymentType.SplitPayment(amount, Constants.BILL_URL, null,useCitrusCash, useMVC);
+citrusClient.smartPay(paymentType , callback);
 ```
 
 ### Payment Using Saved Cards
 ```java
 Amount amount = new Amount("100");
-
 // Get the Saved Card Option from the payment options list returned by the getwallet api
 CardOption cardOption = null;
 for (PaymentOption paymentOption : paymentOptionsList) {
@@ -53,15 +54,13 @@ for (PaymentOption paymentOption : paymentOptionsList) {
             break;
       }
 }
-// Set the transaction amount for the particular payment option.
-cardOption.setTransactionAmount(amount);
+// Set the CVV for cardOption
+cardOption.setCardCVV(cvv);
+boolean useCitrusCash = false;
+boolean useMVC = false;
+PaymentType.SplitPayment paymentType = new PaymentType.SplitPayment(amount, Constants.BILL_URL, cardOption,useCitrusCash, useMVC);
+citrusClient.smartPay( paymentType , callback);
 
-List<PaymentOption> walletPaymentOptionsList = new ArrayList<>();
-// Add the payment option in the list.
-walletPaymentOptionsList.add(cardOption);
-
-PaymentType.WalletPGPayment paymentType = new PaymentType.WalletPGPayment(amount, Constants.BILL_URL, walletPaymentOptionsList);
-citrusClient.walletPGCharge(paymentType, callback);
 ```
 
 ### Payment Using Saved Netbanking
