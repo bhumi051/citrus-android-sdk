@@ -30,8 +30,17 @@ You need to present user with the UI to decide to the user using which payment i
 
 ### Payment Using CitrusCash (If the citrusCash balance is sufficient)
 ```java
-PaymentType.CitrusCash paymentType = new PaymentType.CitrusCash(new Amount("5"),"BILL_URL");
+Amount amount = new Amount("100");
+PaymentType.CitrusCash paymentType = new PaymentType.CitrusCash(amount,Constants.BILL_URL);
 citrusClient.smartPay(paymentType,callback);
+
+//or
+
+Amount amount = new Amount("100");
+boolean useCitrusCash = true;
+boolean useMVC = false;
+PaymentType.SplitPayment paymentType = new PaymentType.SplitPayment(amount, Constants.BILL_URL, null,useCitrusCash, useMVC);
+citrusClient.smartPay(paymentType , callback);
 ```
 
 ### Payment Using MVC(Merchant Virtual Currency) (If the MVC balance is sufficient)
@@ -75,15 +84,11 @@ for (PaymentOption paymentOption : paymentOptionsList) {
             break;
       }
 }
-// Set the transaction amount for the particular payment option.
-netbankingOption.setTransactionAmount(amount);
+boolean useCitrusCash = false;
+boolean useMVC = false;
+PaymentType.SplitPayment paymentType = new PaymentType.SplitPayment(amount, Constants.BILL_URL, netbankingOption,useCitrusCash, useMVC);
+citrusClient.smartPay( paymentType , callback);
 
-List<PaymentOption> walletPaymentOptionsList = new ArrayList<>();
-// Add the payment option in the list.
-walletPaymentOptionsList.add(netbankingOption);
-
-PaymentType.WalletPGPayment paymentType = new PaymentType.WalletPGPayment(amount, Constants.BILL_URL, walletPaymentOptionsList);
-citrusClient.walletPGCharge( paymentType, callback);
 ```
 
 ### Payment Using Debit Card
@@ -92,15 +97,12 @@ Amount amount = new Amount("100");
 
 CardOption debitCardOption =new DebitCardOption("Salil", "411111111111111", "123", Month.getMonth("12"), Year.getYear("2020"));
 
-// Set the transaction amount for the particular payment option.
-debitCardOption.setTransactionAmount(amount);
+boolean useCitrusCash = false;
+boolean useMVC = false;
+PaymentType.SplitPayment paymentType = new PaymentType.SplitPayment(amount, Constants.BILL_URL, debitCardOption,useCitrusCash, useMVC);
+citrusClient.smartPay( paymentType , callback);
 
-List<PaymentOption> walletPaymentOptionsList = new ArrayList<>();
-// Add the payment option in the list.
-walletPaymentOptionsList.add(debitCardOption);
 
-PaymentType.WalletPGPayment paymentType = new PaymentType.WalletPGPayment(amount, Constants.BILL_URL, walletPaymentOptionsList);
-citrusClient.walletPGCharge(paymentType, callback);
 ```
 
 ### Payment Using Credit Card
@@ -110,15 +112,10 @@ Amount amount = new Amount("100");
 // Get the MVC payment mode from the payment options list returned by the getwallet api
 CardOption creditCardOption =new CreditCardOption("Salil", "411111111111111", "123", Month.getMonth("12"), Year.getYear("2020"));
 
-// Set the transaction amount for the particular payment option.
-creditCardOption.setTransactionAmount(amount);
-
-List<PaymentOption> walletPaymentOptionsList = new ArrayList<>();
-// Add the payment option in the list.
-walletPaymentOptionsList.add(creditCardOption);
-
-PaymentType.WalletPGPayment paymentType = new PaymentType.WalletPGPayment(amount, Constants.BILL_URL, walletPaymentOptionsList);
-citrusClient.walletPGCharge(paymentType, callback);
+boolean useCitrusCash = false;
+boolean useMVC = false;
+PaymentType.SplitPayment paymentType = new PaymentType.SplitPayment(amount, Constants.BILL_URL, creditCardOption,useCitrusCash, useMVC);
+citrusClient.smartPay( paymentType , callback);
 ```
 
 ### Payment Using Netbanking
@@ -126,15 +123,11 @@ citrusClient.walletPGCharge(paymentType, callback);
 Amount amount = new Amount("100");
 
 NetbankingOption netbankingOption = new NetbankingOption("ICICI Bank", "CID001");
-// Set the transaction amount for the particular payment option.
-netbankingOption.setTransactionAmount(amount);
 
-List<PaymentOption> walletPaymentOptionsList = new ArrayList<>();
-// Add the payment option in the list.
-walletPaymentOptionsList.add(netbankingOption);
-
-PaymentType.WalletPGPayment paymentType = new PaymentType.WalletPGPayment(amount, Constants.BILL_URL, walletPaymentOptionsList);
-citrusClient.walletPGCharge( paymentType, callback);
+boolean useCitrusCash = false;
+boolean useMVC = false;
+PaymentType.SplitPayment paymentType = new PaymentType.SplitPayment(amount, Constants.BILL_URL, netbankingOption,useCitrusCash, useMVC);
+citrusClient.smartPay( paymentType , callback);
 ```
 ----
 
