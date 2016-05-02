@@ -7,9 +7,9 @@
 // Step 2 - Display List on the UI.
 // Step 3 - If option selected by user is CardOption , call setCardCVV method and send payment option to SDK.
 // Set the CVV for cardOption
-cardOption.setCardCVV(cvv); //cardOption is the option selected by user on UI.
+  cardOption.setCardCVV(cvv); //cardOption is the option selected by user on UI.
   // Init Net Banking PaymentType     
-  PaymentType.PGPayment pgPayment = new PaymentType.PGPayment(amount, BILL_URL, cardOption, new CitrusUser("developercitrus@gmail.com","9876543210"));
+  PaymentType.PGPayment pgPayment = new PaymentType.PGPayment(amount, BILL_URL, cardOption, new CitrusUser(email,mobile));
 
   citrusClient.pgPayment(pgPayment, new Callback<TransactionResponse>() {
 
@@ -34,7 +34,7 @@ cardOption.setCardCVV(cvv); //cardOption is the option selected by user on UI.
 // Step 3 - If option selected by user is NetbankingOption , send NetbankingOption to SDK.
 
   // Init Net Banking PaymentType     
-  PaymentType.PGPayment pgPayment = new PaymentType.PGPayment(amount, BILL_URL, ne, netbankingOption CitrusUser("developercitrus@gmail.com","9876543210"));
+  PaymentType.PGPayment pgPayment = new PaymentType.PGPayment(amount, BILL_URL, netbankingOption, new CitrusUser(email,mobile));
 
   citrusClient.pgPayment(pgPayment, new Callback<TransactionResponse>() {
 
