@@ -3,10 +3,22 @@
   CitrusClient citrusClient = CitrusClient.getInstance(context); // Activity Context
   // No need to call init on CitrusClient if already done.
 
-  DebitCardOption debitCardOption = new DebitCardOption("94a4def03fdac35749bfd2746e5cd6f9", "123");
+// Get the Saved Card Option from the payment options list returned by the getwallet api
+DebitCardOption cardOption = null;
+for (PaymentOption paymentOption : paymentOptionsList) {
+      if (paymentOption instanceOf CardOption) {
+            cardOption = (CardOption) paymentOption;
+            break;
+      }
+}
+// Set the CVV for cardOption
+cardOption.setCardCVV(cvv); //set the CVV 
+
+
+  
 
   // Init Net Banking PaymentType     
-  PaymentType.PGPayment pgPayment = new PaymentType.PGPayment(amount, BILL_URL, debitCardOption, new CitrusUser("developercitrus@gmail.com","9876543210"));
+  PaymentType.PGPayment pgPayment = new PaymentType.PGPayment(amount, BILL_URL, cardOption, new CitrusUser("developercitrus@gmail.com","9876543210"));
 
   citrusClient.pgPayment(pgPayment, new Callback<TransactionResponse>() {
 
