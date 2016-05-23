@@ -97,7 +97,7 @@ Welcome to the open-source Android SDK Documentation of Citrus Payments Solution
     }
     allprojects {
         repositories {
-            maven { url "http://dl.bintray.com/populov/maven" } 
+            maven { url "http://dl.bintray.com/developer/maven" }
             mavenCentral()
             jcenter() 
         }
