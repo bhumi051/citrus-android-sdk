@@ -12,7 +12,6 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.citrus.mobile.CType;
 import com.citrus.sdk.Callback;
 import com.citrus.sdk.CitrusClient;
 import com.citrus.sdk.TransactionResponse;
@@ -103,6 +102,14 @@ public class CreditDebitCardFragment extends Fragment implements View.OnClickLis
         editCVV = (EditText) returnView.findViewById(R.id.cardCvv);
         submitButton = (TextView) returnView.findViewById(R.id.load);
         checkBoxSaveCard = (CheckBox) returnView.findViewById(R.id.checkboxSaveCard);
+
+        // If one tap payment is enabled, no need to display the save card button, since one tap payment already saves the card
+        if (Constants.ENABLE_ONE_TAP_PAYMENT) {
+            checkBoxSaveCard.setVisibility(View.GONE);
+        } else {
+            checkBoxSaveCard.setVisibility(View.VISIBLE);
+        }
+
         submitButton.setOnClickListener(this);
 
         switch (paymentType) {
@@ -168,7 +175,7 @@ public class CreditDebitCardFragment extends Fragment implements View.OnClickLis
             Callback<TransactionResponse> callback = new Callback<TransactionResponse>() {
                 @Override
                 public void success(TransactionResponse transactionResponse) {
-                    ((UIActivity) getActivity()).onPaymentComplete(transactionResponse);
+                    ((UIActivity) getActivity()).onPaymentComplete(CreditDebitCardFragment.this.paymentType, transactionResponse);
                 }
 
                 @Override
@@ -180,13 +187,14 @@ public class CreditDebitCardFragment extends Fragment implements View.OnClickLis
             try {
                 if (this.paymentType == Utils.PaymentType.LOAD_MONEY) {
                     paymentType = new PaymentType.LoadMoney(amount, Constants.RETURN_URL_LOAD_MONEY, cardOption);
-                    citrusClient.loadMoney((PaymentType.LoadMoney) paymentType, callback);
+                    citrusClient.simpliPay(paymentType, callback);
                 } else if (this.paymentType == Utils.PaymentType.PG_PAYMENT) {
                     paymentType = new PaymentType.PGPayment(amount, Constants.BILL_URL, cardOption, null);
-                    citrusClient.pgPayment((PaymentType.PGPayment) paymentType, callback);
+                    citrusClient.simpliPay(paymentType, callback);
                 } else if (this.paymentType == Utils.PaymentType.NEW_PG_PAYMENT) {
                     paymentType = new PaymentType.PGPayment(amount, Constants.BILL_URL, cardOption, null);
-                    citrusClient.makePayment((PaymentType.PGPayment) paymentType, callback);
+                    ((PaymentType.PGPayment) paymentType).useSingleHop(true);
+                    citrusClient.simpliPay(paymentType, callback);
                 } else if (this.paymentType == Utils.PaymentType.DYNAMIC_PRICING) {
                     DynamicPricingRequestType dynamicPricingRequestType = new DynamicPricingRequestType.SearchAndApplyRule(amount, cardOption, null);
 
@@ -253,17 +261,23 @@ public class CreditDebitCardFragment extends Fragment implements View.OnClickLis
             alert.setPositiveButton(positiveButtonText, new DialogInterface.OnClickListener() {
 
                 public void onClick(DialogInterface dialog, int whichButton) {
-                    CitrusClient.getInstance(getActivity()).pgPayment(dynamicPricingResponse, new Callback<TransactionResponse>() {
-                        @Override
-                        public void success(TransactionResponse transactionResponse) {
-                            ((UIActivity) getActivity()).showSnackBar(transactionResponse.getMessage());
-                        }
+                    try {
+                        PaymentType.PGPayment pgPayment = new PaymentType.PGPayment(dynamicPricingResponse);
 
-                        @Override
-                        public void error(CitrusError error) {
-                            ((UIActivity) getActivity()).showSnackBar(error.getMessage());
-                        }
-                    });
+                        CitrusClient.getInstance(getActivity()).simpliPay(pgPayment, new Callback<TransactionResponse>() {
+                            @Override
+                            public void success(TransactionResponse transactionResponse) {
+                                ((UIActivity) getActivity()).showSnackBar(transactionResponse.getMessage());
+                            }
+
+                            @Override
+                            public void error(CitrusError error) {
+                                ((UIActivity) getActivity()).showSnackBar(error.getMessage());
+                            }
+                        });
+                    } catch (CitrusException e) {
+                        e.printStackTrace();
+                    }
 
                     dialog.dismiss();
                 }

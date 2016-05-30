@@ -17,11 +17,17 @@ package com.citrus.sample;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.text.InputFilter;
 import android.text.InputType;
+import android.text.TextUtils;
+import android.text.method.PasswordTransformationMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,15 +46,32 @@ import com.citrus.sdk.CitrusClient;
 import com.citrus.sdk.CitrusUser;
 import com.citrus.sdk.classes.Amount;
 import com.citrus.sdk.classes.CashoutInfo;
+import com.citrus.sdk.classes.CitrusException;
+import com.citrus.sdk.response.SubscriptionResponse;
+import com.citrus.sdk.payment.CardOption;
+import com.citrus.sdk.payment.CreditCardOption;
+import com.citrus.sdk.payment.PaymentOption;
+import com.citrus.sdk.payment.PaymentType;
 import com.citrus.sdk.response.CitrusError;
 import com.citrus.sdk.response.CitrusResponse;
 import com.citrus.sdk.response.PaymentResponse;
+import com.orhanobut.logger.Logger;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
+import static com.citrus.sample.Utils.PaymentType.AUTO_LOAD_MONEY;
 import static com.citrus.sample.Utils.PaymentType.CITRUS_CASH;
 import static com.citrus.sample.Utils.PaymentType.LOAD_MONEY;
 import static com.citrus.sample.Utils.PaymentType.NEW_CITRUS_CASH;
 import static com.citrus.sample.Utils.PaymentType.NEW_PG_PAYMENT;
 import static com.citrus.sample.Utils.PaymentType.PG_PAYMENT;
+import static com.citrus.sample.Utils.PaymentType.WALLET_PG_PAYMENT;
 
 
 /**
@@ -61,13 +84,28 @@ import static com.citrus.sample.Utils.PaymentType.PG_PAYMENT;
  */
 public class WalletPaymentFragment extends Fragment implements View.OnClickListener {
 
+    /*@Bind(R.id.btnsubscriptionlist)
+    Button btnsubscriptionlist;*/
+    @Bind(R.id.btnactivesubscription)
+    Button btnactivesubscription;
+    /*@Bind(R.id.btninactivesubscription)
+    Button btninactivesubscription;*/
+    @Bind(R.id.btndeactivatesubscription)
+    Button btndeactivatesubscription;
+    @Bind(R.id.btnsavedcardsubscription)
+    Button btnsavedcardsubscription;
+    @Bind(R.id.btnisActiveSubscription)
+    Button btnisActiveSubscription;
+    @Bind(R.id.btUpdateSubscription)
+    Button btUpdateSubscription;
+    /*@Bind(R.id.btUpdateSubscriptiontohighervalue)
+    Button btUpdateSubscriptiontohighervalue;*/
     private WalletFragmentListener mListener;
     private CitrusClient mCitrusClient = null;
     private Context mContext = null;
 
     private Button btnGetBalance = null;
     private Button btnLoadMoney = null;
-    private Button btnPayUsingCash = null;
     private Button btnPGPayment = null;
     private Button btnGetWithdrawInfo = null;
     private Button btnWithdraw = null;
@@ -77,6 +115,19 @@ public class WalletPaymentFragment extends Fragment implements View.OnClickListe
     private Button btnGetProfile = null;
     private Button btnNewPayUsingCash = null;
     private Button btnNewPGPayment = null;
+    private Button btnautoload;
+
+    SubscriptionResponse activeSubscription;
+    private Button btnWalletPGPayment = null;
+
+    private SavedOptionsAdapter savedOptionsAdapter = null;
+
+    private PaymentOption otherPaymentOption = null;
+
+    private ArrayList<PaymentOption> walletList = new ArrayList<>();
+
+    String[] AUTO_LOAD_CARD_SCHEMS = {"MASTER_CARD", "VISA"};
+
 
     /**
      * Use this factory method to create a new instance of
@@ -92,8 +143,6 @@ public class WalletPaymentFragment extends Fragment implements View.OnClickListe
 
     public WalletPaymentFragment() {
         // Required empty public constructor
-
-
     }
 
     @Override
@@ -114,9 +163,9 @@ public class WalletPaymentFragment extends Fragment implements View.OnClickListe
         btnGetBalance = (Button) rootView.findViewById(R.id.btn_get_balance);
         btnLoadMoney = (Button) rootView.findViewById(R.id.btn_load_money);
         btnNewPayUsingCash = (Button) rootView.findViewById(R.id.btn_new_pay_using_cash);
-        btnPayUsingCash = (Button) rootView.findViewById(R.id.btn_pay_using_cash);
         btnNewPGPayment = (Button) rootView.findViewById(R.id.btn_new_pg_payment);
         btnPGPayment = (Button) rootView.findViewById(R.id.btn_pg_payment);
+        btnWalletPGPayment = (Button) rootView.findViewById(R.id.btn_wallet_pg_payment);
         btnWithdraw = (Button) rootView.findViewById(R.id.btn_cashout);
         btnGetWithdrawInfo = (Button) rootView.findViewById(R.id.btn_get_cashout_info);
         btnSendMoney = (Button) rootView.findViewById(R.id.btn_send_money);
@@ -125,22 +174,64 @@ public class WalletPaymentFragment extends Fragment implements View.OnClickListe
         btnUpdateProfile = (Button) rootView.findViewById(R.id.btn_update_profile);
         btnGetProfile = (Button) rootView.findViewById(R.id.btn_get_profile);
 
+        btnautoload = (Button) rootView.findViewById(R.id.btn_autoLoad);
+
         btnGetBalance.setOnClickListener(this);
         btnLoadMoney.setOnClickListener(this);
         btnNewPayUsingCash.setOnClickListener(this);
-        btnPayUsingCash.setOnClickListener(this);
         btnNewPGPayment.setOnClickListener(this);
         btnPGPayment.setOnClickListener(this);
+        btnWalletPGPayment.setOnClickListener(this);
         btnGetWithdrawInfo.setOnClickListener(this);
         btnWithdraw.setOnClickListener(this);
         btnSendMoney.setOnClickListener(this);
         btnPerformDP.setOnClickListener(this);
         btnUpdateProfile.setOnClickListener(this);
         btnGetProfile.setOnClickListener(this);
+        btnautoload.setOnClickListener(this);
 
         btnPerformDP.setVisibility(View.VISIBLE);
 
+        ButterKnife.bind(this, rootView);
+        updateView();
         return rootView;
+    }
+
+    private void updateView() {
+
+        mCitrusClient.getActiveSubscriptions(new Callback<SubscriptionResponse>() {
+            @Override
+            public void success(SubscriptionResponse subscriptionResponse) {
+                if (WalletPaymentFragment.this.isVisible() && isAdded()) {
+                    if (subscriptionResponse != null) {
+                        btUpdateSubscription.setVisibility(View.VISIBLE);
+                        btndeactivatesubscription.setVisibility(View.VISIBLE);
+                        activeSubscription = subscriptionResponse;
+                    } else {
+                        btUpdateSubscription.setVisibility(View.GONE);
+                        btndeactivatesubscription.setVisibility(View.GONE);
+                        btnactivesubscription.setVisibility(View.GONE);
+                    }
+                }
+            }
+
+            @Override
+            public void error(CitrusError error) {
+                //    Toast.makeText(getActivity(), "SignIn with Full Scope TOken for auto load feature.", Toast.LENGTH_SHORT).show();
+                if (WalletPaymentFragment.this.isVisible() && isAdded()) {
+                    hideAutoLoadButton();
+                }
+            }
+        });
+    }
+
+    void hideAutoLoadButton() {
+        btnautoload.setVisibility(View.GONE);
+        btnactivesubscription.setVisibility(View.GONE);
+        btndeactivatesubscription.setVisibility(View.GONE);
+        btnisActiveSubscription.setVisibility(View.GONE);
+        btnsavedcardsubscription.setVisibility(View.GONE);
+        btUpdateSubscription.setVisibility(View.GONE);
     }
 
     @Override
@@ -173,14 +264,14 @@ public class WalletPaymentFragment extends Fragment implements View.OnClickListe
             case R.id.btn_new_pay_using_cash:
                 payUsingNewCash();
                 break;
-            case R.id.btn_pay_using_cash:
-                payUsingCash();
-                break;
             case R.id.btn_new_pg_payment:
                 newPgPayment();
                 break;
             case R.id.btn_pg_payment:
                 pgPayment();
+                break;
+            case R.id.btn_wallet_pg_payment:
+                walletPGPayment();
                 break;
             case R.id.btn_cashout:
                 cashout();
@@ -200,7 +291,13 @@ public class WalletPaymentFragment extends Fragment implements View.OnClickListe
             case R.id.btn_get_profile:
                 getProfile();
                 break;
+            case R.id.btn_autoLoad:
+                autoLoad();
         }
+    }
+
+    private void autoLoad() {
+        showPrompt(AUTO_LOAD_MONEY);
     }
 
     private void updateProfile() {
@@ -244,6 +341,10 @@ public class WalletPaymentFragment extends Fragment implements View.OnClickListe
         showPrompt(PG_PAYMENT);
     }
 
+    private void walletPGPayment() {
+        showPrompt(WALLET_PG_PAYMENT);
+    }
+
     private void cashout() {
         showCashoutPrompt();
     }
@@ -279,6 +380,7 @@ public class WalletPaymentFragment extends Fragment implements View.OnClickListe
 
         switch (paymentType) {
             case LOAD_MONEY:
+            case AUTO_LOAD_MONEY:
                 message = "Please enter the amount to load.";
                 positiveButtonText = "Load Money";
                 break;
@@ -289,6 +391,7 @@ public class WalletPaymentFragment extends Fragment implements View.OnClickListe
                 break;
             case PG_PAYMENT:
             case NEW_PG_PAYMENT:
+            case WALLET_PG_PAYMENT:
                 message = "Please enter the transaction amount.";
                 positiveButtonText = "Make Payment";
                 break;
@@ -327,6 +430,7 @@ public class WalletPaymentFragment extends Fragment implements View.OnClickListe
         input.requestFocus();
         alert.show();
     }
+
 
     private void showCashoutPrompt() {
         final AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
@@ -580,6 +684,516 @@ public class WalletPaymentFragment extends Fragment implements View.OnClickListe
             }
         });
     }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        ButterKnife.unbind(this);
+    }
+
+    @OnClick(R.id.btnactivesubscription)
+//, R.id.btnactivesubscription, R.id.btninactivesubscription})
+    public void getActiveSubscriptionList() {
+        mCitrusClient.getActiveSubscriptions(new Callback<SubscriptionResponse>() {
+            @Override
+            public void success(SubscriptionResponse subscriptionResponses) {
+                if (subscriptionResponses != null) {
+                    Logger.d("SUBSCRIPTION LIST ***" + subscriptionResponses.toString());
+                    Toast.makeText(getActivity(), subscriptionResponses.toString(), Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getActivity(), "No active subscription exists.", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void error(CitrusError error) {
+                Logger.d("ERROR ***" + error.getMessage());
+                Toast.makeText(getActivity(), error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+
+    @OnClick(R.id.btndeactivatesubscription)
+    public void deactivate() {
+        deaActivateSubscription();
+    }
+
+    public void deaActivateSubscription() {
+        mCitrusClient.deActivateSubscription(new Callback<SubscriptionResponse>() {
+            @Override
+            public void success(SubscriptionResponse subscriptionResponse) {
+                Logger.d("DEACTIVATED SUBSCRIPTION RESPONSE ***" + subscriptionResponse.toString());
+                Toast.makeText(getActivity(), subscriptionResponse.toString(), Toast.LENGTH_SHORT).show();
+                btndeactivatesubscription.setVisibility(View.GONE);
+                btUpdateSubscription.setVisibility(View.GONE);
+                activeSubscription = null;
+            }
+
+            @Override
+            public void error(CitrusError error) {
+                Logger.d("ERROR ***" + error.getMessage());
+                Toast.makeText(getActivity(), error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    }
+
+    @OnClick(R.id.btnisActiveSubscription)
+    public void checkActiveSubscription() {
+        mCitrusClient.isActiveSubscriptionPresent(new Callback<Boolean>() {
+            @Override
+            public void success(Boolean aBoolean) {
+                if (aBoolean)
+                    Toast.makeText(getActivity(), "Active Subscription Exists for the user.", Toast.LENGTH_SHORT).show();
+                else
+                    Toast.makeText(getActivity(), "Active Subscription Does Not Exists for the user.", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void error(CitrusError error) {
+                Toast.makeText(getActivity(), error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    @OnClick(R.id.btnsavedcardsubscription)
+    void showTokenizedSubscriptionPrompt() {
+
+        mCitrusClient.isActiveSubscriptionPresent(new Callback<Boolean>() {
+            @Override
+            public void success(Boolean aBoolean) {
+                if (!aBoolean) {
+                    showTokenizedPrompt();
+                } else {
+                    Toast.makeText(getActivity(), "Active Subscription already exists", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void error(CitrusError error) {
+                Toast.makeText(getActivity(), error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+
+    private void showSavedAccountsDialog() {
+        final Dialog dialog = new Dialog(getActivity());
+        View view = getActivity().getLayoutInflater().inflate(R.layout.fragment_saved_cards, null);
+        RecyclerView recyclerViewSavedAcc = (RecyclerView) view.findViewById(R.id.recycler_view_saved_options);
+        if (walletList != null && walletList.size() > 0) {
+            recyclerViewSavedAcc.setAdapter(savedOptionsAdapter);
+        } else {
+            // In case there are no saved accounts.
+            recyclerViewSavedAcc.setVisibility(View.GONE);
+            view.findViewById(R.id.noSavedAccTextViewId).setVisibility(View.VISIBLE);
+        }
+        // use this setting to improve performance if you know that changes
+        // in content do not change the layout size of the RecyclerView
+        recyclerViewSavedAcc.setHasFixedSize(true);
+        // use a linear layout manager
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
+        recyclerViewSavedAcc.setLayoutManager(mLayoutManager);
+
+        recyclerViewSavedAcc.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(), new RecyclerItemClickListener.OnItemClickListener() {
+            @Override
+            public void onItemClick(View childView, int position) {
+                PaymentOption paymentOption = getItem(position);
+                dialog.dismiss();
+
+                if (paymentOption instanceof CardOption) {
+                    if (mCitrusClient.isOneTapPaymentEnabledForCard((CardOption) paymentOption)) {
+                        otherPaymentOption = paymentOption;
+                        //otherPaymentOption.setTransactionAmount(new Amount(amount));
+                    } else {
+                        showCvvPrompt(paymentOption);
+                    }
+
+                } else {
+                    otherPaymentOption = paymentOption;
+                    //otherPaymentOption.setTransactionAmount(new Amount(amount));
+                }
+            }
+
+            @Override
+            public void onItemLongPress(View childView, int position) {
+            }
+        }));
+
+        dialog.setContentView(view);
+        dialog.show();
+    }
+
+
+    private void showCvvPrompt(final PaymentOption paymentOption) {
+        final AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
+        String message = "Please enter CVV.";
+        String positiveButtonText = "OK";
+        alert.setTitle("CVV");
+        alert.setMessage(message);
+        // Set an EditText view to get user input
+        final EditText input = new EditText(getActivity());
+        input.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+        input.setTransformationMethod(PasswordTransformationMethod.getInstance());
+        InputFilter[] FilterArray = new InputFilter[1];
+        FilterArray[0] = new InputFilter.LengthFilter(4);
+        input.setFilters(FilterArray);
+        alert.setView(input);
+        alert.setPositiveButton(positiveButtonText, new DialogInterface.OnClickListener() {
+
+            public void onClick(DialogInterface dialog, int whichButton) {
+                String cvv = input.getText().toString();
+                input.clearFocus();
+                // Hide the keyboard.
+                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(
+                        Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(input.getWindowToken(), 0);
+                otherPaymentOption = paymentOption;
+                ((CardOption) otherPaymentOption).setCardCVV(cvv);
+            }
+        });
+
+        alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                dialog.cancel();
+                // Hide the keyboard.
+                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(
+                        Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(input.getWindowToken(), 0);
+            }
+        });
+
+        input.requestFocus();
+        alert.show();
+    }
+
+    private PaymentOption getItem(int position) {
+        PaymentOption paymentOption = null;
+
+        if (walletList != null && walletList.size() > position && position >= -1) {
+            paymentOption = walletList.get(position);
+        }
+
+        return paymentOption;
+    }
+
+    void showTokenizedPrompt() {
+        final AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
+        final String message = "Auto Load Money with Saved Card";
+        String positiveButtonText = "Auto Load";
+
+        LinearLayout linearLayout = new LinearLayout(getActivity());
+        linearLayout.setOrientation(LinearLayout.VERTICAL);
+        final TextView labelamt = new TextView(getActivity());
+        final EditText editAmount = new EditText(getActivity());
+        final TextView labelAmount = new TextView(getActivity());
+        final EditText editLoadAmount = new EditText(getActivity());
+        final TextView labelMobileNo = new TextView(getActivity());
+        final EditText editThresholdAmount = new EditText(getActivity());
+        final Button btnSelectSavedCards = new Button(getActivity());
+        btnSelectSavedCards.setText("Select Saved Card");
+
+        editLoadAmount.setSingleLine(true);
+        editThresholdAmount.setSingleLine(true);
+
+        editAmount.setSingleLine(true);
+        labelamt.setText("Load Amount");
+        labelAmount.setText("Auto Load Amount");
+        labelMobileNo.setText("Threshold Amount");
+
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT);
+
+        labelamt.setLayoutParams(layoutParams);
+        editAmount.setLayoutParams(layoutParams);
+        labelAmount.setLayoutParams(layoutParams);
+        labelMobileNo.setLayoutParams(layoutParams);
+        editLoadAmount.setLayoutParams(layoutParams);
+        editThresholdAmount.setLayoutParams(layoutParams);
+        btnSelectSavedCards.setLayoutParams(layoutParams);
+
+        btnSelectSavedCards.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mCitrusClient.getWallet(new Callback<List<PaymentOption>>() {
+                    @Override
+                    public void success(List<PaymentOption> paymentOptions) {
+                        walletList.clear();
+                        for (PaymentOption paymentOption : paymentOptions) {
+                            if (paymentOption instanceof CreditCardOption) {
+                                if (Arrays.asList(AUTO_LOAD_CARD_SCHEMS).contains(((CardOption) paymentOption).getCardScheme().toString()))
+                                    walletList.add(paymentOption); //only available for Master and Visa Credit Card....
+                            }
+                        }
+                        savedOptionsAdapter = new SavedOptionsAdapter(getActivity(), walletList);
+                        showSavedAccountsDialog();
+                    }
+
+                    @Override
+                    public void error(CitrusError error) {
+                        Toast.makeText(getActivity(), error.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        });
+
+        linearLayout.addView(labelamt);
+        linearLayout.addView(editAmount);
+        linearLayout.addView(labelAmount);
+        linearLayout.addView(editLoadAmount);
+        linearLayout.addView(labelMobileNo);
+        linearLayout.addView(editThresholdAmount);
+        linearLayout.addView(btnSelectSavedCards);
+
+        int paddingPx = Utils.getSizeInPx(getActivity(), 32);
+        linearLayout.setPadding(paddingPx, paddingPx, paddingPx, paddingPx);
+
+        editLoadAmount.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+        editThresholdAmount.setInputType(InputType.TYPE_CLASS_NUMBER);
+        alert.setTitle("Auto Load Money with Saved Card");
+        alert.setMessage(message);
+
+        alert.setView(linearLayout);
+        alert.setPositiveButton(positiveButtonText, new DialogInterface.OnClickListener() {
+
+            public void onClick(DialogInterface dialog, int whichButton) {
+                final String amount = editAmount.getText().toString();
+                final String loadAmount = editLoadAmount.getText().toString();
+                final String thresHoldAmount = editThresholdAmount.getText().toString();
+                // Hide the keyboard.
+                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(
+                        Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(editAmount.getWindowToken(), 0);
+
+                if (TextUtils.isEmpty(amount)) {
+                    Toast.makeText(getActivity(), "Amount cant be blank", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                if (TextUtils.isEmpty(loadAmount)) {
+                    Toast.makeText(getActivity(), "Load Amount cant be blank", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+
+                if (TextUtils.isEmpty(thresHoldAmount)) {
+                    Toast.makeText(getActivity(), "thresHoldAmount cant be blank", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                if (Double.valueOf(thresHoldAmount) < new Double("500")) {
+                    Toast.makeText(getActivity(), "thresHoldAmount  should not be less than 500", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                if (Double.valueOf(loadAmount) < new Double(thresHoldAmount)) {
+                    Toast.makeText(getActivity(), "Load Amount should not be less than thresHoldAmount", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+
+                if (otherPaymentOption == null) {
+                    Toast.makeText(getActivity(), "Saved Card Option is null.", Toast.LENGTH_SHORT).show();
+                }
+
+                try {
+                    PaymentType paymentType = new PaymentType.LoadMoney(new Amount(amount), Constants.RETURN_URL_LOAD_MONEY, otherPaymentOption);
+                    mCitrusClient.autoLoadMoney((PaymentType.LoadMoney) paymentType, new Amount(thresHoldAmount), new Amount(loadAmount), new Callback<SubscriptionResponse>() {
+                        @Override
+                        public void success(SubscriptionResponse subscriptionResponse) {
+                            Logger.d("AUTO LOAD RESPONSE ***" + subscriptionResponse.getSubscriptionResponseMessage());
+                            Toast.makeText(getActivity(), subscriptionResponse.getSubscriptionResponseMessage(), Toast.LENGTH_SHORT).show();
+                        }
+
+                        @Override
+                        public void error(CitrusError error) {
+                            Logger.d("AUTO LOAD ERROR ***" + error.getMessage());
+                            Toast.makeText(getActivity(), error.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                } catch (CitrusException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                dialog.cancel();
+            }
+        });
+
+        editLoadAmount.requestFocus();
+        alert.show();
+    }
+
+
+    @OnClick(R.id.btUpdateSubscription)
+    public void updateSubscription() {
+        if (activeSubscription != null) {
+            showUpdateSubscriptionPrompt(false);
+        } else {
+            mCitrusClient.updateSubScriptiontoLoweValue(new Amount("508"), new Amount("515"), new Callback<SubscriptionResponse>() {
+                @Override
+                public void success(SubscriptionResponse subscriptionResponse) {
+
+                }
+
+                @Override
+                public void error(CitrusError error) {
+                    Toast.makeText(getActivity(), error.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+    }
+
+    //we will use the same method to update subscription to lower and higher value
+    //i u want to update to higher value - again load Money is required
+    private void showUpdateSubscriptionPrompt(final boolean isUpdateToHigherValue) {
+        final AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
+        //    final String message = "Update Subscription to Lowe Amount";
+        String positiveButtonText = "Update Subscription ";
+
+        LinearLayout linearLayout = new LinearLayout(getActivity());
+        linearLayout.setOrientation(LinearLayout.VERTICAL);
+        final TextView labelsubscriptionID = new TextView(getActivity());
+        final EditText editSubscriptionID = new EditText(getActivity());
+        final TextView labelAmount = new TextView(getActivity());
+        final EditText editLoadAmount = new EditText(getActivity());
+        final TextView labelMobileNo = new TextView(getActivity());
+        final EditText editThresholdAmount = new EditText(getActivity());
+
+        editLoadAmount.setSingleLine(true);
+        editThresholdAmount.setSingleLine(true);
+        editSubscriptionID.setSingleLine(true);
+        editSubscriptionID.setText(activeSubscription.getSubscriptionId());
+        editSubscriptionID.setInputType(InputType.TYPE_NULL);
+        labelsubscriptionID.setText("Load Money Amount");
+        labelAmount.setText("Current Auto Load Amount");
+        editLoadAmount.setText(String.valueOf(activeSubscription.getLoadAmount()));
+        labelMobileNo.setText("Current Threshold Amount");
+        editThresholdAmount.setText(String.valueOf(activeSubscription.getThresholdAmount()));
+
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT);
+
+        labelsubscriptionID.setLayoutParams(layoutParams);
+        editSubscriptionID.setLayoutParams(layoutParams);
+        labelAmount.setLayoutParams(layoutParams);
+        labelMobileNo.setLayoutParams(layoutParams);
+        editLoadAmount.setLayoutParams(layoutParams);
+        editThresholdAmount.setLayoutParams(layoutParams);
+
+
+        linearLayout.addView(labelAmount);
+        linearLayout.addView(editLoadAmount);
+        linearLayout.addView(labelMobileNo);
+        linearLayout.addView(editThresholdAmount);
+        linearLayout.addView(labelsubscriptionID);
+        linearLayout.addView(editSubscriptionID);
+
+        labelsubscriptionID.setVisibility(View.INVISIBLE);
+        editSubscriptionID.setVisibility(View.INVISIBLE);
+
+
+        int paddingPx = Utils.getSizeInPx(getActivity(), 32);
+        linearLayout.setPadding(paddingPx, paddingPx, paddingPx, paddingPx);
+
+        editLoadAmount.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+        editLoadAmount.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    if (Double.valueOf(editLoadAmount.getText().toString()) > activeSubscription.getLoadAmount()) {
+                        labelsubscriptionID.setVisibility(View.VISIBLE);
+                        editSubscriptionID.setVisibility(View.VISIBLE);
+                        editSubscriptionID.setText("1.00");
+
+                    } else {
+                        labelsubscriptionID.setVisibility(View.INVISIBLE);
+                        editSubscriptionID.setVisibility(View.INVISIBLE);
+                    }
+                }
+            }
+        });
+        editThresholdAmount.setInputType(InputType.TYPE_CLASS_NUMBER);
+        alert.setTitle("Update Subscription ");
+        alert.setMessage("Updating Load amount to higher will require Load Money transactions.");
+
+        alert.setView(linearLayout);
+        alert.setPositiveButton(positiveButtonText, new DialogInterface.OnClickListener() {
+
+            public void onClick(DialogInterface dialog, int whichButton) {
+                final String subscriptionID = editSubscriptionID.getText().toString();
+
+                final String loadAmount = editLoadAmount.getText().toString();
+                final String thresHoldAmount = editThresholdAmount.getText().toString();
+
+                // Hide the keyboard.
+                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(
+                        Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(editSubscriptionID.getWindowToken(), 0);
+
+                if (TextUtils.isEmpty(subscriptionID)) {
+                    Toast.makeText(getActivity(), "subscriptionID cant be blank", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                if (TextUtils.isEmpty(loadAmount)) {
+                    Toast.makeText(getActivity(), "Load Amount cant be blank", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+
+                if (TextUtils.isEmpty(thresHoldAmount)) {
+                    Toast.makeText(getActivity(), "thresHoldAmount cant be blank", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+
+                if (Double.valueOf(thresHoldAmount) < new Double("500")) {
+                    Toast.makeText(getActivity(), "thresHoldAmount  should not be less than 500", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                if (Double.valueOf(loadAmount) < new Double(thresHoldAmount)) {
+                    Toast.makeText(getActivity(), "Load Amount should not be less than thresHoldAmount", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (Double.valueOf(editLoadAmount.getText().toString()) > activeSubscription.getLoadAmount()) { //update to higher value
+                    mListener.onAutoLoadSelected(AUTO_LOAD_MONEY, new Amount(loadAmount), editLoadAmount.getText().toString(),
+                            editThresholdAmount.getText().toString(), true);
+                } else { //update to lower value
+                    mCitrusClient.updateSubScriptiontoLoweValue(new Amount(thresHoldAmount), new Amount(loadAmount), new Callback<SubscriptionResponse>() {
+                        @Override
+                        public void success(SubscriptionResponse subscriptionResponse) {
+                            Toast.makeText(getActivity(), subscriptionResponse.toString(), Toast.LENGTH_SHORT).show();
+
+                            Logger.d("updateSubscription response **" + subscriptionResponse.toString());
+                            activeSubscription = subscriptionResponse;//update the active subscription Object
+                        }
+
+                        @Override
+                        public void error(CitrusError error) {
+                            Toast.makeText(getActivity(), error.getMessage(), Toast.LENGTH_SHORT).show();
+                            Logger.d("ERROR ***updateSubscription" + error.getMessage());
+                        }
+                    });
+                }
+            }
+        });
+
+        alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                dialog.cancel();
+            }
+        });
+
+        editLoadAmount.requestFocus();
+        alert.show();
+    }
+
 }
 
 

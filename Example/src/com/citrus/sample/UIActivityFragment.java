@@ -40,6 +40,7 @@ public class UIActivityFragment extends Fragment implements View.OnClickListener
     private Button btnSignout = null;
     private Button btnUserManagement = null;
     private Button btnWalletPayment = null;
+    public boolean isUserLoggedIn = false;
 
     public UIActivityFragment() {
     }
@@ -59,40 +60,6 @@ public class UIActivityFragment extends Fragment implements View.OnClickListener
         btnSignout = (Button) rootView.findViewById(R.id.btn_logout);
         btnSignout.setOnClickListener(this);
 
-        citrusClient.isUserSignedIn(new Callback<Boolean>() {
-            @Override
-            public void success(Boolean isUserLoggedIn) {
-                if (isUserLoggedIn) {
-                    citrusClient.getProfileInfo(new Callback<CitrusUser>() {
-                        @Override
-                        public void success(CitrusUser citrusUser) {
-                            textMessage.setText("Welcome " + citrusUser.getEmailId());
-                            btnWalletPayment.setVisibility(View.VISIBLE);
-                            btnUserManagement.setVisibility(View.GONE);
-                            btnSignout.setVisibility(View.VISIBLE);
-                        }
-
-                        @Override
-                        public void error(CitrusError error) {
-                            textMessage.setText("Welcome Back");
-                            btnWalletPayment.setVisibility(View.VISIBLE);
-                            btnUserManagement.setVisibility(View.GONE);
-                            btnSignout.setVisibility(View.VISIBLE);
-                        }
-                    });
-                } else {
-                    textMessage.setText("Please Sign In or Sign Up the user.");
-                    btnWalletPayment.setVisibility(View.GONE);
-                    btnUserManagement.setVisibility(View.VISIBLE);
-                    btnSignout.setVisibility(View.GONE);
-                }
-            }
-
-            @Override
-            public void error(CitrusError error) {
-                textMessage.setText(error.getMessage());
-            }
-        });
         return rootView;
     }
 
@@ -123,6 +90,50 @@ public class UIActivityFragment extends Fragment implements View.OnClickListener
 //                Utils.showToast(getActivity(), error.getMessage());
 
                 ((UIActivity) getActivity()).showSnackBar(error.getMessage());
+            }
+        });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        checkUserLogin();
+    }
+
+    void checkUserLogin() {
+        citrusClient.isUserSignedIn(new Callback<Boolean>() {
+            @Override
+            public void success(Boolean isUserLoggedIn) {
+                UIActivityFragment.this.isUserLoggedIn = isUserLoggedIn;
+                if (isUserLoggedIn) {
+                    citrusClient.getProfileInfo(new Callback<CitrusUser>() {
+                        @Override
+                        public void success(CitrusUser citrusUser) {
+                            textMessage.setText("Welcome " + citrusUser.getEmailId());
+                            btnWalletPayment.setVisibility(View.VISIBLE);
+                            btnUserManagement.setVisibility(View.GONE);
+                            btnSignout.setVisibility(View.VISIBLE);
+                        }
+
+                        @Override
+                        public void error(CitrusError error) {
+                            textMessage.setText("Welcome Back");
+                            btnWalletPayment.setVisibility(View.VISIBLE);
+                            btnUserManagement.setVisibility(View.GONE);
+                            btnSignout.setVisibility(View.VISIBLE);
+                        }
+                    });
+                } else {
+                    textMessage.setText("Please Sign In or Sign Up the user.");
+                    btnWalletPayment.setVisibility(View.GONE);
+                    btnUserManagement.setVisibility(View.VISIBLE);
+                    btnSignout.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void error(CitrusError error) {
+                textMessage.setText(error.getMessage());
             }
         });
     }

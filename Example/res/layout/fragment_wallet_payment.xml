@@ -15,7 +15,8 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/white">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -38,18 +39,11 @@
             android:text="Load Money" />
 
         <Button
-            android:id="@+id/btn_pay_using_cash"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/button_margin"
-            android:text="Pay Using Citrus Cash" />
-
-        <Button
             android:id="@+id/btn_new_pay_using_cash"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/button_margin"
-            android:text="New Pay Using Citrus Cash" />
+            android:text="Pay Using Citrus Cash" />
 
         <Button
             android:id="@+id/btn_pg_payment"
@@ -64,6 +58,13 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/button_margin"
             android:text="New PG Payment" />
+
+        <Button
+            android:id="@+id/btn_wallet_pg_payment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/button_margin"
+            android:text="Wallet PG Payment"/>
 
         <Button
             android:id="@+id/btn_get_cashout_info"
@@ -108,6 +109,71 @@
             android:layout_gravity="center_horizontal"
             android:layout_margin="@dimen/button_margin"
             android:text="GetProfile" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Auto Load "
+            android:id="@+id/btn_autoLoad"
+            android:layout_gravity="center_horizontal" />
+
+       <!-- <Button
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Get Subscription List"
+            android:id="@+id/btnsubscriptionlist"
+            android:layout_gravity="center_horizontal" />-->
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Get Active Subscription"
+            android:id="@+id/btnactivesubscription"
+            android:layout_gravity="center_horizontal" />
+
+       <!-- <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Get InActive Subscription"
+            android:id="@+id/btninactivesubscription"
+            android:layout_gravity="center_horizontal" />-->
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Deactivate Subscription"
+            android:id="@+id/btndeactivatesubscription"
+            android:layout_gravity="center_horizontal" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Subscription using saved card"
+            android:id="@+id/btnsavedcardsubscription"
+            android:layout_gravity="center_horizontal" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="is Active Subscription Present"
+            android:id="@+id/btnisActiveSubscription"
+            android:layout_gravity="center_horizontal" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Update Subscription"
+            android:id="@+id/btUpdateSubscription"
+            android:layout_gravity="center_horizontal" />
+
+       <!-- <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Update Subscription to higher value"
+            android:id="@+id/btUpdateSubscriptiontohighervalue"
+            android:layout_gravity="center_horizontal" />-->
+
 
     </LinearLayout>
 </ScrollView>

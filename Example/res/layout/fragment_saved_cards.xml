@@ -8,6 +8,19 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view_saved_options"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent" />
+
+    <TextView
+        android:id="@+id/noSavedAccTextViewId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="15dp"
+        android:layout_centerVertical="true"
+        android:text="No Saved Accounts"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@android:color/black"
+        android:visibility="gone" />
+
 
 </RelativeLayout>

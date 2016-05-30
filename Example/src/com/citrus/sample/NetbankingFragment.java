@@ -207,7 +207,7 @@ public final class NetbankingFragment extends Fragment {
                 Callback<TransactionResponse> callback = new Callback<TransactionResponse>() {
                     @Override
                     public void success(TransactionResponse transactionResponse) {
-                        ((UIActivity) getActivity()).onPaymentComplete(transactionResponse);
+                        ((UIActivity) getActivity()).onPaymentComplete(paymentType, transactionResponse);
                     }
 
                     @Override
@@ -219,13 +219,13 @@ public final class NetbankingFragment extends Fragment {
                 try {
                     if (paymentType == Utils.PaymentType.LOAD_MONEY) {
                         paymentType1 = new PaymentType.LoadMoney(amount, Constants.RETURN_URL_LOAD_MONEY, netbankingOption);
-                        client.loadMoney((PaymentType.LoadMoney) paymentType1, callback);
+                        client.simpliPay((PaymentType.LoadMoney) paymentType1, callback);
                     } else if (paymentType == Utils.PaymentType.PG_PAYMENT) {
                         paymentType1 = new PaymentType.PGPayment(amount, Constants.BILL_URL, netbankingOption, null);
-                        client.pgPayment((PaymentType.PGPayment) paymentType1, callback);
+                        client.simpliPay(paymentType1, callback);
                     } else if (paymentType == Utils.PaymentType.NEW_PG_PAYMENT) {
                         paymentType1 = new PaymentType.PGPayment(amount, Constants.BILL_URL, netbankingOption, null);
-                        client.makePayment((PaymentType.PGPayment) paymentType1, callback);
+                        client.simpliPay(paymentType1, callback);
                     }
                 } catch (CitrusException e) {
                     e.printStackTrace();
@@ -265,17 +265,23 @@ public final class NetbankingFragment extends Fragment {
             alert.setPositiveButton(positiveButtonText, new DialogInterface.OnClickListener() {
 
                 public void onClick(DialogInterface dialog, int whichButton) {
-                    CitrusClient.getInstance(getActivity()).pgPayment(dynamicPricingResponse, new Callback<TransactionResponse>() {
-                        @Override
-                        public void success(TransactionResponse transactionResponse) {
-                            ((UIActivity) getActivity()).showSnackBar(transactionResponse.getMessage());
-                        }
+                    try {
+                        PaymentType.PGPayment pgPayment = new PaymentType.PGPayment(dynamicPricingResponse);
+                        CitrusClient.getInstance(getActivity()).simpliPay(pgPayment, new Callback<TransactionResponse>() {
+                            @Override
+                            public void success(TransactionResponse transactionResponse) {
+                                ((UIActivity) getActivity()).showSnackBar(transactionResponse.getMessage());
+                            }
 
-                        @Override
-                        public void error(CitrusError error) {
-                            ((UIActivity) getActivity()).showSnackBar(error.getMessage());
-                        }
-                    });
+                            @Override
+                            public void error(CitrusError error) {
+                                ((UIActivity) getActivity()).showSnackBar(error.getMessage());
+                            }
+                        });
+                    } catch (CitrusException e) {
+                        e.printStackTrace();
+                    }
+
 
                     dialog.dismiss();
                 }

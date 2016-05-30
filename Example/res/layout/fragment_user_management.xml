@@ -1,7 +1,8 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/white">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -15,7 +16,7 @@
             android:layout_margin="@dimen/button_margin"
             android:hint="@string/enter_email_text"
             android:inputType="textEmailAddress"
-            android:text="@string/dummy_email_hint" />
+             /><!--android:text="@string/dummy_email_hint"-->
 
         <EditText
             android:id="@+id/edit_mobile_no"
@@ -25,13 +26,38 @@
             android:layout_margin="@dimen/button_margin"
             android:hint="@string/enter_mobile_text"
             android:inputType="number"
-            android:text="@string/dummy_mobile_hint" />
+            /><!--android:text="@string/dummy_mobile_hint"-->
+
+
+        <LinearLayout
+            android:id="@+id/scopeCheckboxLayoutID"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/edit_mobile_no">
+
+            <CheckBox
+                android:id="@+id/fullScopeCheckBoxId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:checked="true"
+                android:text="Full Scope" />
+
+            <CheckBox
+                android:id="@+id/limitedCheckBox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:checked="false"
+                android:text="Limited Scope" />
+
+        </LinearLayout>
 
         <Button
             android:id="@+id/btn_link_user"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/edit_mobile_no"
+            android:layout_below="@id/scopeCheckboxLayoutID"
             android:layout_margin="@dimen/button_margin"
             android:text="@string/is_citrus_member_text" />
 
@@ -44,6 +70,7 @@
             android:layout_marginTop="@dimen/button_margin"
             android:hint="@string/password_hint"
             android:inputType="textPassword"
+            android:text="@string/dummy_password"
             android:visibility="gone" />
         <!--android:text="Citrus@123"-->
 
@@ -116,7 +143,7 @@
             android:layout_below="@id/txt_user_mgmt_message"
             android:layout_margin="@dimen/button_margin"
             android:text="@string/reset_pass_text"
-            android:visibility="visible" />
+            android:visibility="gone" />
 
     </RelativeLayout>
 </ScrollView>

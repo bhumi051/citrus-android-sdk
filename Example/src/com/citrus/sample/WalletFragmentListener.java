@@ -1,5 +1,7 @@
 package com.citrus.sample;
 
+import android.support.v4.app.Fragment;
+
 import com.citrus.sdk.TransactionResponse;
 import com.citrus.sdk.classes.Amount;
 import com.citrus.sdk.classes.CashoutInfo;
@@ -8,7 +10,7 @@ import com.citrus.sdk.classes.CashoutInfo;
  * Created by salil on 3/6/15.
  */
 public interface WalletFragmentListener {
-    void onPaymentComplete(TransactionResponse transactionResponse);
+    void onPaymentComplete(Utils.PaymentType paymentType , TransactionResponse transactionResponse);
 
     void onPaymentTypeSelected(Utils.PaymentType paymentType, Amount amount);
 
@@ -18,5 +20,9 @@ public interface WalletFragmentListener {
 
     void onUpdateProfileSelected();
 
+    void onAutoLoadSelected(Utils.PaymentType paymentType, Amount amount, String updatedLoadAmount, String updatedThresholdAmount, boolean isUpdateAutoLoad);
+
     void showSnackBar(String message);
+
+    void onWalletPgSplitOptionSelected(Fragment fragment);
 }

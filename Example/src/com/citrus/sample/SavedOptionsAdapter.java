@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.citrus.sdk.payment.CardOption;
 import com.citrus.sdk.payment.CitrusCash;
+import com.citrus.sdk.payment.MVCOption;
 import com.citrus.sdk.payment.NetbankingOption;
 import com.citrus.sdk.payment.PaymentOption;
 
@@ -54,14 +55,17 @@ final class SavedOptionsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 itemHolder.paymentOptionName.setText("\t" + ((NetbankingOption) paymentOption).getBankName());
                 Drawable mNetBankIconDrawable = paymentOption.getOptionIcon(mActivity);
                 itemHolder.paymentOptionName.setCompoundDrawablesWithIntrinsicBounds(mNetBankIconDrawable, null, null, null);
+                itemHolder.paymentOptionBankName.setText( "Net Banking" );
 
             } else if (paymentOption instanceof CardOption) {
                 itemHolder.paymentOptionName.setText("\t" + ((CardOption) paymentOption).getCardNumber());
                 Drawable mCardIconDrawable = paymentOption.getOptionIcon(mActivity);
                 itemHolder.paymentOptionName.setCompoundDrawablesWithIntrinsicBounds(mCardIconDrawable, null, null, null);
                 itemHolder.paymentOptionBankName.setText(paymentOption.getName());
-            }
-            if (paymentOption instanceof CitrusCash) {
+            } else if (paymentOption instanceof CitrusCash) {
+                itemHolder.paymentOptionName.setText(paymentOption.getName());
+                itemHolder.paymentOptionBankName.setVisibility(View.GONE);
+            } else if (paymentOption instanceof MVCOption) {
                 itemHolder.paymentOptionName.setText(paymentOption.getName());
                 itemHolder.paymentOptionBankName.setVisibility(View.GONE);
             }

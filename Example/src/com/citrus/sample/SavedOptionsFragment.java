@@ -27,10 +27,12 @@ import com.citrus.sdk.dynamicPricing.DynamicPricingRequestType;
 import com.citrus.sdk.dynamicPricing.DynamicPricingResponse;
 import com.citrus.sdk.payment.CardOption;
 import com.citrus.sdk.payment.CitrusCash;
+import com.citrus.sdk.payment.MVCOption;
 import com.citrus.sdk.payment.PaymentOption;
 import com.citrus.sdk.payment.PaymentType;
 import com.citrus.sdk.response.CitrusError;
 import com.citrus.sdk.response.CitrusResponse;
+import com.orhanobut.logger.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -115,7 +117,7 @@ public class SavedOptionsFragment extends Fragment {
             citrusClient.getBalance(new Callback<Amount>() {
                 @Override
                 public void success(Amount amount) {
-                    CitrusCash citrusCash = new CitrusCash(amount.getValue());
+                    CitrusCash citrusCash = new CitrusCash(amount);
                     walletList.add(0, citrusCash);
                 }
 
@@ -135,20 +137,39 @@ public class SavedOptionsFragment extends Fragment {
         citrusClient.getWallet(new Callback<List<PaymentOption>>() {
             @Override
             public void success(List<PaymentOption> paymentOptionList) {
-                // In Case of DP show Citrus Cash As a Payment Option
-                if (paymentType == Utils.PaymentType.DYNAMIC_PRICING && walletList.size() == 1) {
+                // In case of not a wallet pg payment remove citrus cash and MVC from the payment options list.
+                if (paymentType == Utils.PaymentType.PG_PAYMENT
+                        || paymentType == Utils.PaymentType.NEW_PG_PAYMENT
+                        || paymentType == Utils.PaymentType.LOAD_MONEY
+                        || paymentType == Utils.PaymentType.CITRUS_CASH
+                        || paymentType == Utils.PaymentType.NEW_CITRUS_CASH) {
+                    for (PaymentOption paymentOption : paymentOptionList) {
+                        // Do not put the Citrus Cash and MVC as a payment instrument in case not a wallet pg payment.
+                        if (!(paymentOption instanceof CitrusCash || paymentOption instanceof MVCOption)) {
+                            walletList.add(paymentOption);
+                        }
+                    }
+                } else if (paymentType == Utils.PaymentType.DYNAMIC_PRICING && walletList.size() == 1) {
+                    // In Case of DP show Citrus Cash As a Payment Option
                     walletList.addAll(1, paymentOptionList);
+
+                    savedOptionsAdapter.setWalletList(walletList);
                 } else {
                     walletList.addAll(0, paymentOptionList);
+                    savedOptionsAdapter.setWalletList(walletList);
                 }
-                savedOptionsAdapter.setWalletList(walletList);
+
                 savedOptionsAdapter.notifyDataSetChanged();
             }
 
             @Override
             public void error(CitrusError error) {
 //                Utils.showToast(getActivity(), error.getMessage());
-                ((UIActivity) getActivity()).showSnackBar(error.getMessage());
+                if (getActivity() != null) {
+                    ((UIActivity) getActivity()).showSnackBar(error.getMessage());
+                } else {
+                    Logger.d("ERROR", error.getMessage());
+                }
             }
         });
     }
@@ -210,7 +231,7 @@ public class SavedOptionsFragment extends Fragment {
         }
     }
 
-    private void proceedToPayment(Utils.PaymentType paymentType, PaymentOption paymentOption) {
+    private void proceedToPayment(final Utils.PaymentType paymentType, PaymentOption paymentOption) {
 
         if (paymentType == Utils.PaymentType.DYNAMIC_PRICING) {
             DynamicPricingRequestType dynamicPricingRequestType = null;
@@ -242,7 +263,7 @@ public class SavedOptionsFragment extends Fragment {
                 @Override
                 public void success(TransactionResponse transactionResponse) {
                     if (getActivity() != null) {
-                        ((UIActivity) getActivity()).onPaymentComplete(transactionResponse);
+                        ((UIActivity) getActivity()).onPaymentComplete(paymentType, transactionResponse);
                     }
                 }
 
@@ -257,13 +278,14 @@ public class SavedOptionsFragment extends Fragment {
             try {
                 if (paymentType == Utils.PaymentType.LOAD_MONEY) {
                     paymentType1 = new PaymentType.LoadMoney(amount, Constants.RETURN_URL_LOAD_MONEY, paymentOption);
-                    citrusClient.loadMoney((PaymentType.LoadMoney) paymentType1, callback);
+                    citrusClient.simpliPay(paymentType1, callback);
                 } else if (paymentType == Utils.PaymentType.PG_PAYMENT) {
                     paymentType1 = new PaymentType.PGPayment(amount, Constants.BILL_URL, paymentOption, null);
-                    citrusClient.pgPayment((PaymentType.PGPayment) paymentType1, callback);
+                    citrusClient.simpliPay(paymentType1, callback);
                 } else if (this.paymentType == Utils.PaymentType.NEW_PG_PAYMENT) {
                     paymentType1 = new PaymentType.PGPayment(amount, Constants.BILL_URL, paymentOption, null);
-                    citrusClient.makePayment((PaymentType.PGPayment) paymentType1, callback);
+                    ((PaymentType.PGPayment) paymentType1).useSingleHop(true);
+                    citrusClient.simpliPay(paymentType1, callback);
                 }
             } catch (CitrusException e) {
                 e.printStackTrace();
@@ -275,7 +297,7 @@ public class SavedOptionsFragment extends Fragment {
     }
 
 
-    private void proceedToFastPayment(Utils.PaymentType paymentType, PaymentOption paymentOption) {
+    private void proceedToFastPayment(final Utils.PaymentType paymentType, PaymentOption paymentOption) {
 
         if (paymentType == Utils.PaymentType.DYNAMIC_PRICING) {
             DynamicPricingRequestType dynamicPricingRequestType = null;
@@ -288,6 +310,18 @@ public class SavedOptionsFragment extends Fragment {
                 dynamicPricingRequestType = new DynamicPricingRequestType.ValidateRule(amount, paymentOption, couponCode, alteredAmount, null);
             }
 
+            citrusClient.performDynamicPricing(dynamicPricingRequestType, Constants.BILL_URL, new Callback<DynamicPricingResponse>() {
+                @Override
+                public void success(DynamicPricingResponse dynamicPricingResponse) {
+                    showPrompt(dynamicPricingResponse);
+                }
+
+                @Override
+                public void error(CitrusError error) {
+                    ((UIActivity) getActivity()).showSnackBar(error.getMessage());
+                }
+            });
+
         } else {
 
             PaymentType paymentType1;
@@ -295,7 +329,7 @@ public class SavedOptionsFragment extends Fragment {
             Callback<TransactionResponse> callback = new Callback<TransactionResponse>() {
                 @Override
                 public void success(TransactionResponse transactionResponse) {
-                    ((UIActivity) getActivity()).onPaymentComplete(transactionResponse);
+                    ((UIActivity) getActivity()).onPaymentComplete(paymentType, transactionResponse);
                 }
 
                 @Override
@@ -309,10 +343,10 @@ public class SavedOptionsFragment extends Fragment {
             try {
                 if (paymentType == Utils.PaymentType.LOAD_MONEY) {
                     paymentType1 = new PaymentType.LoadMoney(amount, Constants.RETURN_URL_LOAD_MONEY, paymentOption);
-                    citrusClient.loadMoneyWithOneTap((PaymentType.LoadMoney) paymentType1, callback);
+                    citrusClient.simpliPay(paymentType1, callback);
                 } else if (paymentType == Utils.PaymentType.PG_PAYMENT) {
                     paymentType1 = new PaymentType.PGPayment(amount, Constants.BILL_URL, paymentOption, null);
-                    citrusClient.pgPaymentWithOneTap((PaymentType.PGPayment) paymentType1, callback);
+                    citrusClient.simpliPay(paymentType1, callback);
                 }
             } catch (CitrusException e) {
                 e.printStackTrace();
@@ -325,7 +359,7 @@ public class SavedOptionsFragment extends Fragment {
     }
 
 
-    private void proceedToFastMakePayment(Utils.PaymentType paymentType, PaymentOption paymentOption) {
+    private void proceedToFastMakePayment(final Utils.PaymentType paymentType, PaymentOption paymentOption) {
 
         if (paymentType == Utils.PaymentType.DYNAMIC_PRICING) {
             DynamicPricingRequestType dynamicPricingRequestType = null;
@@ -338,6 +372,18 @@ public class SavedOptionsFragment extends Fragment {
                 dynamicPricingRequestType = new DynamicPricingRequestType.ValidateRule(amount, paymentOption, couponCode, alteredAmount, null);
             }
 
+            citrusClient.performDynamicPricing(dynamicPricingRequestType, Constants.BILL_URL, new Callback<DynamicPricingResponse>() {
+                @Override
+                public void success(DynamicPricingResponse dynamicPricingResponse) {
+                    showPrompt(dynamicPricingResponse);
+                }
+
+                @Override
+                public void error(CitrusError error) {
+                    ((UIActivity) getActivity()).showSnackBar(error.getMessage());
+                }
+            });
+
         } else {
 
             PaymentType paymentType1;
@@ -345,7 +391,7 @@ public class SavedOptionsFragment extends Fragment {
             Callback<TransactionResponse> callback = new Callback<TransactionResponse>() {
                 @Override
                 public void success(TransactionResponse transactionResponse) {
-                    ((UIActivity) getActivity()).onPaymentComplete(transactionResponse);
+                    ((UIActivity) getActivity()).onPaymentComplete(paymentType, transactionResponse);
                 }
 
                 @Override
@@ -359,10 +405,11 @@ public class SavedOptionsFragment extends Fragment {
             try {
                 if (paymentType == Utils.PaymentType.LOAD_MONEY) {
                     paymentType1 = new PaymentType.LoadMoney(amount, Constants.RETURN_URL_LOAD_MONEY, paymentOption);
-                    citrusClient.loadMoneyWithOneTap((PaymentType.LoadMoney) paymentType1, callback);
+                    citrusClient.simpliPay((PaymentType.LoadMoney) paymentType1, callback);
                 } else if (paymentType == Utils.PaymentType.NEW_PG_PAYMENT) {
                     paymentType1 = new PaymentType.PGPayment(amount, Constants.BILL_URL, paymentOption, null);
-                    citrusClient.makePaymentWithOneTap((PaymentType.PGPayment) paymentType1, callback);
+                    ((PaymentType.PGPayment) paymentType1).useSingleHop(true);
+                    citrusClient.simpliPay(paymentType1, callback);
                 }
             } catch (CitrusException e) {
                 e.printStackTrace();
@@ -443,17 +490,24 @@ public class SavedOptionsFragment extends Fragment {
             alert.setPositiveButton(positiveButtonText, new DialogInterface.OnClickListener() {
 
                 public void onClick(DialogInterface dialog, int whichButton) {
-                    CitrusClient.getInstance(getActivity()).pgPayment(dynamicPricingResponse, new Callback<TransactionResponse>() {
-                        @Override
-                        public void success(TransactionResponse transactionResponse) {
-                            ((UIActivity) getActivity()).showSnackBar(transactionResponse.getMessage());
-                        }
 
-                        @Override
-                        public void error(CitrusError error) {
-                            ((UIActivity) getActivity()).showSnackBar(error.getMessage());
-                        }
-                    });
+                    try {
+                        PaymentType.PGPayment pgPayment = new PaymentType.PGPayment(dynamicPricingResponse);
+
+                        CitrusClient.getInstance(getActivity()).simpliPay(pgPayment, new Callback<TransactionResponse>() {
+                            @Override
+                            public void success(TransactionResponse transactionResponse) {
+                                ((UIActivity) getActivity()).showSnackBar(transactionResponse.getMessage());
+                            }
+
+                            @Override
+                            public void error(CitrusError error) {
+                                ((UIActivity) getActivity()).showSnackBar(error.getMessage());
+                            }
+                        });
+                    } catch (CitrusException e) {
+                        e.printStackTrace();
+                    }
 
                     dialog.dismiss();
                 }
