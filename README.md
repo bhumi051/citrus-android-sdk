@@ -70,7 +70,12 @@ Welcome to the open-source Android SDK Documentation of Citrus Payments Solution
 	  </td>
   </tr>
 </table>
-    
+
+### Bank and Card Icons Dependecies
+Include below dependecies for bank and card icons
+
+####compile 'com.citrus.sdk:bankassets:1.0.0'
+####compile 'com.citrus.sdk:cardassets:1.0.0'
     
 ### If you are using Google Play Services library in your project and if you are facing multidex problem , update build.gradle as below
 	compile ('com.citrus.sdk:payment-sdk:3.4.8:retrofitoldRelease@aar')  {
