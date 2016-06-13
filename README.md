@@ -19,7 +19,7 @@ Welcome to the open-source Android SDK Documentation of Citrus Payments Solution
 	  <td>	
 			<br />
 	  		// Using Citrus SDK <br /> 
-			compile 'com.citrus.sdk:payment-sdk:3.4.8:retrofitoldRelease@aar' <br /> 
+			compile 'com.citrus.sdk:payment-sdk:3.4.11:retrofitoldRelease@aar' <br /> 
 		 <br /> 
 			// citrus sdk dependencies for retrofit <br /> 
 			// For retrofit 1.9 <br /> 
@@ -46,7 +46,7 @@ Welcome to the open-source Android SDK Documentation of Citrus Payments Solution
 	  <td>	
 			<br />
 			// Using Citrus SDK <br /> 
-			compile 'com.citrus.sdk:payment-sdk:3.4.8:retrofitnewRelease@aar' <br /> 
+			compile 'com.citrus.sdk:payment-sdk:3.4.11:retrofitnewRelease@aar' <br /> 
 			// citrus sdk dependencies for retrofit <br /> 
 			// For retrofit version 2.0 <br /> 
 			compile('com.squareup.retrofit:retrofit:2.0.0-beta2') { <br /> 
@@ -78,13 +78,13 @@ Include below dependecies for bank and card icons
 ####compile 'com.citrus.sdk:cardassets:1.0.0'
     
 ### If you are using Google Play Services library in your project and if you are facing multidex problem , update build.gradle as below
-	compile ('com.citrus.sdk:payment-sdk:3.4.8:retrofitoldRelease@aar')  {
+	compile ('com.citrus.sdk:payment-sdk:3.4.11:retrofitoldRelease@aar')  {
         transitive = false
     }
     
             OR 
             
-    compile ('com.citrus.sdk:payment-sdk:3.4.8:retrofitnewRelease@aar')  {
+    compile ('com.citrus.sdk:payment-sdk:3.4.11:retrofitnewRelease@aar')  {
         transitive = false
     }
     
