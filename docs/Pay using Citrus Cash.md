@@ -3,19 +3,12 @@
 <li>You can perform a transaction using Citrus cash.</li>  
 
 ```java
- try {
-          mCitrusClient.prepaidPay(new PaymentType.CitrusCash(new Amount("5"),"BILL_URL"),new Callback<PaymentResponse>() {
-              @Override
-              public void success(PaymentResponse paymentResponse) {
-                  
-              }
+  citrusClient.simpliPay(new PaymentType.CitrusCash(amount, BILL_URL), new Callback<TransactionResponse>() {
 
-              @Override
-              public void error(CitrusError citrusError) {
+     @Override
+     public void success(TransactionResponse transactionResponse) { }
 
-              }
-          });
-        } catch (CitrusException e) {
-            e.printStackTrace();
-        }
+     @Override
+     public void error(CitrusError error) { }
+  });
   ```
