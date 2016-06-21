@@ -13,7 +13,7 @@
   PaymentType.LoadMoney loadMoney = new PaymentType.LoadMoney(amount, LOAD_MONEY_RETURN_URL,            debitCardOption);
 
   // Call Load Money
-  citrusClient.loadMoney(loadMoney, new Callback<TransactionResponse>() {
+  citrusClient.simpliPay(loadMoney, new Callback<TransactionResponse>() {
 
      @Override
      public void success(TransactionResponse transactionResponse) {}
@@ -32,7 +32,7 @@
   // Init Load Money PaymentType     
   PaymentType.LoadMoney loadMoney = new PaymentType.LoadMoney(amount, LOAD_MONEY_RETURN_URL, creditCardOption);
 
-  citrusClient.loadMoney(loadMoney, new Callback<TransactionResponse>() {
+  citrusClient.simpliPay(loadMoney, new Callback<TransactionResponse>() {
 
      @Override
      public void success(TransactionResponse transactionResponse) {}
@@ -51,7 +51,7 @@
   // Init Net Banking PaymentType     
   PaymentType.LoadMoney loadMoney = new PaymentType.LoadMoney(amount, LOAD_MONEY_RETURN_URL, netbankingOption);
 
-  citrusClient.loadMoney(loadMoney, new Callback<TransactionResponse>() {
+  citrusClient.simpliPay(loadMoney, new Callback<TransactionResponse>() {
 
      @Override
      public void success(TransactionResponse transactionResponse) { }
