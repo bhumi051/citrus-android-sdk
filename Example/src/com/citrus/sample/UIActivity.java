@@ -312,7 +312,8 @@ public class UIActivity extends AppCompatActivity implements UserManagementFragm
 
     @Override
     public void showSnackBar(String message) {
-        Snackbar.make(snackBarParent, message, Snackbar.LENGTH_LONG).show();
+        if (snackBarParent != null & !isFinishing())
+            Snackbar.make(snackBarParent, message, Snackbar.LENGTH_LONG).show();
     }
 
     @Override

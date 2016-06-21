@@ -137,6 +137,7 @@ public class SavedOptionsFragment extends Fragment {
         citrusClient.getWallet(new Callback<List<PaymentOption>>() {
             @Override
             public void success(List<PaymentOption> paymentOptionList) {
+                walletList.clear();
                 // In case of not a wallet pg payment remove citrus cash and MVC from the payment options list.
                 if (paymentType == Utils.PaymentType.PG_PAYMENT
                         || paymentType == Utils.PaymentType.NEW_PG_PAYMENT

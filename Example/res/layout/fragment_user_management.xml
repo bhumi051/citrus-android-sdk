@@ -33,6 +33,7 @@
             android:id="@+id/scopeCheckboxLayoutID"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:visibility="gone"
             android:layout_below="@id/edit_mobile_no">
 
             <CheckBox
@@ -143,7 +144,7 @@
             android:layout_below="@id/txt_user_mgmt_message"
             android:layout_margin="@dimen/button_margin"
             android:text="@string/reset_pass_text"
-            android:visibility="gone" />
+            android:visibility="visible" />
 
     </RelativeLayout>
 </ScrollView>

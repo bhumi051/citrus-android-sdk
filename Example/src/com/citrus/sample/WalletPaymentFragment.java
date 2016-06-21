@@ -1067,7 +1067,6 @@ public class WalletPaymentFragment extends Fragment implements View.OnClickListe
         editLoadAmount.setSingleLine(true);
         editThresholdAmount.setSingleLine(true);
         editSubscriptionID.setSingleLine(true);
-        editSubscriptionID.setText(activeSubscription.getSubscriptionId());
         editSubscriptionID.setInputType(InputType.TYPE_NULL);
         labelsubscriptionID.setText("Load Money Amount");
         labelAmount.setText("Current Auto Load Amount");
@@ -1125,7 +1124,7 @@ public class WalletPaymentFragment extends Fragment implements View.OnClickListe
         alert.setPositiveButton(positiveButtonText, new DialogInterface.OnClickListener() {
 
             public void onClick(DialogInterface dialog, int whichButton) {
-                final String subscriptionID = editSubscriptionID.getText().toString();
+                final String trAmount = editSubscriptionID.getText().toString();
 
                 final String loadAmount = editLoadAmount.getText().toString();
                 final String thresHoldAmount = editThresholdAmount.getText().toString();
@@ -1135,13 +1134,13 @@ public class WalletPaymentFragment extends Fragment implements View.OnClickListe
                         Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(editSubscriptionID.getWindowToken(), 0);
 
-                if (TextUtils.isEmpty(subscriptionID)) {
-                    Toast.makeText(getActivity(), "subscriptionID cant be blank", Toast.LENGTH_SHORT).show();
+                if (TextUtils.isEmpty(trAmount) && editSubscriptionID.getVisibility() == View.VISIBLE) {
+                    Toast.makeText(getActivity(), " load amount cant be blank", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
                 if (TextUtils.isEmpty(loadAmount)) {
-                    Toast.makeText(getActivity(), "Load Amount cant be blank", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "Auto Load Amount cant be blank", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -1162,7 +1161,7 @@ public class WalletPaymentFragment extends Fragment implements View.OnClickListe
                     return;
                 }
                 if (Double.valueOf(editLoadAmount.getText().toString()) > activeSubscription.getLoadAmount()) { //update to higher value
-                    mListener.onAutoLoadSelected(AUTO_LOAD_MONEY, new Amount(loadAmount), editLoadAmount.getText().toString(),
+                    mListener.onAutoLoadSelected(AUTO_LOAD_MONEY, new Amount(trAmount), editLoadAmount.getText().toString(),
                             editThresholdAmount.getText().toString(), true);
                 } else { //update to lower value
                     mCitrusClient.updateSubScriptiontoLoweValue(new Amount(thresHoldAmount), new Amount(loadAmount), new Callback<SubscriptionResponse>() {

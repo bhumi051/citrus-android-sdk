@@ -147,7 +147,7 @@ public class WalletPGPaymentFragment extends Fragment {
             public void onClick(View v) {
 
 
-                if (Double.valueOf(txtremainingamount.getText().toString()) > 0) {
+                if (!citrusCashBox.isChecked() && !mvcBox.isChecked()) {
                     if (otherPaymentOption == null) { // we need payment option
                         ((UIActivity) getActivity()).showSnackBar("Please select a payment option.");
                     } else {
@@ -157,12 +157,30 @@ public class WalletPGPaymentFragment extends Fragment {
                             e.printStackTrace();
                         }
                     }
-                } else {  // MVC or Citrus Cash is sufficient
-                    try {
-                        citrusClient.simpliPay(new PaymentType.SplitPayment(amount, Constants.BILL_URL, null, citrusCashBox.isChecked(), mvcBox.isChecked()), callback);
-                    } catch (CitrusException e) {
-                        e.printStackTrace();
-                        Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                } else {  // MVC or Citrus Cash is sufficiente
+                    if (!citrusCashBox.isChecked() || !mvcBox.isChecked()) {
+                        try {
+                            citrusClient.simpliPay(new PaymentType.SplitPayment(amount, Constants.BILL_URL, otherPaymentOption, citrusCashBox.isChecked(), mvcBox.isChecked()), callback);
+                        } catch (CitrusException e) {
+                            e.printStackTrace();
+                            Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        if(TextUtils.isEmpty(txtremainingamount.getText().toString())) {
+                            try {
+                                citrusClient.simpliPay(new PaymentType.SplitPayment(amount, Constants.BILL_URL, null, citrusCashBox.isChecked(), mvcBox.isChecked()), callback);
+                            } catch (CitrusException e) {
+                                e.printStackTrace();
+                                Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        }else {
+                            try {
+                                citrusClient.simpliPay(new PaymentType.SplitPayment(amount, Constants.BILL_URL, otherPaymentOption, citrusCashBox.isChecked(), mvcBox.isChecked()), callback);
+                            } catch (CitrusException e) {
+                                e.printStackTrace();
+                                Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        }
                     }
                 }
             }
@@ -245,39 +263,39 @@ public class WalletPGPaymentFragment extends Fragment {
 
                     savedOptionsAdapter.setWalletList(walletList);
                     savedOptionsAdapter.notifyDataSetChanged();
-
-                    citrusClient.getPaymentDistribution(amount, new Callback<PaymentDistribution>() {
-                        @Override
-                        public void success(PaymentDistribution paymentDistribution) {
-                            Logger.d("Payment Distribution ****" + paymentDistribution.toString());
-                            mPaymentDistribution = paymentDistribution;
-                            updateUI();
-                            //updateUI();
-                        }
-
-                        @Override
-                        public void error(CitrusError error) {
-
-                        }
-                    });
                 }
 
+                citrusClient.getPaymentDistribution(amount, new Callback<PaymentDistribution>() {
+                    @Override
+                    public void success(PaymentDistribution paymentDistribution) {
+                        Logger.d("Payment Distribution ****" + paymentDistribution.toString());
+                        mPaymentDistribution = paymentDistribution;
+                        updateUI();
+                        //updateUI();
+                    }
 
+                    @Override
+                    public void error(CitrusError error) {
+
+                    }
+                });
                 mvcBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                        mvcChecked = isChecked;
+                        if (mPaymentDistribution != null) {
+                            mvcChecked = isChecked;
 
-                        if (mPaymentDistribution.isMVCAvailable()) {
-                            double amount = mPaymentDistribution.getMvcAmount().getValueAsDouble();
-                            if (!doOnceForMVC) {
-                                updateOtherPaymentsAmount(amount, isChecked);
+                            if (mPaymentDistribution.isMVCAvailable()) {
+                                double amount = mPaymentDistribution.getMvcAmount().getValueAsDouble();
+                                if (!doOnceForMVC) {
+                                    updateOtherPaymentsAmount(amount, isChecked);
+                                } else {
+                                    doOnceForMVC = true;
+                                }
+
                             } else {
-                                doOnceForMVC = true;
+                                mvcBox.setChecked(false);
                             }
-
-                        } else {
-                            mvcBox.setChecked(false);
                         }
                     }
                 });
@@ -285,28 +303,30 @@ public class WalletPGPaymentFragment extends Fragment {
                 citrusCashBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                        citrusCashChecked = isChecked;
+                        if (mPaymentDistribution != null) {
+                            citrusCashChecked = isChecked;
 
-                        if (mPaymentDistribution.isCitrusCashAvailable()) {
-                            double amount = mPaymentDistribution.getCitrusCashAmount().getValueAsDouble();
-                            if (!doOnceForCash) {
-                                updateOtherPaymentsAmount(amount, isChecked);
-                            } else {
-                                doOnceForCash = true;
-                            }
-
-                        } else {
-                            if (citrusCashAmount.getValueAsDouble() >= amount.getValueAsDouble() && !mvcChecked) {
-                                if (isChecked)
-                                    updateOtherPaymentsAmount(amount.getValueAsDouble(), isChecked);
-                                else {
-                                    String text = "CASH BALANCE ₹ :" + citrusCashAmount.getValue() + "  USED ₹:" + "0";
-                                    citrusCashBox.setText(text);
-                                    txtremainingamount.setText(String.valueOf(amount.getValueAsDouble()));
+                            if (mPaymentDistribution.isCitrusCashAvailable()) {
+                                double amount = mPaymentDistribution.getCitrusCashAmount().getValueAsDouble();
+                                if (!doOnceForCash) {
+                                    updateOtherPaymentsAmount(amount, isChecked);
+                                } else {
+                                    doOnceForCash = true;
                                 }
 
                             } else {
-                                citrusCashBox.setChecked(false);
+                                if (citrusCashAmount.getValueAsDouble() >= amount.getValueAsDouble() && !mvcChecked) {
+                                    if (isChecked)
+                                        updateOtherPaymentsAmount(amount.getValueAsDouble(), isChecked);
+                                    else {
+                                        String text = "CASH BALANCE ₹ :" + citrusCashAmount.getValue() + "  USED ₹:" + "0";
+                                        citrusCashBox.setText(text);
+                                        txtremainingamount.setText(String.valueOf(amount.getValueAsDouble()));
+                                    }
+
+                                } else {
+                                    citrusCashBox.setChecked(false);
+                                }
                             }
                         }
                     }

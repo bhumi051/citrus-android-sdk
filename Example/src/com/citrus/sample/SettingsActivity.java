@@ -73,10 +73,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
                     Constants.environment = Environment.PRODUCTION;
                 } else if ("Sandbox".equalsIgnoreCase(stringValue)) {
                     Constants.environment = Environment.SANDBOX;
-                } else if ("Custom".equalsIgnoreCase(stringValue)) {
-                    Constants.environment = Environment.CUSTOM;
                 }
-
 //                citrusClient.signOut(null);
                 toggleEnvironments(preference, Constants.environment);
             } else if (preference instanceof EditTextPreference) {
@@ -161,13 +158,6 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
     private static void toggleEnvironments(Preference preference, Environment environment) {
         if (environment == Environment.SANDBOX || environment == Environment.PRODUCTION) {
             toggleEnvUrls(preference, false);
-        } else if (environment == Environment.CUSTOM) {
-            toggleEnvUrls(preference, true);
-            String baseUrl = preference.getPreferenceManager().findPreference("base_url").getSummary().toString();
-            String citrusBaseUrl = preference.getPreferenceManager().findPreference("citrus_base_url").getSummary().toString();
-            String dynamicPricingUrl = preference.getPreferenceManager().findPreference("dynamic_pricing_url").getSummary().toString();
-            String dynamicPricingPath = preference.getPreferenceManager().findPreference("dynamic_pricing_path").getSummary().toString();
-
         }
     }
 

@@ -32,15 +32,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/apptheme_textfield_activated_holo_light"
-                android:hint="@string/card_number_hint"
+                android:hint="@string/credit_card_number_hint"
                 android:imeOptions="actionNext"
                 android:inputType="number|none"
                 android:paddingLeft="8dp"
                 android:paddingRight="8dp"
                 android:textColor="@android:color/black"
                 android:textCursorDrawable="@null"
-                android:textSize="16sp"
-                android:text=""/>
+                android:textSize="16sp" />
         </LinearLayout>
 
 

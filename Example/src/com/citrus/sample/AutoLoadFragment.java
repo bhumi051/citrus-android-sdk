@@ -334,6 +334,7 @@ public class AutoLoadFragment extends Fragment {
                         @Override
                         public void error(CitrusError error) {
                             Toast.makeText(getActivity(), error.getMessage(), Toast.LENGTH_SHORT).show();
+                            dismissDialog();
                         }
                     });
                 }
@@ -350,11 +351,13 @@ public class AutoLoadFragment extends Fragment {
                     @Override
                     public void error(CitrusError error) {
                         Toast.makeText(getActivity(), error.getMessage(), Toast.LENGTH_SHORT).show();
+                        dismissDialog();
                     }
                 });
             }
         } catch (CitrusException e) {
             e.printStackTrace();
+            dismissDialog();
         }
     }
 
