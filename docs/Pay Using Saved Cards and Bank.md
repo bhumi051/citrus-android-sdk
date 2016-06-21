@@ -11,7 +11,7 @@
      
   PaymentType.PGPayment pgPayment = new PaymentType.PGPayment(amount, BILL_URL, cardOption, new CitrusUser(email,mobile));
 
-  citrusClient.pgPayment(pgPayment, new Callback<TransactionResponse>() {
+  citrusClient.simpliPay(pgPayment, new Callback<TransactionResponse>() {
 
      @Override
      public void success(TransactionResponse transactionResponse) { }
@@ -35,7 +35,7 @@ NetbankingOption netbankingOption ;//is the option selected by user on the UI.
   // Init Net Banking PaymentType     
   PaymentType.PGPayment pgPayment = new PaymentType.PGPayment(amount, BILL_URL, netbankingOption, new CitrusUser(email,mobile));
 
-  citrusClient.pgPayment(pgPayment, new Callback<TransactionResponse>() {
+  citrusClient.simpliPay(pgPayment, new Callback<TransactionResponse>() {
 
      @Override
      public void success(TransactionResponse transactionResponse) { }
