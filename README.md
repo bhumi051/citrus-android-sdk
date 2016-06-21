@@ -103,13 +103,6 @@ Welcome to the open-source Android SDK Documentation of Citrus Payments Solution
         }
     }
       
-#### Eclipse
-    
-    * Get the code git clone https://github.com/citruspay/citrus-android-sdk.git
-    * Import citrus-library project in your workspace
-    * Copy files from Example/libs into your apps libs folder
-    * You are good to go!
-
 ___
 <h5>Introduction</h5>
 ___
