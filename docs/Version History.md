@@ -1,5 +1,10 @@
 | Version History<br>Last updated : 19/02/2016 |  Feature Updates|
 | :-------------: | :------------- |
+| v3.6.0| * Wallet PG Payment |
+| | * One Tap Payment only for Indian Cards|
+| | * SimpliPay -- All the payments will be processed through single end point exposed via SDK|
+| | * Auto Load feature|
+| | * SDK Init Optimization|
 | v3.4.3| * Removed Analytics, SDK size optimization (This version will reduce your app size by around 1mb) |
 | | * Bug fixes|
 | v3.4.0| * Added support for Rupay Card  |
