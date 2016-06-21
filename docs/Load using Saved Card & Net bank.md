@@ -10,7 +10,7 @@
   cardOption.setCardCVV(cvv); //cardOption is the option selected by user on UI.
 
   // Init PaymentType     
-  PaymentType.LoadMoney loadMoney = new PaymentType.LoadMoney(amount, LOAD_MONEY_RETURN_URL, debitCardOption);
+  PaymentType.LoadMoney loadMoney = new PaymentType.LoadMoney(amount, LOAD_MONEY_RETURN_URL, cardOption);
 
   citrusClient.simpliPay(loadMoney, new Callback<TransactionResponse>() {
 
