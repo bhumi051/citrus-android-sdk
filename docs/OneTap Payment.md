@@ -26,10 +26,10 @@ Below method will return true if One Tap Payment is enabled for saved Credit/Deb
  ```java
  if (CitrusClient.getInstance(mContext).isOneTapPaymentEnabledForCard((CardOption) paymentOption)) {
      //do not prompt CVV from end user and Continue Load Money Payment with below method
-     CitrusClient.getInstance(mContext).loadMoneyWithOneTap((PaymentType.LoadMoney) paymentType, callback);
+     CitrusClient.getInstance(mContext).simpliPay((PaymentType.LoadMoney) paymentType, callback);
   } else {
     //prompt CVV from end user, udate Payment Option and continue payment
-    CitrusClient.getInstance(mContext).loadMoney((PaymentType.LoadMoney) paymentType, callback);
+    CitrusClient.getInstance(mContext).simpliPay((PaymentType.LoadMoney) paymentType, callback);
   }
  ``` 
 ####Step 4. PG Payment using One Tap Payment
@@ -37,10 +37,10 @@ Below method will return true if One Tap Payment is enabled for saved Credit/Deb
  ```java
  if (CitrusClient.getInstance(mContext).isOneTapPaymentEnabledForCard((CardOption) paymentOption)) {
      //do not prompt CVV from end user and continue PG Payment with below method
-     CitrusClient.getInstance(mContext).pgPaymentWithOneTap((PaymentType.PGPayment) paymentType, callback);
+     CitrusClient.getInstance(mContext).simpliPay((PaymentType.PGPayment) paymentType, callback);
   } else {
     //prompt CVV from end user, udate Payment Option and continue PG Payment
-     citrusClient.pgPayment((PaymentType.PGPayment) paymentType, callback);
+     citrusClient.simpliPay((PaymentType.PGPayment) paymentType, callback);
   }
  ``` 
 ####Step 5. Make Payment using One Tap Payment
@@ -48,10 +48,10 @@ Below method will return true if One Tap Payment is enabled for saved Credit/Deb
  ```java
  if (CitrusClient.getInstance(mContext).isOneTapPaymentEnabledForCard((CardOption) paymentOption)) {
      //do not prompt CVV from end user and continue Make Payment
-     CitrusClient.getInstance(mContext).makePaymentWithOneTap((PaymentType.PGPayment) paymentType, callback);
+     CitrusClient.getInstance(mContext).simpliPay((PaymentType.PGPayment) paymentType, callback);
    } else {
     //prompt CVV from end user, udate Payment Option and continue Make Payment
-    CitrusClient.getInstance(mContext).makePayment((PaymentType.PGPayment) paymentType, callback);
+    CitrusClient.getInstance(mContext).simpliPay((PaymentType.PGPayment) paymentType, callback);
   }
  ``` 
   
