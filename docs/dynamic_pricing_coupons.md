@@ -28,7 +28,9 @@ The input parameters will be transaction amount, payment details, userDetails ,
       public void success(DynamicPricingResponse dynamicPricingResponse) {
             // Show the user with altered amount and status of the request.
             // If user aggress then pay using the dynamicPricingResponse.
-            citrusClient.pgPayment(dynamicPricingResponse, new Callback<TransactionResponse>() {
+            PaymentType.PGPayment pgPayment = new PaymentType.PGPayment(dynamicPricingResponse);
+            
+            citrusClient.simpliPay(pgPayment, new Callback<TransactionResponse>() {
                 @Override
                 public void success(TransactionResponse transactionResponse) { }
 
@@ -55,7 +57,9 @@ The input parameters will be transaction amount, payment details, userDetails ,
       public void success(DynamicPricingResponse dynamicPricingResponse) {
             // Show the user with altered amount and status of the request.
             // If user aggress then pay using the dynamicPricingResponse.
-            citrusClient.pgPayment(dynamicPricingResponse, new Callback<TransactionResponse>() {
+            PaymentType.PGPayment pgPayment = new PaymentType.PGPayment(dynamicPricingResponse);
+            
+            citrusClient.simpliPay(pgPayment, new Callback<TransactionResponse>() {
                 @Override
                 public void success(TransactionResponse transactionResponse) { }
 
@@ -82,7 +86,10 @@ The input parameters will be transaction amount, payment details, userDetails ,
       public void success(DynamicPricingResponse dynamicPricingResponse) {
             // Show the user with altered amount along with status of the request.
             // If user aggress then pay using the dynamicPricingResponse.
-            citrusClient.pgPayment(dynamicPricingResponse, new Callback<TransactionResponse>() {
+            
+             PaymentType.PGPayment pgPayment = new PaymentType.PGPayment(dynamicPricingResponse);
+             
+            citrusClient.simpliPay(pgPayment, new Callback<TransactionResponse>() {
                 @Override
                 public void success(TransactionResponse transactionResponse) { }
 
@@ -113,7 +120,9 @@ The input parameters will be transaction amount, payment details, user details�
       public void success(DynamicPricingResponse dynamicPricingResponse) {
             // Show the user with altered amount and status of the request.
             // If user aggress then pay using the dynamicPricingResponse.
-            citrusClient.pgPayment(dynamicPricingResponse, new Callback<TransactionResponse>() {
+             PaymentType.PGPayment pgPayment = new PaymentType.PGPayment(dynamicPricingResponse);
+             
+            citrusClient.simpliPay(pgPayment, new Callback<TransactionResponse>() {
                 @Override
                 public void success(TransactionResponse transactionResponse) { }
 
@@ -140,7 +149,8 @@ The input parameters will be transaction amount, payment details, user details�
       public void success(DynamicPricingResponse dynamicPricingResponse) {
             // Show the user with altered amount and status of the request.
             // If user aggress then pay using the dynamicPricingResponse.
-            citrusClient.pgPayment(dynamicPricingResponse, new Callback<TransactionResponse>() {
+             PaymentType.PGPayment pgPayment = new PaymentType.PGPayment(dynamicPricingResponse);
+             citrusClient.simpliPay(pgPayment, new Callback<TransactionResponse>() {
                 @Override
                 public void success(TransactionResponse transactionResponse) { }
 
@@ -167,7 +177,8 @@ The input parameters will be transaction amount, payment details, user details�
       public void success(DynamicPricingResponse dynamicPricingResponse) {
             // Show the user with altered amount along with status of the request.
             // If user aggress then pay using the dynamicPricingResponse.
-            citrusClient.pgPayment(dynamicPricingResponse, new Callback<TransactionResponse>() {
+             PaymentType.PGPayment pgPayment = new PaymentType.PGPayment(dynamicPricingResponse);
+            citrusClient.simpliPay(pgPayment, new Callback<TransactionResponse>() {
                 @Override
                 public void success(TransactionResponse transactionResponse) { }
 
@@ -199,7 +210,8 @@ System will search for the given rule and apply the rule and check whether the g
       public void success(DynamicPricingResponse dynamicPricingResponse) {
             // Show the user with altered amount and status of the request.
             // If user aggress then pay using the dynamicPricingResponse.
-            citrusClient.pgPayment(dynamicPricingResponse, new Callback<TransactionResponse>() {
+             PaymentType.PGPayment pgPayment = new PaymentType.PGPayment(dynamicPricingResponse);
+             citrusClient.simpliPay(pgPayment, new Callback<TransactionResponse>() {
                 @Override
                 public void success(TransactionResponse transactionResponse) { }
 
@@ -226,7 +238,8 @@ System will search for the given rule and apply the rule and check whether the g
       public void success(DynamicPricingResponse dynamicPricingResponse) {
             // Show the user with altered amount and status of the request.
             // If user aggress then pay using the dynamicPricingResponse.
-            citrusClient.pgPayment(dynamicPricingResponse, new Callback<TransactionResponse>() {
+             PaymentType.PGPayment pgPayment = new PaymentType.PGPayment(dynamicPricingResponse);
+             citrusClient.simpliPay(pgPayment, new Callback<TransactionResponse>() {
                 @Override
                 public void success(TransactionResponse transactionResponse) { }
 
@@ -253,7 +266,8 @@ System will search for the given rule and apply the rule and check whether the g
       public void success(DynamicPricingResponse dynamicPricingResponse) {
             // Show the user with altered amount along with status of the request.
             // If user aggress then pay using the dynamicPricingResponse.
-            citrusClient.pgPayment(dynamicPricingResponse, new Callback<TransactionResponse>() {
+             PaymentType.PGPayment pgPayment = new PaymentType.PGPayment(dynamicPricingResponse);
+             citrusClient.simpliPay(pgPayment, new Callback<TransactionResponse>() {
                 @Override
                 public void success(TransactionResponse transactionResponse) { }
 
