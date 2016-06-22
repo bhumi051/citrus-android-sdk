@@ -176,6 +176,9 @@ ___
 <b>One Tap Card Payment</b>
 * <a href="docs/OneTap Payment.md" target="_blank">One Tap Card Payment</a>
 
+<b>AutoLoad</b>
+* <a href="docs/AutoLoad.md" target="_blank">Auto Load</a>
+
 <b>How to save Cards option and Banks</b>
 * <a href="docs/Save%20payment%20option.md" target="_blank">Save Debit/Credit Card and Net banking</a>
 
