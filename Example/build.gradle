@@ -10,7 +10,7 @@ dependencies {
     compile 'com.android.support:design:23.1.1'
 
     // Using Citrus SDK
-    compile 'com.citruspay.sdk:payment-sdk:3.6.0:retrofitoldRelease@aar'
+    compile 'com.citruspay.sdk:payment-sdk:3.6.1:retrofitoldRelease@aar'
 
     // citrus sdk dependencies for retrofit
     // For retrofit 1.9

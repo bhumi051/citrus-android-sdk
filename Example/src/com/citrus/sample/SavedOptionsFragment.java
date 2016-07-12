@@ -143,6 +143,7 @@ public class SavedOptionsFragment extends Fragment {
                         || paymentType == Utils.PaymentType.NEW_PG_PAYMENT
                         || paymentType == Utils.PaymentType.LOAD_MONEY
                         || paymentType == Utils.PaymentType.CITRUS_CASH
+                        || paymentType == Utils.PaymentType.DYNAMIC_PRICING
                         || paymentType == Utils.PaymentType.NEW_CITRUS_CASH) {
                     for (PaymentOption paymentOption : paymentOptionList) {
                         // Do not put the Citrus Cash and MVC as a payment instrument in case not a wallet pg payment.
