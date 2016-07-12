@@ -1,5 +1,8 @@
 | Version History<br>Last updated : 19/02/2016 |  Feature Updates|
 | :-------------: | :------------- |
+| v3.6.1| * Wallet PG Payment Enhancement |
+| | * Custom Parameters support for Wallet PG Transactions|
+| | * Updated Sample APP UI for Dynamic Pricing|
 | v3.6.0| * Wallet PG Payment |
 | | * One Tap Payment only for Indian Cards|
 | | * SimpliPay -- All the payments will be processed through single end point exposed via SDK|
