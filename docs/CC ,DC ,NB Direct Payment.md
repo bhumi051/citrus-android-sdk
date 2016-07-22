@@ -11,7 +11,7 @@
   // Init PaymentType     
   PaymentType.PGPayment pgPayment = new PaymentType.PGPayment(amount, BILL_URL, debitCardOption, new CitrusUser("developercitrus@gmail.com","9876543210"));
 
-  citrusClient.pgPayment(pgPayment, new Callback<TransactionResponse>() {
+  citrusClient.simpliPay(pgPayment, new Callback<TransactionResponse>() {
 
      @Override
      public void success(TransactionResponse transactionResponse) { }
@@ -32,7 +32,7 @@
   // Init PaymentType     
   PaymentType.PGPayment pgPayment = new PaymentType.PGPayment(amount, BILL_URL, creditCardOption, new CitrusUser("developercitrus@gmail.com","9876543210"));
 
-  citrusClient.pgPayment(pgPayment, new Callback<TransactionResponse>() {
+  citrusClient.simpliPay(pgPayment, new Callback<TransactionResponse>() {
 
      @Override
      public void success(TransactionResponse transactionResponse) { }
@@ -53,7 +53,7 @@
   // Init Net Banking PaymentType     
   PaymentType.PGPayment pgPayment = new PaymentType.PGPayment(amount, BILL_URL, netbankingOption, new CitrusUser("developercitrus@gmail.com","9876543210"));
 
-  citrusClient.pgPayment(pgPayment, new Callback<TransactionResponse>() {
+  citrusClient.simpliPay(pgPayment, new Callback<TransactionResponse>() {
 
      @Override
      public void success(TransactionResponse transactionResponse) { }
