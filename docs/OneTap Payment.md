@@ -43,17 +43,7 @@ Below method will return true if One Tap Payment is enabled for saved Credit/Deb
      CitrusClient.getInstance(mContext).simpliPay((PaymentType.PGPayment) paymentType, callback);
   }
  ``` 
-####Step 5. Make Payment using One Tap Payment
 
- ```java
- if (CitrusClient.getInstance(mContext).isOneTapPaymentEnabledForCard((CardOption) paymentOption)) {
-     //do not prompt CVV from end user and continue Make Payment
-     CitrusClient.getInstance(mContext).simpliPay((PaymentType.PGPayment) paymentType, callback);
-   } else {
-    //prompt CVV from end user, udate Payment Option and continue Make Payment
-    CitrusClient.getInstance(mContext).simpliPay((PaymentType.PGPayment) paymentType, callback);
-  }
- ``` 
   
                 
     
