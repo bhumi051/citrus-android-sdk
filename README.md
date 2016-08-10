@@ -187,7 +187,7 @@ ___
 * <a href="docs/Withdraw.md" target="_blank">Withdraw Money to Your Account</a>
 
 <b>SDK Features</b>
-* <a href="docs/Send%20Money.md" target="_blank">SDK UI Items</a>
+* <a href="docs/SDK%20UI%20Items.md" target="_blank">SDK UI Items</a>
 * <a href="docs/Withdraw.md" target="_blank">Payment Using JSON Bill/Post Bill URL</a> 
 * <a href="docs/Send%20Money.md" target="_blank">Pass Custom Parameters via Bill URL</a>
 * <a href="docs/Send%20Money.md" target="_blank">Load Money Redirect URL</a>
