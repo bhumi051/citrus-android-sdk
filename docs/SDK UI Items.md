@@ -25,3 +25,7 @@ You can add this widget in your layout xml file as below
 ```
 
 You can refer **fragment_credit_debit_card.xml** and **CreditDebitCardFragment** in Example app for usage.
+
+
+###CardNumber and Expiry widget will look like
+![screen](../images/cardnumberexpiry.png)
