@@ -195,10 +195,9 @@ ___
 * <a href="docs/Send%20Money.md" target="_blank">Delete saved Card</a>
 * <a href="docs/Send%20Money.md" target="_blank">How to use NetBanking options?</a>
 
-<b>Check sample app with your keys and url</b>
-* <a href="docs/Send%20Money.md" target="_blank">SDK UI Items</a>
-<b>How does return URL work?</b>
-* <a href="docs/Send%20Money.md" target="_blank">SDK UI Items</a> 
+<b>* <a href="docs/Send%20Money.md" target="_blank">Sample App with your keys and url</a></b>
+
+
 ___
 <h5>How to Go Live...</h5>
 
