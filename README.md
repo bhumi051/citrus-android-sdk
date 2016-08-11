@@ -190,7 +190,7 @@ ___
 * <a href="docs/SDK%20UI%20Items.md" target="_blank">SDK UI Items</a>
 * <a href="docs/Payment-using-JSON-Bill.md
 " target="_blank">Payment Using JSON Bill/Post Bill URL</a> 
-* <a href="docs/Send%20Money.md" target="_blank">Pass Additional Parameters via Bill URL</a>
+* <a href="docs/Additonal%20Parameters%20in%20Bill%20URL.md" target="_blank">Pass Additional Parameters via Bill URL</a>
 * <a href="docs/Load%20money%20redirect%20url.md" target="_blank">Load Money Redirect URL</a>
 * <a href="docs/Send%20Money.md" target="_blank">How to pass user details in Payment?</a>
 * <a href="docs/Send%20Money.md" target="_blank">Delete saved Card</a>
