@@ -191,7 +191,7 @@ ___
 * <a href="docs/Payment-using-JSON-Bill.md
 " target="_blank">Payment Using JSON Bill/Post Bill URL</a> 
 * <a href="docs/Send%20Money.md" target="_blank">Pass Custom Parameters via Bill URL</a>
-* <a href="docs/Send%20Money.md" target="_blank">Load Money Redirect URL</a>
+* <a href="docs/Load%20money%20redirect%20url.md" target="_blank">Load Money Redirect URL</a>
 * <a href="docs/Send%20Money.md" target="_blank">How to pass user details in Payment?</a>
 * <a href="docs/Send%20Money.md" target="_blank">Delete saved Card</a>
 * <a href="docs/Send%20Money.md" target="_blank">How to use NetBanking options?</a>
