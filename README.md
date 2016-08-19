@@ -9,23 +9,6 @@ Welcome to the open-source Android SDK Documentation of Citrus Payments Solution
 
 #### [Release Notes](docs/Version%20History.md)
     
-#### Update Top-level build.gradle.
-    buildscript {
-        repositories {
-            mavenCentral()
-            jcenter()
-    }
-    dependencies {
-            classpath 'com.android.tools.build:gradle:2.1.2'
-            }
-    }
-    allprojects {
-        repositories {
-            mavenCentral()
-            jcenter() 
-        }
-    }
-      
 ___
 <h5>Introduction</h5>
 ___
