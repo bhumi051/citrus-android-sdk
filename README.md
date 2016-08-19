@@ -3,9 +3,7 @@
 Welcome to the open-source Android SDK Documentation of Citrus Payments Solution!
 #### Update your project’s build.gradle
 
-	compile('com.citruspay.sdk:payment-sdk:4.0.0@aar') {
-        	transitive true;
-   }
+	compile 'com.citruspay.sdk:payment-sdk:4.0.0'
     
 #### [Migration from older version to Version 4.0.0](docs/Migration_Guide.md)
 
