@@ -7,6 +7,8 @@ Welcome to the open-source Android SDK Documentation of Citrus Payments Solution
         	transitive true;
    }
     
+#### [Migration from older version to Version 4.0.0](docs/Migration_Guide.md)
+
 #### [Release Notes](docs/Version%20History.md)
     
 #### Update Top-level build.gradle.
