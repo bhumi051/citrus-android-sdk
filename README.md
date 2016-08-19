@@ -1,88 +1,11 @@
 # Citrus Payments Android SDK
 
 Welcome to the open-source Android SDK Documentation of Citrus Payments Solution!
-##Note: Prior to Version 3.4.3 we were using google analytics. We have removed google analytics from SDK. Please make sure you have removed google analytics dependecy from your build.gradle.
-### Please remove below line from your build.gradle if it exists
-    compile 'com.google.android.gms:play-services-analytics:7.8.0'
-### Download
 #### Update your project’s build.gradle
 
-<table border="1" cellpadding="4" >
-  <tr align="center">
-    <th>Retrofit Version</th>
-    <th>Gradle Dependencies</th>
-  </tr>
-  <tr align="center">
-    <th rowspan="2">Retrofit 1.9</th>
-  </tr>
-    <tr align="left">
-	  <td>	
-			<br />
-	  		// Using Citrus SDK <br /> 
-			compile 'com.citruspay.sdk:payment-sdk:3.6.2:retrofitoldRelease@aar' <br /> 
-		 <br /> 
-			// citrus sdk dependencies for retrofit <br /> 
-			// For retrofit 1.9 <br /> 
-			compile 'com.squareup.retrofit:retrofit:1.9.0' <br /> 
-			compile 'com.squareup.okhttp:okhttp:2.3.0' <br /> 
-		 <br /> 
-			// Other retrofit dependencies.( This is mandatory for retrofit 1.9 and retrofit 2.0) <br /> 
-			compile 'com.squareup.okhttp:okhttp-urlconnection:2.3.0' <br /> 
-			compile 'com.squareup.okio:okio:1.3.0' <br /> 
-			compile 'com.orhanobut:logger:1.8' <br /> 
-			
-			compile "com.facebook.conceal:conceal:1.0.1@aar" <br /> 
-		 <br /> 
-			// Other additional dependencies (You may skip these if you are already using these in your app). <br /> 
-			
-			compile 'com.android.support:appcompat-v7:23.1.1'
-			<br />
-	  </td>
-  </tr>
-  <tr align="center">
-    <th rowspan="2">Retrofit 2.0</th>
-  </tr>
-    <tr align="left">
-	  <td>	
-			<br />
-			// Using Citrus SDK <br /> 
-			compile 'com.citruspay.sdk:payment-sdk:3.6.2:retrofitnewRelease@aar' <br /> 
-			// citrus sdk dependencies for retrofit <br /> 
-			// For retrofit version 2.0 <br /> 
-			compile('com.squareup.retrofit:retrofit:2.0.0-beta2') { <br /> 
-		        exclude module: 'okhttp' <br />
-	        }   <br /> 
-			compile 'com.squareup.okhttp:okhttp:2.5.0' <br /> 
-			compile 'com.squareup.retrofit:converter-gson:2.0.0-beta2' <br /> 
-			compile 'com.squareup.okhttp:logging-interceptor:2.6.0' //to enable logging <br /> 
-			<br /> 
-			// Other retrofit dependencies.( This is mandatory for retrofit 1.9 and retrofit 2.0) <br /> 
-			compile 'com.squareup.okhttp:okhttp-urlconnection:2.3.0' <br /> 
-			compile 'com.squareup.okio:okio:1.3.0' <br /> 
-			compile 'com.orhanobut:logger:1.8' <br /> 
-			
-			compile "com.facebook.conceal:conceal:1.0.1@aar" <br /> 
-			<br /> 
-			// Other additional dependencies (You may skip these if you are already using these in your app). <br /> 
-			
-			compile 'com.android.support:appcompat-v7:23.1.1'
-			<br />
-	  </td>
-  </tr>
-</table>
-
-
-    
-### If you are using Google Play Services library in your project and if you are facing multidex problem , update build.gradle as below
-	compile ('com.citruspay.sdk:payment-sdk:3.6.2:retrofitoldRelease@aar')  {
-        transitive = false
-    }
-    
-            OR 
-            
-    compile ('com.citruspay.sdk:payment-sdk:3.6.2:retrofitnewRelease@aar')  {
-        transitive = false
-    }
+	compile('com.citruspay.sdk:payment-sdk:4.0.0@aar') {
+        	transitive true;
+   }
     
 #### [Release Notes](docs/Version%20History.md)
     
