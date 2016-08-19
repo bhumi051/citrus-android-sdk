@@ -1,5 +1,9 @@
 | Version History<br>Last updated : 02/08/2016 |  Feature Updates|
 | :-------------: | :------------- |
+| v4.0.0| * Network layer changed from Retrofit to Volley |
+| | * Pay using Citrus Cash/MVC implementation change|
+| | * Auto OTP Bug fixes for SBI credit card|
+| | * SMS Receive permission issue fixed for android M|
 | v3.6.2| * Null pointer on loadURL issue fixed |
 | | * Pay using Citrus Cash using Payment Bill Issues fixed(SimpliPay interface)|
 | | * Auto OTP Bug fixes for CITI and SBI|
