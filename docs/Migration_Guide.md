@@ -25,7 +25,7 @@
         compile 'com.orhanobut:logger:1.8'
         compile 'com.facebook.conceal:conceal:1.0.1@aar'
         
-* We have also changed domain name from citrus to citruspay. Please make sure you are copying following dependency 
+* We have also changed domain name from *citrus* to **citruspay**. Please make sure you are copying following dependency 
   and is used in your build.gradle instead of just changing version.
   
 	      compile 'com.citruspay.sdk:payment-sdk:4.0.0'
