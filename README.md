@@ -101,9 +101,8 @@ ___
 * <a href="docs/Send%20Money.md" target="_blank">How to pass user details in Payment?</a>
 * <a href="docs/Delete%20Card.md
 " target="_blank">Delete saved Card</a>
-* <a href="docs/Send%20Money.md" target="_blank">How to use NetBanking options?</a>
 
-<b>* <a href="docs/Send%20Money.md" target="_blank">Sample App with your keys and url</a></b>
+<b>* <a href="docs/Sample%20App%20with%20merchant%20keys.md" target="_blank">Sample App with your keys and url</a></b>
 
 
 ___
