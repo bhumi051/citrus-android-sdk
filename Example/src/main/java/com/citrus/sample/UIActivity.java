@@ -172,7 +172,7 @@ public class UIActivity extends AppCompatActivity implements UserManagementFragm
     public void onPaymentTypeSelected(Utils.PaymentType paymentType, Amount amount) {
         if (paymentType == Utils.PaymentType.NEW_CITRUS_CASH) {
 
-            citrusClient.getBill(Constants.BILL_URL,amount, com.citrus.sdk.Constants.AMOUNT_DOUBLE_PRECISION_FORMAT, new Callback<PaymentBill>() {
+            citrusClient.getBill(Constants.BILL_URL,amount, "#.00", new Callback<PaymentBill>() {
                 @Override
                 public void success(PaymentBill paymentBill) {
                     //try {
