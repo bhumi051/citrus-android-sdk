@@ -5,6 +5,7 @@
 1. masterpass.png
 2. masterpass_selected.png
 3. masterpass_unselected.png
+
 ####Below is the sample piece of code for MasterPass Payment
 ```groovy
   try {
