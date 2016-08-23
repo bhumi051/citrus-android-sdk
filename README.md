@@ -75,7 +75,7 @@ ___
 * <a href="docs/Get%20Wallet.md" target="_blank">Get Wallet</a> (It fetches all Saved Cards and Bank options of the User's account)
 * <a href="docs/Pay%20Using%20Saved%20Cards%20and%20Bank.md" target="_blank">Pay using Saved Cards and Net banking</a>
 * <a href="docs/Pay%20using%20Citrus%20Cash.md" target="_blank">Pay using Citrus Cash</a> (<b>Note:</b> User should be <b>Signed In</b> for this Implementation)
-* * <a href="docs/masterpass.md" target="_blank">Pay using MasterPass</a>
+* <a href="docs/masterpass.md" target="_blank">Pay using MasterPass</a>
 
 #####Dynamic Pricing Offer Coupons and Surcharge
 * [How to use dynamic pricing ?](https://github.com/citruspay/citrus-android-sdk/blob/master/docs/dynamic_pricing_coupons.md)
