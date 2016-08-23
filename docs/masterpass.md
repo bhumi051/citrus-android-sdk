@@ -1,5 +1,5 @@
 ##Pay Using Masterpass
-####You can design MasterPass Payment as below
+####You can design MasterPass Payment screen as below
 ![screen](../images/Masterpass.jpg)
 ####SDK provides below resources
 1. masterpass.png
