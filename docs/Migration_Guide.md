@@ -38,7 +38,7 @@
 * In case if any of above library is used in your app as well, keep that library in build.gradle.
 * Follwing are the librarys and versions internally used in 4.0.0 version(no need to add in your build.gradle. Taken care by   Citrus SDK compile dependency).
 
-<table border="1" cellpadding="4" width="100%">
+<table border="1" width="100%">
   <tr align="center">
     <th>Library Name</th>
     <th>Library Version</th>
