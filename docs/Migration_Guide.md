@@ -31,4 +31,45 @@
 ```groovy
 	compile 'com.citruspay.sdk:payment-sdk:4.0.0'
 ```
+
+<b>Note</b>
+
+* Remove these library's only if you have added those for earlier version of Citrus SDK.
+* In case if any of above library is used in your app as well, keep that library in build.gradle.
+* Follwing are the librarys and versions internally used in 4.0.0 version(no need to add in your build.gradle. Taken care by   Citrus SDK compile dependency).
+
+<table border="1" cellpadding="4" width="100%">
+  <tr align="center">
+    <th>Library Name</th>
+    <th>Library Version</th>
+    <th>Compile Dependency</th>
+  </tr>
+  <tr align="center">
+    <th>appcompat-v7</th>
+    <th>23.1.0</th>
+    <th>compile 'com.android.support:appcompat-v7:23.1.0'</th>
+  </tr>
+  <tr align="center">
+    <th>logger</th>
+    <th>1.8</th>
+    <th>compile 'com.orhanobut:logger:1.8'</th>
+  </tr>
+  <tr align="center">
+    <th>conceal</th>
+    <th>1.0.1</th>
+    <th>compile 'com.facebook.conceal:conceal:1.0.1@aar'</th>
+  </tr>
+  <tr align="center">
+    <th>volley</th>
+    <th>1.0.0</th>
+    <th>compile 'com.android.volley:volley:1.0.0'</th>
+  </tr>
+   <tr align="center">
+    <th>gson</th>
+    <th>2.6.2</th>
+    <th>compile 'com.google.code.gson:gson:2.6.2'</th>
+  </tr>
+</table> 
+
+
   
