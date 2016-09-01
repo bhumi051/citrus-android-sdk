@@ -74,6 +74,7 @@
     <th>compile 'com.google.code.gson:gson:2.6.2'</th>
   </tr>
 </table> 
+* If your app uses any of above library you can exclude module from Citrus SDK.
 
 
   
