@@ -3,9 +3,9 @@
 Welcome to the open-source Android SDK Documentation of Citrus Payments Solution!
 #### Update your project’s build.gradle
 ```groovy
-compile 'com.citruspay.sdk:payment-sdk:4.0.0'
+compile 'com.citruspay.sdk:payment-sdk:4.0.1'
 ```
-#### [Migration from older version to Version 4.0.0](docs/Migration_Guide.md)
+#### [Migration from older version to Version 4.x.x](docs/Migration_Guide.md)
 
 #### [Release Notes](docs/Version%20History.md)
     
