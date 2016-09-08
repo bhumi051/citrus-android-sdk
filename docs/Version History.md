@@ -1,8 +1,12 @@
-| Version History<br>Last updated : 02/08/2016 |  Feature Updates|
+| Version History<br>Last updated : 08/09/2016 |  Feature Updates|
 | :-------------: | :------------- |
+| v4.0.1| * Support for series 2 mastercard  |
+| | * Rupay Card issue fixed|
+| | * Minor bug fixes|
 | v4.0.0| * Network layer changed from Retrofit to Volley |
 | | * Pay using Citrus Cash/MVC implementation change|
 | | * Auto OTP Bug fixes for SBI credit card|
+| | * SDK size reduced by 17%|
 | | * SMS Receive permission issue fixed for android M|
 | v3.6.2| * Null pointer on loadURL issue fixed |
 | | * Pay using Citrus Cash using Payment Bill Issues fixed(SimpliPay interface)|
