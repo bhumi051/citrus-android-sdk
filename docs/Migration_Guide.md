@@ -1,6 +1,7 @@
-<b>Updating to SDK version 4.0.0 from previous version</b>
-* SDK Version 4.0.0 is major release where Network layer of SDK has been changed from Retrofit to Volley.
-* If you are upgrading SDK to 4.0.0 following dependencies should be removed from your build.gradle
+<b>Updating to SDK version 4.x.x from previous version</b>
+* SDK Version 4.x.x  is major release where Network layer of SDK has been changed from Retrofit to Volley.
+* SDK size reduced by 17%
+* If you are upgrading SDK to 4.x.x following dependencies should be removed from your build.gradle
 
   <b>for Retrofit 1.9</b>
   
@@ -29,7 +30,7 @@
   and is used in your build.gradle instead of just changing version.
 
 ```groovy
-	compile 'com.citruspay.sdk:payment-sdk:4.0.0'
+	compile 'com.citruspay.sdk:payment-sdk:4.0.1'
 ```
 
 <b>Note</b>

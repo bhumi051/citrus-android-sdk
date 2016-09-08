@@ -3,9 +3,9 @@
 Welcome to the open-source Android SDK Documentation of Citrus Payments Solution!
 #### Update your project’s build.gradle
 ```groovy
-compile 'com.citruspay.sdk:payment-sdk:4.0.0'
+compile 'com.citruspay.sdk:payment-sdk:4.0.1'
 ```
-#### [Migration from older version to Version 4.0.0](docs/Migration_Guide.md)
+#### [Migration from older version to Version 4.x.x](docs/Migration_Guide.md)
 
 #### [Release Notes](docs/Version%20History.md)
     
@@ -75,6 +75,7 @@ ___
 * <a href="docs/Get%20Wallet.md" target="_blank">Get Wallet</a> (It fetches all Saved Cards and Bank options of the User's account)
 * <a href="docs/Pay%20Using%20Saved%20Cards%20and%20Bank.md" target="_blank">Pay using Saved Cards and Net banking</a>
 * <a href="docs/Pay%20using%20Citrus%20Cash.md" target="_blank">Pay using Citrus Cash</a> (<b>Note:</b> User should be <b>Signed In</b> for this Implementation)
+* <a href="docs/masterpass.md" target="_blank">Pay using MasterPass</a>
 
 
 #####Dynamic Pricing Offer Coupons and Surcharge
