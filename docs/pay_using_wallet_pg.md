@@ -32,7 +32,7 @@ You need to present user with the UI to decide to the user using which payment i
 ```java
 Amount amount = new Amount("100");
 PaymentType.CitrusCash paymentType = new PaymentType.CitrusCash(amount,Constants.BILL_URL);
-citrusClient.smartPay(paymentType,callback);
+citrusClient.simpliPay(paymentType,callback);
 
 //or
 
@@ -40,7 +40,7 @@ Amount amount = new Amount("100");
 boolean useCitrusCash = true;
 boolean useMVC = false;
 PaymentType.SplitPayment paymentType = new PaymentType.SplitPayment(amount, Constants.BILL_URL, null,useCitrusCash, useMVC);
-citrusClient.smartPay(paymentType , callback);
+citrusClient.simpliPay(paymentType , callback);
 ```
 
 ### Payment Using MVC(Merchant Virtual Currency) (If the MVC balance is sufficient)
@@ -49,7 +49,7 @@ Amount amount = new Amount("100");
 boolean useCitrusCash = false;
 boolean useMVC = true;
 PaymentType.SplitPayment paymentType = new PaymentType.SplitPayment(amount, Constants.BILL_URL, null,useCitrusCash, useMVC);
-citrusClient.smartPay(paymentType , callback);
+citrusClient.simpliPay(paymentType , callback);
 ```
 
 ### Payment Using Saved Cards
@@ -68,7 +68,7 @@ cardOption.setCardCVV(cvv);
 boolean useCitrusCash = false;
 boolean useMVC = false;
 PaymentType.SplitPayment paymentType = new PaymentType.SplitPayment(amount, Constants.BILL_URL, cardOption,useCitrusCash, useMVC);
-citrusClient.smartPay( paymentType , callback);
+citrusClient.simpliPay( paymentType , callback);
 
 ```
 
@@ -87,7 +87,7 @@ for (PaymentOption paymentOption : paymentOptionsList) {
 boolean useCitrusCash = false;
 boolean useMVC = false;
 PaymentType.SplitPayment paymentType = new PaymentType.SplitPayment(amount, Constants.BILL_URL, netbankingOption,useCitrusCash, useMVC);
-citrusClient.smartPay( paymentType , callback);
+citrusClient.simpliPay( paymentType , callback);
 
 ```
 
@@ -100,7 +100,7 @@ CardOption debitCardOption =new DebitCardOption("Salil", "411111111111111", "123
 boolean useCitrusCash = false;
 boolean useMVC = false;
 PaymentType.SplitPayment paymentType = new PaymentType.SplitPayment(amount, Constants.BILL_URL, debitCardOption,useCitrusCash, useMVC);
-citrusClient.smartPay( paymentType , callback);
+citrusClient.simpliPay( paymentType , callback);
 
 
 ```
@@ -115,7 +115,7 @@ CardOption creditCardOption =new CreditCardOption("Salil", "411111111111111", "1
 boolean useCitrusCash = false;
 boolean useMVC = false;
 PaymentType.SplitPayment paymentType = new PaymentType.SplitPayment(amount, Constants.BILL_URL, creditCardOption,useCitrusCash, useMVC);
-citrusClient.smartPay( paymentType , callback);
+citrusClient.simpliPay( paymentType , callback);
 ```
 
 ### Payment Using Netbanking
@@ -127,7 +127,7 @@ NetbankingOption netbankingOption = new NetbankingOption("ICICI Bank", "CID001")
 boolean useCitrusCash = false;
 boolean useMVC = false;
 PaymentType.SplitPayment paymentType = new PaymentType.SplitPayment(amount, Constants.BILL_URL, netbankingOption,useCitrusCash, useMVC);
-citrusClient.smartPay( paymentType , callback);
+citrusClient.simpliPay( paymentType , callback);
 ```
 ----
 
@@ -154,7 +154,7 @@ paymentOption = new CreditCardOption("Salil", "411111111111111", "123", Month.ge
 // Or DebitCard
 paymentOption = new DebitCardOption("Salil", "411111111111111", "123", Month.getMonth("12"), Year.getYear("2020"));
 PaymentType.SplitPayment paymentType = new PaymentType.SplitPayment(amount, Constants.BILL_URL, paymentOption,useCitrusCash, useMVC);
-citrusClient.smartPay( paymentType , callback);
+citrusClient.simpliPay( paymentType , callback);
 ```
 ----
 
@@ -184,7 +184,7 @@ paymentOption = new DebitCardOption("Salil", "411111111111111", "123", Month.get
 
 ```java
 PaymentType.SplitPayment paymentType = new PaymentType.SplitPayment(amount, Constants.BILL_URL, paymentOption,useCitrusCash, useMVC);
-citrusClient.smartPay( paymentType , callback);
+citrusClient.simpliPay( paymentType , callback);
 ```
 ----
 
@@ -216,5 +216,5 @@ paymentOption = new DebitCardOption("Salil", "411111111111111", "123", Month.get
 
 ```java
 PaymentType.SplitPayment paymentType = new PaymentType.SplitPayment(amount, Constants.BILL_URL, paymentOption,useCitrusCash, useMVC);
-citrusClient.smartPay( paymentType , callback);
+citrusClient.simpliPay( paymentType , callback);
 ```
