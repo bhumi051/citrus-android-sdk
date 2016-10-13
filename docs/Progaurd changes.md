@@ -1,5 +1,18 @@
 <b> Pro-Guard Changes </b>
 
-Pro-guard configuration is already applied to SDK. 
-Pro-guard config for this SDK (starting from version 4.0.0) is not required.
+#Add Following pro-guard rules for SDK
+
+
+-keep,allowobfuscation @interface com.facebook.proguard.annotations.DoNotStrip
+-keep,allowobfuscation @interface com.facebook.proguard.annotations.KeepGettersAndSetters
+
+-keep @com.facebook.proguard.annotations.DoNotStrip class *
+-keepclassmembers class * {
+    @com.facebook.proguard.annotations.DoNotStrip *;
+}
+
+-keepclassmembers @com.facebook.proguard.annotations.KeepGettersAndSetters class * {
+  void set*(***);
+  *** get*();
+}
 
