@@ -10,7 +10,7 @@
   Amount amount = new Amount("5"); 
 
   // Init Load Money PaymentType     
-  PaymentType.LoadMoney loadMoney = new PaymentType.LoadMoney(amount, LOAD_MONEY_RETURN_URL,            debitCardOption);
+  PaymentType.LoadMoney loadMoney = new PaymentType.LoadMoney(amount,debitCardOption);
 
   // Call Load Money
   citrusClient.simpliPay(loadMoney, new Callback<TransactionResponse>() {
@@ -30,7 +30,7 @@
 
   Amount amount = new Amount("5");
   // Init Load Money PaymentType     
-  PaymentType.LoadMoney loadMoney = new PaymentType.LoadMoney(amount, LOAD_MONEY_RETURN_URL, creditCardOption);
+  PaymentType.LoadMoney loadMoney = new PaymentType.LoadMoney(amount,creditCardOption);
 
   citrusClient.simpliPay(loadMoney, new Callback<TransactionResponse>() {
 
@@ -49,7 +49,7 @@
   NetbankingOption netbankingOptio = new NetbankingOption(“ICICI Bank” ,”CID001”);
 
   // Init Net Banking PaymentType     
-  PaymentType.LoadMoney loadMoney = new PaymentType.LoadMoney(amount, LOAD_MONEY_RETURN_URL, netbankingOption);
+  PaymentType.LoadMoney loadMoney = new PaymentType.LoadMoney(amount,netbankingOption);
 
   citrusClient.simpliPay(loadMoney, new Callback<TransactionResponse>() {
 
