@@ -10,7 +10,7 @@
   cardOption.setCardCVV(cvv); //cardOption is the option selected by user on UI.
 
   // Init PaymentType     
-  PaymentType.LoadMoney loadMoney = new PaymentType.LoadMoney(amount, LOAD_MONEY_RETURN_URL, cardOption);
+  PaymentType.LoadMoney loadMoney = new PaymentType.LoadMoney(amount,cardOption);
 
   citrusClient.simpliPay(loadMoney, new Callback<TransactionResponse>() {
 
@@ -33,7 +33,7 @@
 // Step 3 - If option selected by user is NetBanking Option ,  send payment option to SDK.
 
   // Init PaymentType     
-  PaymentType.LoadMoney loadMoney = new PaymentType.LoadMoney(amount, LOAD_MONEY_RETURN_URL, netBankingOption);
+  PaymentType.LoadMoney loadMoney = new PaymentType.LoadMoney(amount,netBankingOption);
 //netBankingOption is the option selected by user on the UI.
   citrusClient.simpliPay(loadMoney, new Callback<TransactionResponse>() {
 
