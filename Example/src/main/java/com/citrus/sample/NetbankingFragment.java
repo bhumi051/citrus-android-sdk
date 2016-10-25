@@ -218,7 +218,7 @@ public final class NetbankingFragment extends Fragment {
 
                 try {
                     if (paymentType == Utils.PaymentType.LOAD_MONEY) {
-                        paymentType1 = new PaymentType.LoadMoney(amount, Constants.RETURN_URL_LOAD_MONEY, netbankingOption);
+                        paymentType1 = new PaymentType.LoadMoney(amount, netbankingOption);
                         client.simpliPay((PaymentType.LoadMoney) paymentType1, callback);
                     } else if (paymentType == Utils.PaymentType.PG_PAYMENT) {
                         paymentType1 = new PaymentType.PGPayment(amount, Constants.BILL_URL, netbankingOption, null);

@@ -1004,7 +1004,7 @@ public class WalletPaymentFragment extends Fragment implements View.OnClickListe
                 }
 
                 try {
-                    PaymentType paymentType = new PaymentType.LoadMoney(new Amount(amount), Constants.RETURN_URL_LOAD_MONEY, otherPaymentOption);
+                    PaymentType paymentType = new PaymentType.LoadMoney(new Amount(amount),otherPaymentOption);
                     mCitrusClient.autoLoadMoney((PaymentType.LoadMoney) paymentType, new Amount(thresHoldAmount), new Amount(loadAmount), new Callback<SubscriptionResponse>() {
                         @Override
                         public void success(SubscriptionResponse subscriptionResponse) {

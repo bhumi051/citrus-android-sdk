@@ -310,13 +310,13 @@ public class AutoLoadFragment extends Fragment {
             if (isAutoLoadEnabled) {
                 if (mAUTO_load_type == AUTO_LOAD_TYPE.UPDATE_AUTO_LOAD) {
                     showDialog();
-                    paymentType = new PaymentType.LoadMoney(amout, Constants.RETURN_URL_LOAD_MONEY, cardOption);
+                    paymentType = new PaymentType.LoadMoney(amout, cardOption);
                     citrusClient.updateSubscriptiontoHigherValue((PaymentType.LoadMoney) paymentType, new Amount(threshholdAmount.getText().toString()), new Amount(loadamount.getText().toString()), callback);
                 } else if (mAUTO_load_type == AUTO_LOAD_TYPE.LAZY_AUTO_LOAD) {
                     showDialog();
                     citrusClient.autoLoadMoney(new Amount(threshholdAmount.getText().toString()), new Amount(loadamount.getText().toString()), callback);
                 } else {
-                    paymentType = new PaymentType.LoadMoney(amout, Constants.RETURN_URL_LOAD_MONEY, cardOption);
+                    paymentType = new PaymentType.LoadMoney(amout, cardOption);
                     citrusClient.isActiveSubscriptionPresent(new Callback<Boolean>() { //check if active subscription exists and then auto Load
                         @Override
                         public void success(Boolean aBoolean) {
@@ -340,7 +340,7 @@ public class AutoLoadFragment extends Fragment {
                 }
 
             } else {
-                paymentType = new PaymentType.LoadMoney(amout, Constants.RETURN_URL_LOAD_MONEY, cardOption);
+                paymentType = new PaymentType.LoadMoney(amout, cardOption);
                 citrusClient.loadMoney((PaymentType.LoadMoney) paymentType, new Callback<TransactionResponse>() {
                     @Override
                     public void success(TransactionResponse transactionResponse) {

@@ -279,7 +279,7 @@ public class SavedOptionsFragment extends Fragment {
 
             try {
                 if (paymentType == Utils.PaymentType.LOAD_MONEY) {
-                    paymentType1 = new PaymentType.LoadMoney(amount, Constants.RETURN_URL_LOAD_MONEY, paymentOption);
+                    paymentType1 = new PaymentType.LoadMoney(amount, paymentOption);
                     citrusClient.simpliPay(paymentType1, callback);
                 } else if (paymentType == Utils.PaymentType.PG_PAYMENT) {
                     paymentType1 = new PaymentType.PGPayment(amount, Constants.BILL_URL, paymentOption, null);
@@ -344,7 +344,7 @@ public class SavedOptionsFragment extends Fragment {
 
             try {
                 if (paymentType == Utils.PaymentType.LOAD_MONEY) {
-                    paymentType1 = new PaymentType.LoadMoney(amount, Constants.RETURN_URL_LOAD_MONEY, paymentOption);
+                    paymentType1 = new PaymentType.LoadMoney(amount, paymentOption);
                     citrusClient.simpliPay(paymentType1, callback);
                 } else if (paymentType == Utils.PaymentType.PG_PAYMENT) {
                     paymentType1 = new PaymentType.PGPayment(amount, Constants.BILL_URL, paymentOption, null);
@@ -406,7 +406,7 @@ public class SavedOptionsFragment extends Fragment {
 
             try {
                 if (paymentType == Utils.PaymentType.LOAD_MONEY) {
-                    paymentType1 = new PaymentType.LoadMoney(amount, Constants.RETURN_URL_LOAD_MONEY, paymentOption);
+                    paymentType1 = new PaymentType.LoadMoney(amount, paymentOption);
                     citrusClient.simpliPay((PaymentType.LoadMoney) paymentType1, callback);
                 } else if (paymentType == Utils.PaymentType.NEW_PG_PAYMENT) {
                     paymentType1 = new PaymentType.PGPayment(amount, Constants.BILL_URL, paymentOption, null);
