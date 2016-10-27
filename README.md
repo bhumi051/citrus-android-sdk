@@ -67,7 +67,6 @@ ___
 <b> Implementation for User creation and management </b>
 
 * <a href="docs/isUserSignedIn.md" target="_blank">See if the User is logged/Signed in   </a>
-* <a href="docs/Unified%20Login%20API.md" target="_blank">Login User (Unified Login Api)</a>
 * <a href="docs/login_with_limited_access.md" target="_blank">Login User with Limited Access</a>
 * <a href="docs/login_with_full_access.md" target="_blank">Login User with Full Access</a>
 * <a href="docs/Logout.md" target="_blank">Logout the User </a>
