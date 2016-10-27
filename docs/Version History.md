@@ -1,5 +1,10 @@
 | Version History<br>Last updated : 08/09/2016 |  Feature Updates|
 | :-------------: | :------------- |
+| v4.1.0| * Unified Login Apis (SDK will present login screen to simplify integration)  |
+| | * Support for dynamic assets|
+| | * Integrating Flash (A unique way to make card payments with beatiful UI) |
+| | * Further size reduction in SDK by 20 % |
+| | * Minor bug fixes|
 | v4.0.1| * Support for series 2 mastercard  |
 | | * Rupay Card issue fixed|
 | | * Minor bug fixes|
