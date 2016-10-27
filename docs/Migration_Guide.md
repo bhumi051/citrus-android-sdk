@@ -82,7 +82,7 @@
 
   If your app also uses volley library, you can exclude volley from Citrus SDK. Add following compile dependency to your build gradle
 ```groovy
- compile ('com.citruspay.sdk:payment-sdk:4.0.1@aar') {
+ compile ('com.citruspay.sdk:payment-sdk:4.1.0@aar') {
  transitive = true; exclude module: 'volley'
  }
 ```
