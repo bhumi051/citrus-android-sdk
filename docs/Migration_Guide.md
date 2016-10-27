@@ -30,7 +30,7 @@
   and is used in your build.gradle instead of just changing version.
 
 ```groovy
-	compile 'com.citruspay.sdk:payment-sdk:4.0.1'
+	compile 'com.citruspay.sdk:payment-sdk:4.1.0'
 ```
 
 <b>Note</b>
