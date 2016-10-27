@@ -29,12 +29,13 @@ android {
 ___
 <h5>Introduction</h5>
 ___
-* This document details the merchant's <b>Android App</b> integration with Citrus Payment gateway.There is a difference between <b>Normal(PG) Payment</b> and <b>Prepaid Payment</b>!
-* <b>Normal</b> payment requires only <b>email</b> and <b>mobile</b>. Citrus User account will be created by only using email and mobile combination. We call it as <b><i>Bind</i></b>. Once user is Bind, card can be saved against his account, saved cards can be fetched against his account.
-* <b>Prepaid</b> Payment requires <b>email</b> and <b>password</b>. Citrus User account will be created by using email and password combination. We call it prepaid account.
+* This document details the merchant's <b>Android App</b> integration with Citrus Payment gateway.There is a difference between <b>Normal(PG) Payment</b> and <b>Wallet Payment</b>!
+* <b>Normal</b> payment requires only <b>email</b> and <b>mobile</b>. Citrus User account will be created by using only mobile or both email & mobile number combination. We call it as <b><i>Limited Access</i></b>. Once user is logged in with Limited Access, card can be saved against his account, saved cards can be fetched against his account.
+* <b>Wallet</b> Payment requires the user to be logged in with <b><i>Full Access </i></b>. Once the user is logged in with  <b><i>Full Access </i></b> the user can pay using his wallet balance as well saved cards in the account.
 
 This is enhanced [version](docs/Version%20History.md) of SDK V2 wherein you can implement your App with features such as:
 
+* Unified Login Api with native login screen
 * Pay using Credit Card/Debit Card & Netbanking 
 * Pay Using Citrus Cash - user can make a payment using Citrus Cash account if he has sufficient amount for payment. 
 * Get Citrus Cash balance
@@ -43,17 +44,14 @@ This is enhanced [version](docs/Version%20History.md) of SDK V2 wherein you can 
 * Fetch Saved cards of user
 * Delete Cards
 * Send Money
-* Logout your user from App
 * Withdraw your Money
 
 <h5>Few more points on SDK V3</h5>
 ___
    * SDK response time optimization-  over 5x faster response compared to V2
    * Everything is Object now. No more JSON parsing required.
-   * Improved WebView. WebView is handled by SDK.  
-   * Uniform responses from SDK across different API’s
-   * Support for Citrus Cash.
-   * Added support to gradle/Android Studio
+   * Integrated Flash, a unique way to make payments on mobile.
+   * Support for Citrus Wallet.
    * Less Integration Time Required.
    * Zero click payment using Citrus Cash.
 
@@ -70,6 +68,8 @@ ___
 
 * <a href="docs/isUserSignedIn.md" target="_blank">See if the User is logged/Signed in   </a>
 * <a href="docs/Unified%20Login%20API.md" target="_blank">Login User</a>
+* <a href="docs/login_with_limited_access.md" target="_blank">Login User with Limited Access</a>
+* <a href="docs/login_with_full_access.md" target="_blank">Login User with Full Access</a>
 * <a href="docs/Logout.md" target="_blank">Logout the User </a>
 
 <b> Get Payment Options</b>
