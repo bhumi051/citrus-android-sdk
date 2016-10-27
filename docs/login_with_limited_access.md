@@ -6,7 +6,6 @@ You can initiate user login with Limited Access.
 ```groovy
 String emailId = "email@gmail.com";
 String mobileNo = "9999999999";
-AccessType accessType = AccessType.FULL;
 
 CitrusLoginApi citrusLoginApi = new CitrusLoginApi.Builder(getActivity())
                           .mobile(mobileNo)
