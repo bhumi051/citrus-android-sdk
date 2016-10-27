@@ -86,6 +86,62 @@
  transitive = true; exclude module: 'volley'
  }
 ```
+<hr /> 
+<h1> How to get Cards and Netbanking Icons?</h1>
+<b>NetBanking Option Resource Accessability</b>
+ * SDK Version 4.0.1 and before
+ ```groovy
+   netbankingOption.getOptionIcon(context);
+ ```
+ 
+ * SDK Version 4.1.0 
+ ```groovy
+   netbankingOption.getBitmap(new BitmapCallBack() {
+	@Override
+	public void onBitmapReceived(Bitmap bitmap) {
+		//set bitmap to your respective view
+	}
+
+	@Override
+	public void onBitmapFailed(Bitmap bitmap) {
+		//SDK returns defalut netbanking bitmap.
+	}
+    });
+ ```
+ 
+ 
+<b>Saved Card Payment</b>
+ * SDK Version 4.0.1 and before
+   For Credit Card  
+   
+ ```groovy
+   CreditCardOption creditCardOption = new CreditCardOption(token, cvv);
+ ```
+ 
+    For Debit Card 
+    
+ ```groovy
+   DebitCardOption creditCardOption = new DebitCardOption(token, cvv);
+ ```
+ 
+ * SDK Version 4.1.0 and before
+   For Credit Card  	
+   
+ ```groovy
+   CreditCardOption creditCardOption = new CreditCardOption(token, cardscheme, cvv);
+   //where cardscheme is cardscheme received from PaymentOption of WalletList.
+ ```
+ 
+    For Debit Card  	
+    
+ ```groovy
+   DebitCardOption creditCardOption = new DebitCardOption(token, cardscheme, cvv);
+   //where cardscheme is cardscheme received from PaymentOption of WalletList.
+ ```
+
+ 
+ 
+ 
 
 
 
