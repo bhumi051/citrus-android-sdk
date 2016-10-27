@@ -5,6 +5,23 @@ Welcome to the open-source Android SDK Documentation of Citrus Payments Solution
 ```groovy
 compile 'com.citruspay.sdk:payment-sdk:4.1.0'
 ```
+From version 4.1.0 Citrus SDK supports Android version 24 and is compiled against Android version 24.
+Make following changes to make your application's build.gradle file.
+
+```groovy
+android {
+    defaultConfig {
+        jackOptions {
+            enabled true
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+```
+
 #### [Migration from older version to Version 4.x.x](docs/Migration_Guide.md)
 
 #### [Release Notes](docs/Version%20History.md)
@@ -52,10 +69,8 @@ ___
 <b> Implementation for User creation and management </b>
 
 * <a href="docs/isUserSignedIn.md" target="_blank">See if the User is logged/Signed in   </a>
-* <a href="docs/Link User Extended API.md" target="_blank">Link User Extended</a>
-* <a href="docs/Reset%20Password.md" target="_blank">Reset Password </a>
+* <a href="docs/Unified%20Login%20API.md" target="_blank">Login User</a>
 * <a href="docs/Logout.md" target="_blank">Logout the User </a>
-
 
 <b> Get Payment Options</b>
  
