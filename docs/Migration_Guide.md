@@ -88,7 +88,7 @@
 ```
 <hr /> 
 <h1> How to get Cards and Netbanking Icons?</h1>
-<b>NetBanking Option Resource Accessability</b>
+<b>NetBanking Option/Saved NetBanking Option Resource Accessability</b>
  * SDK Version 4.0.1 and before
  ```groovy
    netbankingOption.getOptionIcon(context);
@@ -109,8 +109,31 @@
     });
  ```
  
+<b>Card Option/Saved Card Option Resource Accessability</b>
+ * SDK Version 4.0.1 and before
+ ```groovy
+   paymentOption.getOptionIcon(context); 
+   //paymentOption is object of either Credit/Debit or Saved Credit/Debit Card.
+ ```
  
-<b>Saved Card Payment</b>
+ * SDK Version 4.1.0 
+ ```groovy
+   //paymentOption is object of either Credit/Debit or Saved Credit/Debit Card. 	
+   ((CardOption)paymentOption).getBitmap(new BitmapCallBack() {
+	@Override
+	public void onBitmapReceived(Bitmap bitmap) {
+		//set bitmap to your respective view
+	}
+
+	@Override
+	public void onBitmapFailed(Bitmap bitmap) {
+		//SDK returns defalut card bitmap
+	}
+    });
+ ```
+ 
+<hr />  
+<h1>How to make payment using Saved Cards?</h1>
  * SDK Version 4.0.1 and before
    For Credit Card  
    
