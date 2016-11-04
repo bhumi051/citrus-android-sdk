@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import com.citrus.sdk.CitrusClient;
 import com.citrus.sdk.Environment;
+import com.citrus.sdk.logger.CitrusLogger;
 
 /**
  * Created by salil on 29/5/15.
@@ -65,37 +66,37 @@ public class Utils {
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         String billUrl = prefs.getString(getResourceString(context, R.string.pref_bill_url_key), getResourceString(context, R.string.prefs_bill_url_default_value));
-        Constants.RETURN_URL_LOAD_MONEY = prefs.getString(getResourceString(context, R.string.prefs_load_money_return_url_key), getResourceString(context, R.string.prefs_load_money_return_url_default_value));
-        Constants.SIGNUP_ID = prefs.getString(getResourceString(context, R.string.prefs_signup_id_key), getResourceString(context, R.string.prefs_signup_id_default_value));
-        Constants.SIGNUP_SECRET = prefs.getString(getResourceString(context, R.string.prefs_signup_secret_key), getResourceString(context, R.string.prefs_signup_secret_default_value));
-        Constants.SIGNIN_ID = prefs.getString(getResourceString(context, R.string.prefs_signin_id_key), getResourceString(context, R.string.prefs_signin_id_default_value));
-        Constants.SIGNIN_SECRET = prefs.getString(getResourceString(context, R.string.prefs_signin_secret_key), getResourceString(context, R.string.prefs_signin_secret_default_value));
-        String vanity = prefs.getString(getResourceString(context, R.string.prefs_vanity_key), getResourceString(context, R.string.prefs_vanity_default_value));
+        boolean useDafaultSignautes = prefs.getBoolean(getResourceString(context, R.string.pref_key_use_default_signatures), true);
         boolean enableLog = prefs.getBoolean(getResourceString(context, R.string.pref_enable_logs_key), true);
 
         Constants.enableLogging = enableLog;
-        CitrusClient.getInstance(context).enableLog(enableLog);
+        CitrusClient.getInstance(context).setLogLevel(enableLog==true? CitrusLogger.LogLevel.DEBUG: CitrusLogger.LogLevel.ERROR);
 
         String preferredEnv = Utils.getPreferredEnvironment(context);
 
         if (preferredEnv.equalsIgnoreCase(Utils.getResourceString(context, R.string.environment_preference_default_value))) {
             // Sandbox env
-            Constants.BILL_URL = MerchantConfigParameters.SANDBOX.getBillUrl();
-            Constants.VANITY = MerchantConfigParameters.SANDBOX.getVanity();
-            Constants.environment = Environment.SANDBOX;
-            Constants.SIGNUP_ID = MerchantConfigParameters.SANDBOX.getSignUpId();
-            Constants.SIGNUP_SECRET = MerchantConfigParameters.SANDBOX.getSignUpSecret();
-            Constants.SIGNIN_ID = MerchantConfigParameters.SANDBOX.getSignInId();
-            Constants.SIGNIN_SECRET = MerchantConfigParameters.SANDBOX.getSignInSecret();
+
+            if (useDafaultSignautes) {
+                Constants.BILL_URL = MerchantConfigParameters.SANDBOX.getBillUrl();
+                Constants.VANITY = MerchantConfigParameters.SANDBOX.getVanity();
+                Constants.environment = Environment.SANDBOX;
+                Constants.SIGNUP_ID = MerchantConfigParameters.SANDBOX.getSignUpId();
+                Constants.SIGNUP_SECRET = MerchantConfigParameters.SANDBOX.getSignUpSecret();
+                Constants.SIGNIN_ID = MerchantConfigParameters.SANDBOX.getSignInId();
+                Constants.SIGNIN_SECRET = MerchantConfigParameters.SANDBOX.getSignInSecret();
+            }
         } else if (preferredEnv.equalsIgnoreCase("Production")) {
             // Production Env
-            Constants.BILL_URL = MerchantConfigParameters.PRODUCTION.getBillUrl();
-            Constants.VANITY = MerchantConfigParameters.PRODUCTION.getVanity();
-            Constants.environment = Environment.PRODUCTION;
-            Constants.SIGNUP_ID = MerchantConfigParameters.PRODUCTION.getSignUpId();
-            Constants.SIGNUP_SECRET = MerchantConfigParameters.PRODUCTION.getSignUpSecret();
-            Constants.SIGNIN_ID = MerchantConfigParameters.PRODUCTION.getSignInId();
-            Constants.SIGNIN_SECRET = MerchantConfigParameters.PRODUCTION.getSignInSecret();
+            if (useDafaultSignautes) {
+                Constants.BILL_URL = MerchantConfigParameters.PRODUCTION.getBillUrl();
+                Constants.VANITY = MerchantConfigParameters.PRODUCTION.getVanity();
+                Constants.environment = Environment.PRODUCTION;
+                Constants.SIGNUP_ID = MerchantConfigParameters.PRODUCTION.getSignUpId();
+                Constants.SIGNUP_SECRET = MerchantConfigParameters.PRODUCTION.getSignUpSecret();
+                Constants.SIGNIN_ID = MerchantConfigParameters.PRODUCTION.getSignInId();
+                Constants.SIGNIN_SECRET = MerchantConfigParameters.PRODUCTION.getSignInSecret();
+            }
         }
 
     }

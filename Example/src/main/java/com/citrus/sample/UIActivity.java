@@ -41,12 +41,15 @@ import com.citrus.sdk.classes.Amount;
 import com.citrus.sdk.classes.CashoutInfo;
 import com.citrus.sdk.classes.CitrusConfig;
 import com.citrus.sdk.classes.CitrusException;
+import com.citrus.sdk.logger.CitrusLogger;
 import com.citrus.sdk.payment.PaymentBill;
 import com.citrus.sdk.payment.PaymentType;
 import com.citrus.sdk.response.CitrusError;
 import com.citrus.sdk.response.CitrusResponse;
 import com.citrus.sdk.response.PaymentResponse;
+import com.citruspay.graphics.AssetDownloadManager;
 import com.crashlytics.android.Crashlytics;
+
 import io.fabric.sdk.android.Fabric;
 
 
@@ -76,7 +79,7 @@ public class UIActivity extends AppCompatActivity implements UserManagementFragm
         fragmentManager = getSupportFragmentManager();
 
         citrusClient = CitrusClient.getInstance(mContext);
-        citrusClient.enableLog(Constants.enableLogging);
+        citrusClient.setLogLevel(CitrusLogger.LogLevel.DEBUG);
 
         initCitrusClient();
 
@@ -123,7 +126,9 @@ public class UIActivity extends AppCompatActivity implements UserManagementFragm
             Intent intent = new Intent(this, SettingsActivity.class);
             startActivityForResult(intent, SETTINGS_ACTION);
         }
-
+        if (item.getItemId() == R.id.action_clearcache) {
+            AssetDownloadManager.getInstance().clearCache();
+        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -172,10 +177,11 @@ public class UIActivity extends AppCompatActivity implements UserManagementFragm
     public void onPaymentTypeSelected(Utils.PaymentType paymentType, Amount amount) {
         if (paymentType == Utils.PaymentType.NEW_CITRUS_CASH) {
 
-            citrusClient.getBill(Constants.BILL_URL,amount, "#.00", new Callback<PaymentBill>() {
+            citrusClient.getBill(Constants.BILL_URL, amount, Constants.AMOUNT_DOUBLE_PRECISION_FORMAT, new Callback<PaymentBill>() {
                 @Override
                 public void success(PaymentBill paymentBill) {
                     //try {
+                    if (paymentBill != null) {
                         PaymentType.CitrusCash citrusCash = new PaymentType.CitrusCash(paymentBill);
                         citrusClient.simpliPay(citrusCash, new Callback<TransactionResponse>() {
                             @Override
@@ -192,6 +198,9 @@ public class UIActivity extends AppCompatActivity implements UserManagementFragm
                                 }
                             }
                         });
+                    } else {
+                        showSnackBar("Incorrect Bill Received from Server.");
+                    }
                    /* } catch (CitrusException e) {
                         e.printStackTrace();
                         showSnackBar(e.getMessage());
@@ -200,7 +209,7 @@ public class UIActivity extends AppCompatActivity implements UserManagementFragm
 
                 @Override
                 public void error(CitrusError error) {
-
+                    showSnackBar(error.getMessage());
                 }
             });
 
@@ -208,12 +217,11 @@ public class UIActivity extends AppCompatActivity implements UserManagementFragm
         } else if (paymentType == Utils.PaymentType.CITRUS_CASH) {
 
             try {
-
-                citrusClient.prepaidPay(new PaymentType.CitrusCash(amount, Constants.BILL_URL), new Callback<PaymentResponse>() {
+                citrusClient.simpliPay(new PaymentType.CitrusCash(amount, Constants.BILL_URL), new Callback<TransactionResponse>() {
                     @Override
-                    public void success(PaymentResponse paymentResponse) {
+                    public void success(TransactionResponse transactionResponse) {
                         if (getApplicationContext() != null) {
-                            showSnackBar(paymentResponse.getMessage());
+                            showSnackBar(transactionResponse.getMessage());
                         }
                     }
 
@@ -223,7 +231,6 @@ public class UIActivity extends AppCompatActivity implements UserManagementFragm
                             showSnackBar(error.getMessage());
                         }
                     }
-
                 });
             } catch (CitrusException e) {
                 e.printStackTrace();
@@ -370,12 +377,12 @@ public class UIActivity extends AppCompatActivity implements UserManagementFragm
                     citrusClient.signOut(new Callback<CitrusResponse>() {
                         @Override
                         public void success(CitrusResponse citrusResponse) {
-                            Utils.showToast(UIActivity.this, citrusResponse.getMessage());
+//                            Utils.showToast(UIActivity.this, citrusResponse.getMessage());
                         }
 
                         @Override
                         public void error(CitrusError error) {
-                            Utils.showToast(UIActivity.this, error.getMessage());
+//                            Utils.showToast(UIActivity.this, error.getMessage());
                         }
                     });
 

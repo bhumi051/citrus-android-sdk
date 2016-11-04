@@ -5,13 +5,10 @@ import com.citrus.sdk.Environment;
 /**
  * Created by salil on 13/6/15.
  */
-public class Constants {
+public final class Constants {
 
-    //    public static String BILL_URL = "https://salty-plateau-1529.herokuapp.com/billGenerator.production.wallet.php";
+    public static final String AMOUNT_DOUBLE_PRECISION_FORMAT = "#.00";
     public static String BILL_URL = "https://salty-plateau-1529.herokuapp.com/billGenerator.sandbox.php";
-    //public static String BILL_URL_BN = "https://salty-plateau-1529.herokuapp.com/billGenerator.sandbox.bn.php";
-    public static String BILL_URL_BC = "https://salty-plateau-1529.herokuapp.com/billGenerator.sandbox.bc.php";
-    public static String RETURN_URL_LOAD_MONEY = "https://salty-plateau-1529.herokuapp.com/redirectUrlLoadCash.php";
 
     // Sand wallet PG
     public static String SIGNUP_ID = "9hh5re3r5q-signup";
@@ -27,7 +24,4 @@ public class Constants {
     public static String colorPrimaryDark = "#E7961D";
     public static String colorPrimary = "#F9A323";
     public static String textColor = "#ffffff";
-
-    public static String INTENT_EXTRA_ENVIRONMENT_CHANGED = "INTENT_EXTRA_ENVIRONMENT_CHANGED";
-    public static String INTENT_EXTRA_MERCHANT_DETAILS_CHANGED = "INTENT_EXTRA_MERCHANT_DETAILS_CHANGED";
 }

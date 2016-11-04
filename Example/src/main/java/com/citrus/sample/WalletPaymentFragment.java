@@ -45,10 +45,10 @@ import android.widget.Toast;
 import com.citrus.sdk.Callback;
 import com.citrus.sdk.CitrusClient;
 import com.citrus.sdk.CitrusUser;
-import com.citrus.sdk.TransactionResponse;
 import com.citrus.sdk.classes.Amount;
 import com.citrus.sdk.classes.CashoutInfo;
 import com.citrus.sdk.classes.CitrusException;
+import com.citrus.sdk.logger.CitrusLogger;
 import com.citrus.sdk.payment.CardOption;
 import com.citrus.sdk.payment.CreditCardOption;
 import com.citrus.sdk.payment.MasterPassOption;
@@ -58,18 +58,16 @@ import com.citrus.sdk.response.CitrusError;
 import com.citrus.sdk.response.CitrusResponse;
 import com.citrus.sdk.response.PaymentResponse;
 import com.citrus.sdk.response.SubscriptionResponse;
-import com.orhanobut.logger.Logger;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 import static com.citrus.sample.Utils.PaymentType.AUTO_LOAD_MONEY;
-import static com.citrus.sample.Utils.PaymentType.CITRUS_CASH;
 import static com.citrus.sample.Utils.PaymentType.LOAD_MONEY;
 import static com.citrus.sample.Utils.PaymentType.NEW_CITRUS_CASH;
 import static com.citrus.sample.Utils.PaymentType.NEW_PG_PAYMENT;
@@ -89,17 +87,17 @@ public class WalletPaymentFragment extends Fragment implements View.OnClickListe
 
     /*@Bind(R.id.btnsubscriptionlist)
     Button btnsubscriptionlist;*/
-    @Bind(R.id.btnactivesubscription)
+    @BindView(R.id.btnactivesubscription)
     Button btnactivesubscription;
     /*@Bind(R.id.btninactivesubscription)
     Button btninactivesubscription;*/
-    @Bind(R.id.btndeactivatesubscription)
+    @BindView(R.id.btndeactivatesubscription)
     Button btndeactivatesubscription;
-    @Bind(R.id.btnsavedcardsubscription)
+    @BindView(R.id.btnsavedcardsubscription)
     Button btnsavedcardsubscription;
-    @Bind(R.id.btnisActiveSubscription)
+    @BindView(R.id.btnisActiveSubscription)
     Button btnisActiveSubscription;
-    @Bind(R.id.btUpdateSubscription)
+    @BindView(R.id.btUpdateSubscription)
     Button btUpdateSubscription;
     /*@Bind(R.id.btUpdateSubscriptiontohighervalue)
     Button btUpdateSubscriptiontohighervalue;*/
@@ -180,8 +178,7 @@ public class WalletPaymentFragment extends Fragment implements View.OnClickListe
         btnGetProfile = (Button) rootView.findViewById(R.id.btn_get_profile);
 
         btnautoload = (Button) rootView.findViewById(R.id.btn_autoLoad);
-       // btnMasterPass = (ImageButton) rootView.findViewById(R.id.btnMasterpass);
-        masterPassOption = new MasterPassOption();
+        // btnMasterPass = (ImageButton) rootView.findViewById(R.id.btnMasterpass);
         btnGetBalance.setOnClickListener(this);
         btnLoadMoney.setOnClickListener(this);
         btnNewPayUsingCash.setOnClickListener(this);
@@ -210,13 +207,18 @@ public class WalletPaymentFragment extends Fragment implements View.OnClickListe
             public void success(SubscriptionResponse subscriptionResponse) {
                 if (WalletPaymentFragment.this.isVisible() && isAdded()) {
                     if (subscriptionResponse != null) {
-                        btUpdateSubscription.setVisibility(View.VISIBLE);
-                        btndeactivatesubscription.setVisibility(View.VISIBLE);
-                        activeSubscription = subscriptionResponse;
+
+                        if (btUpdateSubscription != null) {
+                            btUpdateSubscription.setVisibility(View.VISIBLE);
+                            btndeactivatesubscription.setVisibility(View.VISIBLE);
+                            activeSubscription = subscriptionResponse;
+                        }
                     } else {
-                        btUpdateSubscription.setVisibility(View.GONE);
-                        btndeactivatesubscription.setVisibility(View.GONE);
-                        btnactivesubscription.setVisibility(View.GONE);
+                        if (btUpdateSubscription != null) {
+                            btUpdateSubscription.setVisibility(View.GONE);
+                            btndeactivatesubscription.setVisibility(View.GONE);
+                            btnactivesubscription.setVisibility(View.GONE);
+                        }
                     }
                 }
             }
@@ -333,10 +335,6 @@ public class WalletPaymentFragment extends Fragment implements View.OnClickListe
 
     private void payUsingNewCash() {
         showPrompt(NEW_CITRUS_CASH);
-    }
-
-    private void payUsingCash() {
-        showPrompt(CITRUS_CASH);
     }
 
     private void newPgPayment() {
@@ -694,7 +692,6 @@ public class WalletPaymentFragment extends Fragment implements View.OnClickListe
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        ButterKnife.unbind(this);
     }
 
     @OnClick(R.id.btnactivesubscription)
@@ -704,7 +701,7 @@ public class WalletPaymentFragment extends Fragment implements View.OnClickListe
             @Override
             public void success(SubscriptionResponse subscriptionResponses) {
                 if (subscriptionResponses != null) {
-                    Logger.d("SUBSCRIPTION LIST ***" + subscriptionResponses.toString());
+                    CitrusLogger.i("SUBSCRIPTION LIST " + subscriptionResponses.toString());
                     Toast.makeText(getActivity(), subscriptionResponses.toString(), Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(getActivity(), "No active subscription exists.", Toast.LENGTH_SHORT).show();
@@ -713,7 +710,7 @@ public class WalletPaymentFragment extends Fragment implements View.OnClickListe
 
             @Override
             public void error(CitrusError error) {
-                Logger.d("ERROR ***" + error.getMessage());
+                CitrusLogger.e("SUBSCRIPTION LIST ERROR" + error.getMessage());
                 Toast.makeText(getActivity(), error.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
@@ -729,7 +726,7 @@ public class WalletPaymentFragment extends Fragment implements View.OnClickListe
         mCitrusClient.deActivateSubscription(new Callback<SubscriptionResponse>() {
             @Override
             public void success(SubscriptionResponse subscriptionResponse) {
-                Logger.d("DEACTIVATED SUBSCRIPTION RESPONSE ***" + subscriptionResponse.toString());
+                CitrusLogger.i("DEACTIVATED SUBSCRIPTION RESPONSE " + subscriptionResponse.toString());
                 Toast.makeText(getActivity(), subscriptionResponse.toString(), Toast.LENGTH_SHORT).show();
                 btndeactivatesubscription.setVisibility(View.GONE);
                 btUpdateSubscription.setVisibility(View.GONE);
@@ -738,7 +735,7 @@ public class WalletPaymentFragment extends Fragment implements View.OnClickListe
 
             @Override
             public void error(CitrusError error) {
-                Logger.d("ERROR ***" + error.getMessage());
+                CitrusLogger.e("DEACTIVATED SUBSCRIPTION ERROR " + error.getMessage());
                 Toast.makeText(getActivity(), error.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
@@ -1004,17 +1001,18 @@ public class WalletPaymentFragment extends Fragment implements View.OnClickListe
                 }
 
                 try {
-                    PaymentType paymentType = new PaymentType.LoadMoney(new Amount(amount),otherPaymentOption);
+                    PaymentType paymentType = new PaymentType.LoadMoney(new Amount(amount), otherPaymentOption);
                     mCitrusClient.autoLoadMoney((PaymentType.LoadMoney) paymentType, new Amount(thresHoldAmount), new Amount(loadAmount), new Callback<SubscriptionResponse>() {
                         @Override
                         public void success(SubscriptionResponse subscriptionResponse) {
-                            Logger.d("AUTO LOAD RESPONSE ***" + subscriptionResponse.getSubscriptionResponseMessage());
+                            CitrusLogger.i("AUTO LOAD RESPONSE " + subscriptionResponse.getSubscriptionResponseMessage());
+
                             Toast.makeText(getActivity(), subscriptionResponse.getSubscriptionResponseMessage(), Toast.LENGTH_SHORT).show();
                         }
 
                         @Override
                         public void error(CitrusError error) {
-                            Logger.d("AUTO LOAD ERROR ***" + error.getMessage());
+                            CitrusLogger.e("AUTO LOAD ERROR " + error.getMessage());
                             Toast.makeText(getActivity(), error.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     });
@@ -1054,64 +1052,7 @@ public class WalletPaymentFragment extends Fragment implements View.OnClickListe
         }
     }
 
-    @OnClick(R.id.btnMasterpass)
-    public void testMasterPass() {
 
-
-        final AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
-        String message = null;
-        String positiveButtonText = null;
-        message = "Please enter the transaction amount.";
-        positiveButtonText = "Make Payment";
-
-        LinearLayout linearLayout = new LinearLayout(getActivity());
-        linearLayout.setOrientation(LinearLayout.VERTICAL);
-
-        alert.setTitle("Transaction Amount?");
-        alert.setMessage(message);
-        // Set an EditText view to get user input
-        final EditText input = new EditText(getActivity());
-        input.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
-        alert.setView(input);
-        alert.setPositiveButton(positiveButtonText, new DialogInterface.OnClickListener() {
-
-            public void onClick(DialogInterface dialog, int whichButton) {
-                String value = input.getText().toString();
-                input.clearFocus();
-                // Hide the keyboard.
-                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(
-                        Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(input.getWindowToken(), 0);
-
-                try {
-                    MasterPassOption masterPassOption = new MasterPassOption();
-                    PaymentType.PGPayment pgPayment = new PaymentType.PGPayment(new Amount(value), Constants.BILL_URL, masterPassOption, null);
-                    mCitrusClient.simpliPay(pgPayment, new Callback<TransactionResponse>() {
-                        @Override
-                        public void success(TransactionResponse transactionResponse) {
-                            Toast.makeText(getActivity(), transactionResponse.getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-
-                        @Override
-                        public void error(CitrusError error) {
-                            Toast.makeText(getActivity(), error.getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                } catch (CitrusException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-
-        alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-                dialog.cancel();
-            }
-        });
-
-        input.requestFocus();
-        alert.show();
-    }
 
     //we will use the same method to update subscription to lower and higher value
     //i u want to update to higher value - again load Money is required
@@ -1232,14 +1173,15 @@ public class WalletPaymentFragment extends Fragment implements View.OnClickListe
                         public void success(SubscriptionResponse subscriptionResponse) {
                             Toast.makeText(getActivity(), subscriptionResponse.toString(), Toast.LENGTH_SHORT).show();
 
-                            Logger.d("updateSubscription response **" + subscriptionResponse.toString());
+                            CitrusLogger.i("updateSubscription response " + subscriptionResponse.toString());
+
                             activeSubscription = subscriptionResponse;//update the active subscription Object
                         }
 
                         @Override
                         public void error(CitrusError error) {
                             Toast.makeText(getActivity(), error.getMessage(), Toast.LENGTH_SHORT).show();
-                            Logger.d("ERROR ***updateSubscription" + error.getMessage());
+                            CitrusLogger.e("ERROR ***updateSubscription" + error.getMessage());
                         }
                     });
                 }

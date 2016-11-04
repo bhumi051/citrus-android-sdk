@@ -4,7 +4,7 @@
          when checked/unchecked. -->
     <SwitchPreference
         android:defaultValue="true"
-        android:key="use_default_signatures"
+        android:key="@string/pref_key_use_default_signatures"
         android:title="@string/pref_title_use_default_signatures" />
 
     <EditTextPreference
@@ -65,14 +65,7 @@
             android:singleLine="true"
             android:title="@string/pref_title_bill_url" />
 
-        <EditTextPreference
-            android:defaultValue="@string/prefs_load_money_return_url_default_value"
-            android:inputType="text"
-            android:key="load_money_return_url"
-            android:maxLines="1"
-            android:selectAllOnFocus="true"
-            android:singleLine="true"
-            android:title="@string/pref_title_load_money_return_url" />
+
 
         <CheckBoxPreference
             android:defaultValue="true"

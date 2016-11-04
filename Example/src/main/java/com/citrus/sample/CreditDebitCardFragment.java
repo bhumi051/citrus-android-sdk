@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.citrus.sdk.Callback;
+import com.citrus.sdk.CardSchemeCallBack;
 import com.citrus.sdk.CitrusClient;
 import com.citrus.sdk.TransactionResponse;
 import com.citrus.sdk.classes.Amount;
@@ -122,6 +124,12 @@ public class CreditDebitCardFragment extends Fragment implements View.OnClickLis
                 submitButton.setText("Pay");
                 break;
         }
+        editCardNumber.getCardScheme(new CardSchemeCallBack() {
+            @Override
+            public void onCardSchemeReceived(CardOption.CardScheme cardScheme) {
+                Log.d("CARDSCHEME", cardScheme.getName());
+            }
+        });
 
         return returnView;
     }
@@ -186,7 +194,7 @@ public class CreditDebitCardFragment extends Fragment implements View.OnClickLis
 
             try {
                 if (this.paymentType == Utils.PaymentType.LOAD_MONEY) {
-                    paymentType = new PaymentType.LoadMoney(amount,cardOption);
+                    paymentType = new PaymentType.LoadMoney(amount, cardOption);
                     citrusClient.simpliPay(paymentType, callback);
                 } else if (this.paymentType == Utils.PaymentType.PG_PAYMENT) {
                     paymentType = new PaymentType.PGPayment(amount, Constants.BILL_URL, cardOption, null);

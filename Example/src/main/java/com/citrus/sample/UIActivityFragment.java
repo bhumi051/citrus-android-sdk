@@ -15,8 +15,8 @@
 
 package com.citrus.sample;
 
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -75,8 +75,6 @@ public class UIActivityFragment extends Fragment implements View.OnClickListener
         citrusClient.signOut(new Callback<CitrusResponse>() {
             @Override
             public void success(CitrusResponse citrusResponse) {
-//                Utils.showToast(getActivity(), citrusResponse.getMessage());
-
                 ((UIActivity) getActivity()).showSnackBar(citrusResponse.getMessage());
 
                 textMessage.setText("Please Sign In or Sign Up the user.");
@@ -87,8 +85,6 @@ public class UIActivityFragment extends Fragment implements View.OnClickListener
 
             @Override
             public void error(CitrusError error) {
-//                Utils.showToast(getActivity(), error.getMessage());
-
                 ((UIActivity) getActivity()).showSnackBar(error.getMessage());
             }
         });

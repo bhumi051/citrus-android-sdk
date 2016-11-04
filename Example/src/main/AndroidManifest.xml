@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.citrus.sample"
-    android:versionCode="9"
-    android:versionName="9.0">
+    android:versionCode="10"
+    android:versionName="10.0">
 
     <uses-sdk
-        android:minSdkVersion="9"
-        android:targetSdkVersion="23" />
+        android:minSdkVersion="15"
+        android:targetSdkVersion="24" />
 
     <application
         android:allowBackup="true"
@@ -27,6 +27,7 @@
         <activity
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings"
+            android:theme="@style/myapptheme"
             android:parentActivityName=".UIActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

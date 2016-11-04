@@ -168,15 +168,7 @@
             android:layout_gravity="center_horizontal" />
 
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="50dp"
-            android:id="@+id/btnMasterpass"
-            android:layout_gravity="center_horizontal"
-            android:src="@drawable/masterpass"
-            android:layout_marginBottom="10dp"
-            android:layout_marginTop="10dp"
-            />
+
 
        <!-- <Button
             android:layout_width="match_parent"

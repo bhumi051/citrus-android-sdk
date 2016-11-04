@@ -77,6 +77,18 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
 //                citrusClient.signOut(null);
                 toggleEnvironments(preference, Constants.environment);
             } else if (preference instanceof EditTextPreference) {
+                if ("signup_id".equals(preference.getKey())) {
+                    Constants.SIGNUP_ID = stringValue;
+                } else if ("signup_secret".equals(preference.getKey())) {
+                    Constants.SIGNUP_SECRET = stringValue;
+                } else if ("signin_id".equals(preference.getKey())) {
+                    Constants.SIGNIN_ID = stringValue;
+                } else if ("signin_secret".equals(preference.getKey())) {
+                    Constants.SIGNIN_SECRET = stringValue;
+                } else if ("vanity".equals(preference.getKey())) {
+                    Constants.VANITY = stringValue;
+                }
+
                 // For all other preferences, set the summary to the value's
                 // simple string representation.
                 preference.setSummary(stringValue);
@@ -101,7 +113,6 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
 
     private void toggleUrls(Preference preference, boolean toggleValue) {
         preference.getPreferenceManager().findPreference("bill_url").setEnabled(toggleValue);
-        preference.getPreferenceManager().findPreference("load_money_return_url").setEnabled(toggleValue);
     }
 
     private void toggleSignatures(Preference preference, boolean toggleValue) {
@@ -144,7 +155,6 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
         SharedPreferences.Editor editor = preferences.edit();
         //this returns whatever preference was set for myPrefKey in PreferencesPage or the default value if nothing was set
         preferences.getString("bill_url", getResources().getString(R.string.prefs_bill_url_default_value));
-        preferences.getString("load_money_return_url", getResources().getString(R.string.prefs_load_money_return_url_default_value));
 
         //this effectively resets the myPrefKey to its default value
         editor.remove("bill_url");
@@ -152,7 +162,6 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
         editor.apply();
 
         preference.getPreferenceManager().findPreference("bill_url").setSummary(R.string.prefs_bill_url_default_value);
-        preference.getPreferenceManager().findPreference("load_money_return_url").setDefaultValue(R.string.prefs_load_money_return_url_default_value);
     }
 
     private static void toggleEnvironments(Preference preference, Environment environment) {
@@ -347,7 +356,6 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
         bindPreferenceSummaryToValue(findPreference("signin_secret"));
         bindPreferenceSummaryToValue(findPreference("vanity"));
         bindPreferenceSummaryToValue(findPreference("bill_url"));
-        bindPreferenceSummaryToValue(findPreference("load_money_return_url"));
         bindBooleanPreferenceSummaryToValue(findPreference("use_default_signatures"));
         bindBooleanPreferenceSummaryToValue(findPreference("use_default_urls"));
         bindBooleanPreferenceSummaryToValue(findPreference("enable_logs"));
@@ -381,7 +389,6 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
         }
 
     }
-
 
 
     @Override

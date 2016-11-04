@@ -16,7 +16,7 @@
             android:layout_margin="@dimen/button_margin"
             android:hint="@string/enter_email_text"
             android:inputType="textEmailAddress"
-             /><!--android:text="@string/dummy_email_hint"-->
+            android:text="" />
 
         <EditText
             android:id="@+id/edit_mobile_no"
@@ -26,15 +26,15 @@
             android:layout_margin="@dimen/button_margin"
             android:hint="@string/enter_mobile_text"
             android:inputType="number"
-            /><!--android:text="@string/dummy_mobile_hint"-->
+            android:text="" />
 
 
         <LinearLayout
             android:id="@+id/scopeCheckboxLayoutID"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="gone"
-            android:layout_below="@id/edit_mobile_no">
+            android:layout_below="@id/edit_mobile_no"
+            android:visibility="visible">
 
             <CheckBox
                 android:id="@+id/fullScopeCheckBoxId"
@@ -55,18 +55,18 @@
         </LinearLayout>
 
         <Button
-            android:id="@+id/btn_link_user"
+            android:id="@+id/btn_login"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/scopeCheckboxLayoutID"
             android:layout_margin="@dimen/button_margin"
-            android:text="@string/is_citrus_member_text" />
+            android:text="@string/btn_login_text" />
 
         <EditText
             android:id="@+id/edit_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/btn_link_user"
+            android:layout_below="@id/btn_login"
             android:layout_margin="@dimen/button_margin"
             android:layout_marginTop="@dimen/button_margin"
             android:hint="@string/password_hint"

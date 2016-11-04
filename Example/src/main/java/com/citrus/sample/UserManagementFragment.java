@@ -35,12 +35,10 @@ import android.widget.TextView;
 
 import com.citrus.sdk.Callback;
 import com.citrus.sdk.CitrusClient;
-import com.citrus.sdk.classes.LinkBindUserResponse;
-import com.citrus.sdk.classes.LinkUserExtendedResponse;
-import com.citrus.sdk.classes.LinkUserPasswordType;
-import com.citrus.sdk.classes.LinkUserSignInType;
 import com.citrus.sdk.login.AccessType;
-import com.citrus.sdk.login.LoginInfo;
+import com.citrus.sdk.login.AvailableLoginType;
+import com.citrus.sdk.login.CitrusLoginApi;
+import com.citrus.sdk.login.FindUserResponse;
 import com.citrus.sdk.login.PasswordType;
 import com.citrus.sdk.response.CitrusError;
 import com.citrus.sdk.response.CitrusResponse;
@@ -73,14 +71,10 @@ public class UserManagementFragment extends Fragment implements View.OnClickList
     private Context context = null;
     private View rootView = null;
 
-    private LinkUserExtendedResponse linkUserExtended;
-    private LinkBindUserResponse linkBindUser = null;
     private static final long RESEND_TIMER = 15000;
-    private LoginInfo loginInfo = null;
     private SharedPreferences prefs = null;
-    private AccessType accessType = null;
-    private PasswordType passwordType = PasswordType.NONE;
-    private String passwordOrOTP = null;
+    private CitrusLoginApi citrusLoginApi;
+    private FindUserResponse findUserResponse;
 
     /**
      * Use this factory method to create a new instance of
@@ -114,7 +108,7 @@ public class UserManagementFragment extends Fragment implements View.OnClickList
         editPassword = (EditText) rootView.findViewById(R.id.edit_password);
         textMessage = (TextView) rootView.findViewById(R.id.txt_user_mgmt_message);
 
-        btnLinkUser = (Button) rootView.findViewById(R.id.btn_link_user);
+        btnLinkUser = (Button) rootView.findViewById(R.id.btn_login);
         btnSignIn = (Button) rootView.findViewById(R.id.btn_signin);
         btnResend = (Button) rootView.findViewById(R.id.btn_resend);
 
@@ -157,71 +151,95 @@ public class UserManagementFragment extends Fragment implements View.OnClickList
         editMobileNo.setText(prefferedMobileNum);
 
 
-
         return rootView;
     }
 
     /**
      * Call Link User Extended API
      */
-    private void linkUserExtended() {
+    private void doLogin() {
         String emailId = editEmailId.getText().toString();
         String mobileNo = editMobileNo.getText().toString();
 
+        AccessType accessType = fullScopeCheckBox.isChecked() ? AccessType.FULL : AccessType.LIMITED;
 
-        citrusClient.linkUserExtended(emailId, mobileNo, new Callback<LinkUserExtendedResponse>() {
-            @Override
-            public void success(LinkUserExtendedResponse linkUserExtendedResponse) {
-                if (linkUserExtendedResponse != null) {
-                    linkUserExtended = linkUserExtendedResponse;
-                    modifyLinkUserExtendedUi(linkUserExtendedResponse);
+        citrusLoginApi = new CitrusLoginApi.Builder(getActivity())
+                .mobile(mobileNo)
+                .email(emailId)
+                .accessType(accessType)
+                .build();
+
+        boolean useCitrusLoginScreen = prefs.getBoolean(getString(R.string.pref_show_citrus_login_screen), true);
+
+        if (!useCitrusLoginScreen) {
+            citrusLoginApi.setLoginProcessor(new CitrusLoginApi.LoginProcessor(getActivity()) {
+                @Override
+                public void onShowLoginScreen(FindUserResponse findUserResponse, CitrusLoginApi citrusLoginApi) {
+                    UserManagementFragment.this.findUserResponse = findUserResponse;
+                    modifyUIForPassword(findUserResponse);
                 }
+
+                @Override
+                public PasswordType getPasswordType() {
+                    String mOtpString = editOtp.getText().toString();
+                    String passwordString = UserManagementFragment.this.editPassword.getText().toString();
+
+                    PasswordType passwordType = null;
+
+                    if (mOtpString.length() > 0) {
+                        passwordType = PasswordType.MOTP;
+                    } else if (passwordString.length() > 0) {
+                        passwordType = PasswordType.PASSWORD;
+                    }
+
+                    return passwordType;
+                }
+
+                @Override
+                public String getPasswordOrOTP() {
+                    String mOtpString = editOtp.getText().toString();
+                    String passwordString = editPassword.getText().toString();
+
+                    String password = null;
+
+                    if (mOtpString.length() > 0) {
+                        password = mOtpString;
+                    } else if (passwordString.length() > 0) {
+                        password = passwordString;
+                    }
+
+                    return password;
+                }
+            });
+        }
+
+        citrusLoginApi.setListener(new CitrusLoginApi.CitrusLoginApiListener() {
+            @Override
+            public void onLoginSuccess() {
+                mListener.onShowWalletScreen(false);
             }
 
             @Override
-            public void error(CitrusError error) {
+            public void onError(CitrusError error) {
                 ((UIActivity) getActivity()).showSnackBar(error.getMessage());
                 textMessage.setText(error.getMessage());
+                clearPasswordFields();
+            }
+
+            @Override
+            public void onLoginCancelled() {
+
             }
         });
 
+        citrusClient.doLogin(citrusLoginApi);
     }
 
     /**
      * Perform Link User Extended Sign In.
      */
-    private void linkUserExtendedSignIn() {
-
-        String linkUserPassword = null;
-        String otpPassword = editOtp.getText().toString();
-        String passwordString = editPassword.getText().toString();
-
-        LinkUserPasswordType linkUserPasswordType = LinkUserPasswordType.None;
-        if (otpPassword.length() > 0) {
-            linkUserPasswordType = LinkUserPasswordType.Otp;
-            linkUserPassword = otpPassword;
-        } else if (passwordString.length() > 0) {
-            linkUserPasswordType = LinkUserPasswordType.Password;
-            linkUserPassword = passwordString;
-        }
-
-        citrusClient.linkUserExtendedSignIn(linkUserExtended, linkUserPasswordType, linkUserPassword, new Callback<CitrusResponse>() {
-            @Override
-            public void success(CitrusResponse citrusResponse) {
-                ((UIActivity) getActivity()).showSnackBar(citrusResponse.getMessage());
-                textMessage.setText(citrusResponse.getMessage());
-                clearPasswordFields();
-
-                mListener.onShowWalletScreen(false);
-            }
-
-            @Override
-            public void error(CitrusError error) {
-                ((UIActivity) getActivity()).showSnackBar(error.getMessage());
-                textMessage.setText(error.getMessage());
-                clearPasswordFields();
-            }
-        });
+    private void signIn() {
+        citrusLoginApi.proceed(findUserResponse);
     }
 
 
@@ -266,18 +284,17 @@ public class UserManagementFragment extends Fragment implements View.OnClickList
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.btn_link_user:
-                linkUserExtended();
+            case R.id.btn_login:
+                doLogin();
                 break;
             case R.id.btn_signin:
-                linkUserExtendedSignIn();
-//                linkBindUserSignIn();
+                signIn();
                 break;
             case R.id.btn_reset_password:
                 resetPassword();
                 break;
             case R.id.btn_resend:
-                linkUserExtended();
+                doLogin();
                 btnResend.setClickable(false);
                 btnResend.setEnabled(false);
                 break;
@@ -289,11 +306,11 @@ public class UserManagementFragment extends Fragment implements View.OnClickList
         editPassword.getText().clear();
     }
 
-    private void modifyLinkUserExtendedUi(LinkUserExtendedResponse linkUserExtendedResponse) {
+    private void modifyUIForPassword(FindUserResponse findUserResponse) {
 
-        LinkUserSignInType linkUserSignInType = linkUserExtendedResponse.getLinkUserSignInType();
-        if (linkUserSignInType != LinkUserSignInType.None) {
-            String linkUserMessage = linkUserExtendedResponse.getLinkUserMessage();
+        AvailableLoginType availableLoginType = findUserResponse.getAvailableLoginType();
+        if (availableLoginType != AvailableLoginType.LOGIN_NONE) {
+            String linkUserMessage = findUserResponse.getLoginMessage();
 
             textMessage.setText(linkUserMessage);
             btnSignIn.setVisibility(View.VISIBLE);
@@ -319,27 +336,22 @@ public class UserManagementFragment extends Fragment implements View.OnClickList
             }, RESEND_TIMER);
 
 
-            switch (linkUserSignInType) {
+            switch (availableLoginType) {
 
-                case SignInTypeMOtpOrPassword:
+                case LOGIN_WITH_MOTP_OR_PASSWORD:
                     // Show Mobile otp and password sign in screen
                     editOtp.setHint("Mobile OTP");
                     rootView.findViewById(R.id.oRTextViewId).setVisibility(View.VISIBLE);
                     break;
-                case SignInTypeMOtp:
+                case LOGIN_WITH_MOTP:
                     // Show Mobile otp sign in screen
                     editOtp.setHint("Mobile OTP");
                     editPassword.setVisibility(View.GONE);
                     break;
-                case SignInTypeEOtpOrPassword:
+                case LOGIN_WITH_EOTP_OR_PASSWORD:
                     // Show Email otp and password sign in screen
                     editOtp.setHint("Email OTP");
                     rootView.findViewById(R.id.oRTextViewId).setVisibility(View.VISIBLE);
-                    break;
-                case SignInTypeEOtp:
-                    // Show Email otp sign in screen
-                    editOtp.setHint("Email OTP");
-                    editPassword.setVisibility(View.GONE);
                     break;
                 default:
                     break;

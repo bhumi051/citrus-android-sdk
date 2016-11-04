@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Citrus Volley</string>
+
+    <string name="app_name">Citrus SDK Sample</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_payment_page">PaymentPage</string>
@@ -26,7 +27,7 @@
     <string name="reset_pass_text">Reset Password</string>
     <string name="signup_text">Sign Up</string>
     <string name="password_hint">Password</string>
-    <string name="is_citrus_member_text">Is Citrus Member?</string>
+    <string name="btn_login_text">Login</string>
     <string name="enter_mobile_text">Enter Mobile No</string>
     <string name="dummy_mobile_hint"></string>
     <string name="dummy_email_hint"></string>
@@ -113,7 +114,6 @@
     <!--<string name="prefs_signin_secret_default_value">52f7e15efd4208cf5345dd554443fd99</string>-->
     <!--<string name="prefs_vanity_default_value">testing</string>-->
     <string name="prefs_bill_url_default_value">https://salty-plateau-1529.herokuapp.com/billGenerator.sandbox.php</string>
-    <string name="prefs_load_money_return_url_default_value">https://salty-plateau-1529.herokuapp.com/redirectUrlLoadCash.php</string>
 
     // Sandbox Wallet PG
     <string name="prefs_vanity_default_value">nativeSDK</string>
@@ -167,5 +167,10 @@
     <string name="auto_load_message">You can choose Auto Load to save time and hassle.Basically we will credit your account with chosen amount(currently with 500rs) when the balance
         in your wallet falls below 500rs.
     </string>
+    <string name="pref_key_use_default_signatures">use_default_signatures</string>
+    <string name="action_clear_cache">Clear Cache</string>
+
+    <string name="masterpassdetails">You will be directed to masterpass site to complete the transaction.</string>
+
 
 </resources>

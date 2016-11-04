@@ -1,6 +1,8 @@
 package com.citrus.sample;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -13,6 +15,7 @@ import com.citrus.sdk.payment.CitrusCash;
 import com.citrus.sdk.payment.MVCOption;
 import com.citrus.sdk.payment.NetbankingOption;
 import com.citrus.sdk.payment.PaymentOption;
+import com.citruspay.graphics.BitmapCallBack;
 
 import java.util.ArrayList;
 
@@ -54,13 +57,41 @@ final class SavedOptionsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             if (paymentOption instanceof NetbankingOption) {
                 itemHolder.paymentOptionName.setText("\t" + ((NetbankingOption) paymentOption).getBankName());
                 Drawable mNetBankIconDrawable = paymentOption.getOptionIcon(mActivity);
-                itemHolder.paymentOptionName.setCompoundDrawablesWithIntrinsicBounds(mNetBankIconDrawable, null, null, null);
+                ((NetbankingOption)paymentOption).getBitmap(new BitmapCallBack() {
+                    @Override
+                    public void onBitmapReceived(Bitmap bitmap) {
+                        Drawable drawable = new BitmapDrawable(mActivity.getResources(),bitmap);
+                        itemHolder.paymentOptionName.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);
+
+                    }
+
+                    @Override
+                    public void onBitmapFailed(Bitmap bitmap) {
+                        Drawable drawable = new BitmapDrawable(mActivity.getResources(),bitmap);
+                        itemHolder.paymentOptionName.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);
+
+                    }
+                });
+
                 itemHolder.paymentOptionBankName.setText( "Net Banking" );
 
             } else if (paymentOption instanceof CardOption) {
                 itemHolder.paymentOptionName.setText("\t" + ((CardOption) paymentOption).getCardNumber());
                 Drawable mCardIconDrawable = paymentOption.getOptionIcon(mActivity);
-                itemHolder.paymentOptionName.setCompoundDrawablesWithIntrinsicBounds(mCardIconDrawable, null, null, null);
+                //itemHolder.paymentOptionName.setCompoundDrawablesWithIntrinsicBounds(mCardIconDrawable, null, null, null);
+                ((CardOption)paymentOption).getBitmap(new BitmapCallBack() {
+                    @Override
+                    public void onBitmapReceived(Bitmap bitmap) {
+                        Drawable drawable = new BitmapDrawable(mActivity.getResources(),bitmap);
+                        itemHolder.paymentOptionName.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);
+                    }
+
+                    @Override
+                    public void onBitmapFailed(Bitmap bitmap) {
+                        Drawable drawable = new BitmapDrawable(mActivity.getResources(),bitmap);
+                        itemHolder.paymentOptionName.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);
+                    }
+                });
                 itemHolder.paymentOptionBankName.setText(paymentOption.getName());
             } else if (paymentOption instanceof CitrusCash) {
                 itemHolder.paymentOptionName.setText(paymentOption.getName());

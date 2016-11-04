@@ -23,16 +23,16 @@ import com.citrus.sdk.CitrusClient;
 import com.citrus.sdk.TransactionResponse;
 import com.citrus.sdk.classes.Amount;
 import com.citrus.sdk.classes.CitrusException;
-import com.citrus.sdk.response.SubscriptionResponse;
 import com.citrus.sdk.payment.CreditCardOption;
 import com.citrus.sdk.payment.PaymentType;
 import com.citrus.sdk.response.CitrusError;
+import com.citrus.sdk.response.SubscriptionResponse;
 import com.citrus.sdk.views.CitrusProgressBar;
 import com.citrus.widgets.CardNumberEditText;
 import com.citrus.widgets.ExpiryDate;
 import com.orhanobut.logger.Logger;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -43,44 +43,44 @@ import butterknife.OnClick;
  */
 public class AutoLoadFragment extends Fragment {
 
-    @Bind(R.id.paymentdetails)
+    @BindView(R.id.paymentdetails)
     RelativeLayout paymentdetails;
-    @Bind(R.id.cardHolderNumber)
+    @BindView(R.id.cardHolderNumber)
     CardNumberEditText cardHolderNumber;
-    @Bind(R.id.cardNumberLayout)
+    @BindView(R.id.cardNumberLayout)
     LinearLayout cardNumberLayout;
-    @Bind(R.id.cardNickNameLayout)
+    @BindView(R.id.cardNickNameLayout)
     LinearLayout cardNickNameLayout;
-    @Bind(R.id.cardExpiry)
+    @BindView(R.id.cardExpiry)
     ExpiryDate cardExpiry;
-    @Bind(R.id.cardCvv)
+    @BindView(R.id.cardCvv)
     EditText cardCvv;
-    @Bind(R.id.expiryLayout)
+    @BindView(R.id.expiryLayout)
     LinearLayout expiryLayout;
-    @Bind(R.id.switch_compat)
+    @BindView(R.id.switch_compat)
     SwitchCompat switchCompat;
-    @Bind(R.id.relativeLayout)
+    @BindView(R.id.relativeLayout)
     RelativeLayout relativeLayout;
-    @Bind(R.id.textView4)
+    @BindView(R.id.textView4)
     TextView textView4;
-    @Bind(R.id.threshhold_amount)
+    @BindView(R.id.threshhold_amount)
     EditText threshholdAmount;
-    @Bind(R.id.textView5)
+    @BindView(R.id.textView5)
     TextView textView5;
-    @Bind(R.id.textView6)
+    @BindView(R.id.textView6)
     TextView textView6;
 
-    @Bind(R.id.rs500)
+    @BindView(R.id.rs500)
     Button rs500;
-    @Bind(R.id.rs1000)
+    @BindView(R.id.rs1000)
     Button rs1000;
-    @Bind(R.id.rs2000)
+    @BindView(R.id.rs2000)
     Button rs2000;
-    @Bind(R.id.load_info)
+    @BindView(R.id.load_info)
     RelativeLayout loadInfo;
-    @Bind(R.id.load)
+    @BindView(R.id.load)
     TextView load;
-    @Bind(R.id.loadamount)
+    @BindView(R.id.loadamount)
     EditText loadamount;
 
     // TODO: Rename and change types of parameters
@@ -260,7 +260,6 @@ public class AutoLoadFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        ButterKnife.unbind(this);
     }
 
     @OnClick({R.id.switch_compat, R.id.rs500, R.id.rs1000, R.id.rs2000, R.id.load})
@@ -341,7 +340,7 @@ public class AutoLoadFragment extends Fragment {
 
             } else {
                 paymentType = new PaymentType.LoadMoney(amout, cardOption);
-                citrusClient.loadMoney((PaymentType.LoadMoney) paymentType, new Callback<TransactionResponse>() {
+                citrusClient.simpliPay((PaymentType.LoadMoney) paymentType, new Callback<TransactionResponse>() {
                     @Override
                     public void success(TransactionResponse transactionResponse) {
                         Logger.d("RESPONSE ***" + transactionResponse.getMessage());

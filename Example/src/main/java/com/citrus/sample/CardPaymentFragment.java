@@ -13,7 +13,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.citrus.sdk.classes.Amount;
+import com.viewpagerindicator.IconPagerAdapter;
 import com.viewpagerindicator.TabPageIndicator;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -26,7 +30,9 @@ import com.viewpagerindicator.TabPageIndicator;
  */
 public class CardPaymentFragment extends Fragment {
 
-    private static final String[] OPTIONS = new String[]{"SAVED\nACCOUNTS", "CREDIT\nCARD", "DEBIT\nCARD", "NET\nBANKING"};
+    // private static final String[] OPTIONS = new String[]{"SAVED\nACCOUNTS", "CREDIT\nCARD", "DEBIT\nCARD", "NET\nBANKING"};
+
+    private static List<String> options = null;
     private Utils.PaymentType paymentType = null;
     private Utils.DPRequestType dpRequestType = null;
     private Amount amount = null;
@@ -76,6 +82,15 @@ public class CardPaymentFragment extends Fragment {
             amount = bundle.getParcelable("amount");
             alteredAmount = bundle.getParcelable("alteredAmount");
             couponCode = bundle.getString("couponCode");
+
+            options = new ArrayList<>();
+            options.add("SAVED\nACCOUNTS");
+            options.add("CREDIT\nCARD");
+            options.add("DEBIT\nCARD");
+            options.add("NET\nBANKING");
+            if (paymentType == Utils.PaymentType.PG_PAYMENT) {
+                options.add("MASTER\nPASS");
+            }
         }
     }
 
@@ -95,7 +110,7 @@ public class CardPaymentFragment extends Fragment {
 
         FragmentStatePagerAdapter adapter = new SavePayAdapter(getChildFragmentManager());
         ViewPager pager = (ViewPager) rootView.findViewById(R.id.pager);
-        pager.setOffscreenPageLimit(4);
+        pager.setOffscreenPageLimit(options.size());
         pager.setAdapter(adapter);
         TabPageIndicator indicator = (TabPageIndicator) rootView.findViewById(R.id.indicator);
         indicator.setViewPager(pager);
@@ -103,7 +118,7 @@ public class CardPaymentFragment extends Fragment {
         return rootView;
     }
 
-    public class SavePayAdapter extends FragmentStatePagerAdapter {
+    public class SavePayAdapter extends FragmentStatePagerAdapter implements IconPagerAdapter{
         public SavePayAdapter(FragmentManager fm) {
             super(fm);
         }
@@ -129,24 +144,35 @@ public class CardPaymentFragment extends Fragment {
                 } else {
                     return CreditDebitCardFragment.newInstance(paymentType, CType.DEBIT, amount);
                 }
-            } else {
+            } else if (position == 3) {
                 if (paymentType == Utils.PaymentType.DYNAMIC_PRICING) {
                     return NetbankingFragment.newInstance(dpRequestType, amount, couponCode, alteredAmount);
                 } else {
                     return NetbankingFragment.newInstance(paymentType, amount);
                 }
+            } else { //this will be enabled only for PG Payment
+                return MasterPassFragment.newInstance(paymentType, amount);
             }
         }
 
         @Override
         public CharSequence getPageTitle(int position) {
-            return OPTIONS[position];
+            return options.get(position);
         }
 
         @Override
-        public int getCount() {
-            return OPTIONS.length;
+        public int getIconResId(int index) {
+            return 0;
         }
+
+
+
+        @Override
+        public int getCount() {
+            return options.size();
+        }
+
+
 
     }
 

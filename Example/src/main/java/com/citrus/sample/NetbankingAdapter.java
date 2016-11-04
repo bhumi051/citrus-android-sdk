@@ -1,14 +1,17 @@
 package com.citrus.sample;
 
 import android.app.Activity;
-import android.graphics.drawable.Drawable;
+import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.citrus.sdk.payment.NetbankingOption;
+import com.citruspay.graphics.BitmapCallBack;
 
 import java.util.ArrayList;
 
@@ -34,7 +37,7 @@ final class NetbankingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
         View itemView = LayoutInflater.
                 from(viewGroup.getContext()).
-                inflate(android.R.layout.simple_list_item_1, viewGroup, false);
+                inflate(R.layout.netbanking_item, viewGroup, false);
 
         return new NetbankingViewHolder(itemView);
     }
@@ -46,10 +49,44 @@ final class NetbankingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         NetbankingOption netbankingOption = getItem(index);
 
         if (netbankingOption != null) {
-            itemHolder.txtBankName.setText(netbankingOption.getBankName());
-            Drawable mBankIconDrawable = netbankingOption.getOptionIcon(mActivity);
-            itemHolder.txtBankName.setCompoundDrawablePadding(25);
-            itemHolder.txtBankName.setCompoundDrawablesWithIntrinsicBounds(mBankIconDrawable,null,null,null);
+
+
+            itemHolder.mImageView.setImageDrawable(null);
+            netbankingOption.getBitmap(new BitmapCallBack() {
+                @Override
+                public void onBitmapReceived(Bitmap bitmap) {
+                    itemHolder.mImageView.setImageBitmap(bitmap);
+
+                    RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) itemHolder.mTextView.getLayoutParams();
+                    //params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+                    params.addRule(RelativeLayout.RIGHT_OF, itemHolder.mImageView.getId());
+                    params.addRule(RelativeLayout.END_OF, itemHolder.mImageView.getId());
+
+                    params.addRule(RelativeLayout.CENTER_VERTICAL, itemHolder.mImageView.getId());
+                    itemHolder.mTextView.setLayoutParams(params); //causes layout update
+                    itemHolder.mTextView.setPadding(25, 0, 0, 0);
+                    itemHolder.mTextView.setText(netbankingOption.getBankName());
+
+                }
+
+                @Override
+                public void onBitmapFailed(Bitmap bitmap) {
+
+                    itemHolder.mImageView.setImageBitmap(bitmap);
+
+                    RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) itemHolder.mTextView.getLayoutParams();
+                    //params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+                    params.addRule(RelativeLayout.RIGHT_OF, itemHolder.mImageView.getId());
+                    params.addRule(RelativeLayout.END_OF, itemHolder.mImageView.getId());
+
+                    params.addRule(RelativeLayout.CENTER_VERTICAL, itemHolder.mImageView.getId());
+                    itemHolder.mTextView.setLayoutParams(params); //causes layout update
+                    itemHolder.mTextView.setPadding(25, 0, 0, 0);
+                    itemHolder.mTextView.setText(netbankingOption.getBankName());
+                }
+            });
+
+            // itemHolder.mTextView.setText(netbankingOption.getBankName());
         }
     }
 
@@ -88,11 +125,21 @@ final class NetbankingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
 
     public static class NetbankingViewHolder extends RecyclerView.ViewHolder {
-        final TextView txtBankName;
+        //   final TextView txtBankName;
+
+        final ImageView mImageView;
+
+        final TextView mTextView;
+
+        final RelativeLayout mrelativeLayout;
 
         public NetbankingViewHolder(View v) {
             super(v);
-            txtBankName = (TextView) v.findViewById(android.R.id.text1);
+            //  txtBankName = (TextView) v.findViewById(android.R.id.text1);
+
+            mImageView = (ImageView) v.findViewById(R.id.iconbank);
+            mTextView = (TextView) v.findViewById(R.id.txtbankname);
+            mrelativeLayout = (RelativeLayout) v.findViewById(R.id.relativeLayout);
         }
     }
 }
