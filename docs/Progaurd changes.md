@@ -2,8 +2,7 @@
 
 #Add Following pro-guard rules for SDK
 
-    -keep class javax.inject.** { *; }
-    -keep class com.citrus.sdk.** { *; } 
+    -keep class com.citrus.** { *; } 
     -keep class com.citruspay.citrusbrowser.** { *; }
     -keepattributes *Annotation*
 
