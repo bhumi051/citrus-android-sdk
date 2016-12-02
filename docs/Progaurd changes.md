@@ -6,17 +6,16 @@
     -keep class com.citruspay.citrusbrowser.** { *; }
     -keepattributes *Annotation*
 
-    -keep,allowobfuscation @interface com.facebook.proguard.annotations.DoNotStrip
+    -keep,allowobfuscation @interface com.facebook.crypto.proguard.annotations.DoNotStrip
+    -keep,allowobfuscation @interface com.facebook.crypto.proguard.annotations.KeepGettersAndSetters
 
-    -keep,allowobfuscation @interface com.facebook.proguard.annotations.KeepGettersAndSetters
-
-    -keep @com.facebook.proguard.annotations.DoNotStrip class *
-
+    # Do not strip any method/class that is annotated with @DoNotStrip
+    -keep @com.facebook.crypto.proguard.annotations.DoNotStrip class *
     -keepclassmembers class * {
-        @com.facebook.proguard.annotations.DoNotStrip *;
+        @com.facebook.crypto.proguard.annotations.DoNotStrip *;
     }
 
-    -keepclassmembers @com.facebook.proguard.annotations.KeepGettersAndSetters class * {
+    -keepclassmembers @com.facebook.crypto.proguard.annotations.KeepGettersAndSetters class * {
         void set*(***);
         *** get*();
     }
